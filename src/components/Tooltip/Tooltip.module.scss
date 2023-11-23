@@ -1,0 +1,71 @@
+.tooltip:hover .top {
+  display: block;
+  bottom: 110%;
+  opacity: 1;
+  animation: slideDown 0.6s ease-out both;
+}
+
+.tooltip:hover .bottom {
+  display: block;
+  top: 110%;
+  opacity: 1;
+  animation: slideUp 0.6s ease-out both;
+}
+
+.tooltip:hover .left {
+  display: block;
+  right: 110%;
+  opacity: 1;
+  animation: slideLeft 0.6s ease-out both;
+}
+
+.tooltip:hover .right {
+  display: block;
+  left: 110%;
+  opacity: 1;
+  animation: slideRight 0.6s ease-out both;
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translate(-50%, 50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideLeft {
+  0% {
+    transform: translate(-30%, -50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  0% {
+    transform: translate(30%, -50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, -50%);
+    opacity: 1;
+  }
+}

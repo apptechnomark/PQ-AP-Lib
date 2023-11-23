@@ -1,0 +1,61 @@
+.search {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px;
+    border-radius: 5px;
+
+    &:focus-within {
+        border: 1px solid #d8d8d8;
+    }
+
+    & :is(input, button) {
+        color: inherit;
+        border: none;
+        background: transparent;
+        outline: none;
+        font-size: 14px;
+    }
+
+    &__input {
+        width: 0;
+        transition: width 0.5s;
+    }
+
+    &__button {
+        display: grid;
+        place-items: center;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        transition: color 0.25s;
+    }
+
+    &:focus-within input {
+        width: 226px;
+        height: 24px;
+    }
+}
+
+.customScrollbar {
+    /* width */
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #EEE;
+        border-radius: 10px;
+        height: 20px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+}

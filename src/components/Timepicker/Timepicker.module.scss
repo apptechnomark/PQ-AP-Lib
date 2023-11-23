@@ -1,0 +1,25 @@
+.scaleUpAnimation {
+    animation: scaleUpAnimation 0.3s ease-in-out;
+}
+@keyframes scaleUpAnimation {
+    0% {
+        transform: scale(0.5, 0.5);
+    }
+    100% {
+        transform: scale(1, 1);
+    }
+}
+.textAnimation {
+    animation: textAnimation 1s infinite ease;
+}
+@keyframes textAnimation {
+    0% {
+        transform: translateY(-7em);
+    }
+    40% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}

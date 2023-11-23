@@ -1,0 +1,149 @@
+/* for icon animation */
+.hideAnimation {
+    animation: hide 0.3s ease-in-out both;
+  }
+  
+  .showAnimation {
+    animation: show 0.3s ease-in-out both;
+  }
+  
+  @keyframes hide {
+    0% {
+      opacity: 1;
+      transform: translateY(0%);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(15%);
+    }
+  }
+  
+  @keyframes show {
+    0% {
+      opacity: 0;
+      transform: translateY(15%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0%);
+    }
+  }
+  
+  /* for icon Left animation */
+  .hideLeftAnimation {
+    animation: hideLeft 0.3s ease-in-out both;
+  }
+  
+  .showLeftAnimation {
+    animation: showLeft 0.3s ease-in-out both;
+  }
+  
+  @keyframes hideLeft {
+    0% {
+      opacity: 1;
+      transform: translateX(-2%);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(3.5%);
+    }
+  }
+  
+  @keyframes showLeft {
+    0% {
+      opacity: 0;
+      transform: translateX(3.5%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(-2%);
+    }
+  }
+  
+  /* for icon text animation */
+  .hide {
+    animation: show 0.3s ease-out both;
+  }
+  .left {
+    animation: slideLeft 0.3s ease-out both;
+  }
+  
+  @keyframes show {
+    0% {
+      opacity: 0;
+      border-radius: 50px;
+    }
+    100% {
+      opacity: 1;
+      border-top-right-radius: 50px;
+      border-bottom-right-radius: 50px;
+    }
+  }
+  
+  @keyframes slideLeft {
+    0% {
+      transform: translateX(30%);
+      border-radius: 50px;
+    }
+    100% {
+      transform: translateX(0);
+      border-top-left-radius: 50px;
+      border-bottom-left-radius: 50px;
+    }
+  }
+  
+  /* for cross icons */
+  .crossAnimation {
+    animation: cross 0.3s ease-in-out both;
+  }
+  .plusAnimation {
+    animation: plus 0.2s ease-in-out both;
+  }
+  
+  @keyframes cross {
+    0% {
+      transform: rotate(0deg);
+    }
+    16% {
+      transform: rotate(-52.5deg);
+    }
+    32% {
+      transform: rotate(-105deg);
+    }
+    48% {
+      transform: rotate(-157.5deg);
+    }
+    64% {
+      transform: rotate(-210deg);
+    }
+    80% {
+      transform: rotate(-262.5deg);
+    }
+    100% {
+      transform: rotate(-315deg);
+    }
+  }
+  
+  @keyframes plus {
+    0% {
+      transform: rotate(0deg);
+    }
+    16% {
+      transform: rotate(52.5deg);
+    }
+    32% {
+      transform: rotate(105deg);
+    }
+    48% {
+      transform: rotate(157.5deg);
+    }
+    64% {
+      transform: rotate(210deg);
+    }
+    80% {
+      transform: rotate(262.5deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }

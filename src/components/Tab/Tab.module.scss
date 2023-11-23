@@ -1,0 +1,21 @@
+.tab__ripple {
+  animation: ripple 0.7s;
+  background-color: rgba(2, 184, 157, 0.473);
+}
+
+@keyframes ripple {
+  from {
+    opacity: 1;
+    transform: scale(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 0px;
+  }

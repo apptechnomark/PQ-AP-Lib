@@ -1,0 +1,57 @@
+.comment_stars_input:checked ~ .comment_stars_view svg,
+.comment_stars_input:checked ~ .comment_stars_view:hover svg,
+.comment_stars_input:checked
+  ~ .comment_stars_view:hover
+  ~ .comment_stars_view
+  svg {
+  fill: #fbbc05;
+  transition: transform 0.3s, fill 0.3s;
+}
+.comment_stars_input_heart:checked ~ .comment_stars_view_heart svg,
+.comment_stars_input_heart:checked ~ .comment_stars_view_heart:hover svg,
+.comment_stars_input_heart:checked
+  ~ .comment_stars_view_heart:hover
+  ~ .comment_stars_view_heart
+  svg {
+  fill: #dc3545;
+  transition: transform 0.3s, fill 0.3s;
+}
+
+.comment_stars_view,
+.comment_stars_view_heart {
+  cursor: pointer;
+  transition: transform 0.3s, fill 0.3s;
+}
+
+.comment_stars_view svg,
+.comment_stars_view_heart svg {
+  fill: #D8D8D8;
+  width: 22px;
+  height: 22px;
+  transition: fill 0.3s;
+}
+
+.comment_stars_view.is_half,
+.comment_stars_view.is_half_heart,
+.comment_stars_view_heart.is_half,
+.comment_stars_view_heart.is_half_heart {
+  transform: translateX(100%) scale(1);
+  margin-left: -10px;
+}
+
+.comment_stars_view.is_half svg,
+.comment_stars_view_heart.is_half_heart svg {
+  width: 11px;
+}
+
+.comment_stars_view:hover svg,
+.comment_stars_view:hover ~ .comment_stars_view svg {
+  fill: #fbbc05;
+  transform: scale(1.1);
+}
+
+.comment_stars_view_heart:hover svg,
+.comment_stars_view_heart:hover ~ .comment_stars_view_heart svg {
+  fill: #dc3545;
+  transform: scale(1.1);
+}

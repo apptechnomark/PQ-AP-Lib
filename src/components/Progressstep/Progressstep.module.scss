@@ -1,0 +1,114 @@
+$pureWhite: #fff;
+$primary: #02b89d;
+$lightSilver: #d8d8d8;
+
+@mixin rings($duration, $delay) {
+  opacity: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  content: "";
+  height: 100%;
+  width: 100%;
+  border: 2px solid transparent;
+  border-radius: 100%;
+  animation-name: progress_ripple;
+  animation-duration: $duration;
+  animation-delay: $delay;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.34, 1);
+}
+
+#steps {
+  width: auto;
+  margin: 0 5px;
+  display: flex;
+}
+
+.step__span {
+  height: 32px;
+  width: 32px;
+  color: $lightSilver;
+  border-radius: 50%;
+  position: relative;
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  border: 2px solid #d8d8d8;
+}
+
+.step {
+  width: 100%;
+  height: 35px;
+  &:last-child {
+    width: fit-content;
+    height: 35px;
+    padding-top: 2px;
+  }
+  &:not(:last-child) {
+    &:before {
+      content: "";
+      height: 2px;
+      display: block;
+      background-color: $lightSilver;
+      transform: translate(37px, 17px);
+      width: calc(100% - 32px - 10.4px);
+    }
+  }
+  &:after {
+    width: 100%;
+    display: block;
+    font-size: 15px;
+    color: $lightSilver;
+    text-align: center;
+    content: attr(data-desc);
+    transform: translate(-42%, 3px);
+  }
+}
+
+.step.active {
+  .step__span {
+    color: $primary;
+    border-color: $primary;
+  }
+  &::after {
+    color: $primary;
+  }
+}
+
+.step__span.span_active {
+  &::after {
+    @include rings(2s, 0s);
+  }
+
+  
+}
+
+.step.done {
+  .step__span {
+    background-color: $primary;
+    border-color: $primary;
+    color: $pureWhite;
+  }
+  &:before {
+    background-color: $primary;
+  }
+  &:after {
+    color: $primary;
+  }
+}
+
+@keyframes progress_ripple {
+  from {
+    opacity: 1;
+    transform: scale3d(1, 1);
+  }
+
+  to {
+    opacity: 0;
+    border: 2px solid $primary;
+    transform: scale3d(1.7, 1.7, 1);
+  }
+}

@@ -1,0 +1,85 @@
+.menu {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 1s ease;
+}
+
+.meatball {
+    flex-direction: row;
+}
+
+.kebab {
+    flex-direction: column;
+}
+
+.dot {
+    background-color: #333;
+    border-radius: 50%;
+    transition: transform 1s ease;
+}
+
+:root {
+    --dot-size-small: 5px;
+    --dot-margin-small: 2px;
+    --dot-size-medium: 6px;
+    --dot-margin-medium: 1.5px;
+    --dot-size-large: 7px;
+    --dot-margin-large: 1px;
+    --dot-transform-down: 18px;
+    --dot-transform-up: -18px;
+    --dot-transform-right: 18px;
+    --dot-transform-left: -18px;
+}
+
+.small .dot {
+    width: var(--dot-size-small);
+    height: var(--dot-size-small);
+    margin: var(--dot-margin-small);
+}
+
+.medium .dot {
+    width: var(--dot-size-medium);
+    height: var(--dot-size-medium);
+    margin: var(--dot-margin-medium);
+}
+
+.large .dot {
+    width: var(--dot-size-large);
+    height: var(--dot-size-large);
+    margin: var(--dot-margin-large);
+}
+
+.menu:hover .dot:nth-child(2),
+.menu:focus .dot:nth-child(2) {
+    background-color: #02B89D;
+}
+
+.meatball.menu:hover .dot:nth-child(2),
+.meatball.menu:focus .dot:nth-child(2) {
+    background-color: #02B89D;
+}
+
+.menu:hover .dot:first-child,
+.menu:focus .dot:first-child {
+    transform: translateY(var(--dot-transform-down));
+    background-color: #02B89D;
+}
+
+.menu:hover .dot:last-child,
+.menu:focus .dot:last-child {
+    transform: translateY(var(--dot-transform-up));
+    background-color: #02B89D;
+}
+
+.meatball.menu:hover .dot:first-child,
+.meatball.menu:focus .dot:first-child {
+    transform: translateX(var(--dot-transform-right));
+    background-color: #02B89D;
+}
+
+.meatball.menu:hover .dot:last-child,
+.meatball.menu:focus .dot:last-child {
+    transform: translateX(var(--dot-transform-left));
+    background-color: #02B89D;
+}
