@@ -49,7 +49,7 @@ const Button: React.FC<ButtonProps> = ({
           } ${className?.includes("btn-lg") && "!py-[14.5px] !px-[20px]"
           } bg-pureWhite text-slatyGrey relative overflow-hidden py-[6px] px-[15px] text-base group ${variant === "btn" && "!bg-lightSilver !text-slatyGrey"
           } ${variant === "btn-primary" &&
-          "!bg-primary !text-pureWhite hover:!bg-darkBlue"
+          "!bg-primary !text-pureWhite hover:!bg-darkPrimary"
           } ${variant === "btn-secondary" &&
           "!bg-blueColor !text-pureWhite hover:!bg-darkBlue"
           } ${variant === "btn-success" &&
@@ -59,7 +59,7 @@ const Button: React.FC<ButtonProps> = ({
           } ${variant === "btn-warning" &&
           "!bg-yellowColor !text-pureWhite hover:!bg-darkYellow"
           } ${variant === "primary" &&
-          "!text-primary hover:bg-secondaryPrimary hover:!text-[#0281B9]"
+          "!text-primary hover:bg-secondaryGreen hover:!text-[#029882]"
           } ${variant === "secondary" &&
           "!text-blueColor hover:bg-[#E5F5FC] hover:!text-[#0281B9]"
           } ${variant === "success" &&
@@ -70,7 +70,7 @@ const Button: React.FC<ButtonProps> = ({
           "!text-yellowColor hover:bg-[#FFF3CD] hover:!text-[#CC9A06]"
           } ${variant === "btn-outline" && "!text-slatyGrey border border-slatyGrey"
           } ${variant === "btn-outline-primary" &&
-          "!text-primary hover:!text-darkBlue border border-primary hover:border-darkBlue hover:!bg-secondaryPrimary"
+          "!text-primary hover:!text-darkPrimary border border-primary hover:border-darkPrimary hover:!bg-secondaryGreen"
           } ${variant === "btn-outline-secondary" &&
           "!text-blueColor hover:!text-darkBlue border border-blueColor hover:border-darkBlue hover:!bg-[#E5F5FC]"
           } ${variant === "btn-outline-success" &&
