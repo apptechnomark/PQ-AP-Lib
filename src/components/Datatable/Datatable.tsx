@@ -31,6 +31,7 @@ interface DataTableProps {
   data: any[];
   align?: "left" | "center" | "right";
   expandable?: boolean;
+  getExpandableData: (arg1: any) => void;
   isExpanded?: boolean;
   expandableStyle?: ExpandableStyle;
   sticky?: boolean;
@@ -46,9 +47,10 @@ const DataTable = ({
   expandable,
   isExpanded = false,
   expandableStyle,
+  getExpandableData,
   sticky,
   hoverEffect,
-  noHeader,
+  noHeader
 }: DataTableProps) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "" });
@@ -64,6 +66,7 @@ const DataTable = ({
   };
 
   const handleRowToggle = (rowIndex: any) => {
+    getExpandableData(data[rowIndex]);
     const isRowExpanded = expandedRows.has(rowIndex);
     const newExpandedRows = new Set(expandedRows);
 

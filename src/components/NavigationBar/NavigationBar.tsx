@@ -143,7 +143,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
 
     return (
         <>
-            <div className="flex items-center py-[10px] relative" ref={parentDivRef}>
+            <div  className={`${className} flex items-center py-[10px] relative`} ref={parentDivRef}>
 
                 {direction == "row-reverse" && visibleTab <= tabs.length && dropdownTabs.length > 0 &&
                     <div ref={selectRef} className="cursor-pointer border-r border-lightSilver">
