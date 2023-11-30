@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ChevronRight from "./icons/ChevronRight";
 import SortIcon from "./icons/SortIcon";
 import styles from "./Datatable.module.scss";
@@ -67,7 +67,7 @@ const DataTable = ({
 
   const handleRowToggle = (rowIndex: any) => {
     getExpandableData(data[rowIndex]);
-    // const isRowExpanded = expandedRows.has(rowIndex);
+    const isRowExpanded = expandedRows.has(rowIndex);
     const newExpandedRows = new Set(expandedRows);
 
     // if (isRowExpanded) {
@@ -75,13 +75,11 @@ const DataTable = ({
     // } else {
     //   newExpandedRows.add(rowIndex);
     // }
+    
     if (newExpandedRows.has(rowIndex)) {
-      // If the row is already expanded, close it
       newExpandedRows.delete(rowIndex);
     } else {
-      // Close the previously opened row, if any
       newExpandedRows.clear();
-      // Open the clicked row
       newExpandedRows.add(rowIndex);
     }
 
@@ -147,9 +145,24 @@ const DataTable = ({
     }
   };
 
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        tableRef.current &&
+        !tableRef.current.contains(event.target as Node)
+      ) {
+        setExpandedRows(new Set());
+      }
+    };
+    document.addEventListener("click", handleOutsideClick);
+    return () => {
+        document.removeEventListener("click", handleOutsideClick);
+    };
+}, []);
+
   return (
     <div className={`h-full`}>
-      <table className="w-full">
+      <table ref={tableRef} className="w-full">
         <thead className={`${sticky && styles.customDataTable} `}>
           <tr
             className={`w-full z-[5] top-0 ${sticky ? `${stickyPostion} sticky bg-pureWhite ` : "static border-y border-pureBlack"

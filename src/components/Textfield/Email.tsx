@@ -21,6 +21,7 @@ interface EmailProps extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string;
   noNumeric?: boolean;
   noSpecialChar?: boolean;
+  noSpecialCharRegex?: any;
 }
 
 const Email: React.FC<EmailProps> = ({
@@ -42,6 +43,7 @@ const Email: React.FC<EmailProps> = ({
   noNumeric,
   noborder,
   noSpecialChar,
+  noSpecialCharRegex,
   errorMessage = "This is a required field!",
   ...props
 }) => {
@@ -76,6 +78,10 @@ const Email: React.FC<EmailProps> = ({
       setErr(true);
       getError(false);
       setErrMsg("Please provide a valid email!");
+    }else if (noSpecialCharRegex && noSpecialCharRegex.test(inputValue)) {
+      setErr(true);
+      getError(false);
+      setErrMsg(`Special characters are not allowed.`);
     } else if (minChar && inputValue.length < minChar) {
       setErr(true);
       getError(false);
