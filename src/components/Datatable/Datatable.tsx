@@ -67,12 +67,21 @@ const DataTable = ({
 
   const handleRowToggle = (rowIndex: any) => {
     getExpandableData(data[rowIndex]);
-    const isRowExpanded = expandedRows.has(rowIndex);
+    // const isRowExpanded = expandedRows.has(rowIndex);
     const newExpandedRows = new Set(expandedRows);
 
-    if (isRowExpanded) {
+    // if (isRowExpanded) {
+    //   newExpandedRows.delete(rowIndex);
+    // } else {
+    //   newExpandedRows.add(rowIndex);
+    // }
+    if (newExpandedRows.has(rowIndex)) {
+      // If the row is already expanded, close it
       newExpandedRows.delete(rowIndex);
     } else {
+      // Close the previously opened row, if any
+      newExpandedRows.clear();
+      // Open the clicked row
       newExpandedRows.add(rowIndex);
     }
 
