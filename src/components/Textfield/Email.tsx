@@ -16,7 +16,7 @@ interface EmailProps extends React.InputHTMLAttributes<HTMLInputElement> {
   getError: (arg1: boolean) => void;
   hasError?: boolean;
   minChar?: number;
-  noborder?:boolean;
+  noborder?: boolean;
   maxChar?: number;
   errorMessage?: string;
   noNumeric?: boolean;
@@ -60,7 +60,7 @@ const Email: React.FC<EmailProps> = ({
   }, [hasError, errorMessage]);
 
   const validateEmail = (email: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const regex = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
     return regex.test(email);
   };
 
@@ -78,7 +78,7 @@ const Email: React.FC<EmailProps> = ({
       setErr(true);
       getError(false);
       setErrMsg("Please provide a valid email!");
-    }else if (noSpecialCharRegex && noSpecialCharRegex.test(inputValue)) {
+    } else if (noSpecialCharRegex && noSpecialCharRegex.test(inputValue)) {
       setErr(true);
       getError(false);
       setErrMsg(`Special characters are not allowed.`);
@@ -153,7 +153,7 @@ const Email: React.FC<EmailProps> = ({
       >
         <input
           type="email"
-          className={`${className} placeholder:text-[14px] text-[14px] ${err&&"text-defaultRed placeholder:text-defaultRed "}  py-1 ${noborder ? '' : 'border-b'} outline-none transition duration-600 w-full h-full ${disabled ? "text-slatyGrey" : "text-darkCharcoal"} ${err
+          className={`${className} placeholder:text-[14px] text-[14px] ${err && "text-defaultRed placeholder:text-defaultRed "}  py-1 ${noborder ? '' : 'border-b'} outline-none transition duration-600 w-full h-full ${disabled ? "text-slatyGrey" : "text-darkCharcoal"} ${err
             ? "border-b-defaultRed"
             : focus
               ? "border-b-primary"

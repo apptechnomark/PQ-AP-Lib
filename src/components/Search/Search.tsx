@@ -12,7 +12,7 @@ interface SearchProps {
   options?: { value: string; label: string }[];
   type?: string;
   Data?: string[];
-  getValue?: (results: string[]) => void;
+  getValue?: (results: any) => void;
 }
 
 function SearchBar({ variant, options, type, Data, getValue }: SearchProps) {
@@ -48,14 +48,21 @@ function SearchBar({ variant, options, type, Data, getValue }: SearchProps) {
   }, [searchTerm, Data]);
 
   const handleSearch = () => {
-    if (searchTerm.trim() !== "") {
-      getValue(filteredData);
+    if (variant === "dropdown") {
+      if (searchTerm.trim() !== "") {
+        getValue(filteredData);
+      }
+    }
+    else {
+      getValue(searchTerm)
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
+    getValue(e.target.value)
   };
+
 
   const selectRef = useRef<HTMLDivElement>(null);
 
@@ -304,7 +311,13 @@ function SearchBar({ variant, options, type, Data, getValue }: SearchProps) {
         </div>
         <div className="w-[250px]">
 
-          <Text placeholder="Search" className="pl-[30px]" getValue={() => { }} getError={() => { }} />
+        <Text 
+          placeholder="Search" 
+          className="pl-[30px]" 
+          getValue={(value) => {setSearchTerm(value)}} 
+          getError={() => { }}
+          onChange={handleInputChange} 
+          />
         </div>
 
 
@@ -327,6 +340,8 @@ function SearchBar({ variant, options, type, Data, getValue }: SearchProps) {
               type="text"
               placeholder="Default Search"
               className="w-[200px] ml-4 text-24px border-none outline-none pl-4"
+              value={searchTerm}
+              onChange={handleInputChange}
             />
           </div>
 
