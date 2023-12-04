@@ -13,9 +13,10 @@ interface SearchProps {
   type?: string;
   Data?: string[];
   getValue?: (results: any) => void;
+  number?: number;
 }
 
-function SearchBar({ variant, options, type, Data, getValue }: SearchProps) {
+function SearchBar({ variant, options, type, Data, getValue, number }: SearchProps) {
   const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
@@ -47,21 +48,25 @@ function SearchBar({ variant, options, type, Data, getValue }: SearchProps) {
     setFilteredData(filteredResults);
   }, [searchTerm, Data]);
 
-  const handleSearch = () => {
-    if (variant === "dropdown") {
-      if (searchTerm.trim() !== "") {
-        getValue(filteredData);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchTerm = e.target.value;
+    setSearchTerm(newSearchTerm);
+
+    if (number && (newSearchTerm.length >= number || (searchTerm.length >= number && newSearchTerm.length < number))) {
+      if (variant === "dropdown") {
+        if (newSearchTerm.trim() !== "") {
+          getValue(filteredData);
+        }
+      } else {
+        if (newSearchTerm.trim().length >= number) {
+          getValue(newSearchTerm);
+        }
       }
-    }
-    else {
-      getValue(searchTerm)
+    } else {
+      getValue("");
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    getValue(e.target.value)
-  };
 
 
   const selectRef = useRef<HTMLDivElement>(null);
@@ -269,7 +274,6 @@ function SearchBar({ variant, options, type, Data, getValue }: SearchProps) {
           <button
             type="button"
             className={styles.search__button}
-            onClick={handleSearch}
           >
             <svg
               width="24"
@@ -311,12 +315,12 @@ function SearchBar({ variant, options, type, Data, getValue }: SearchProps) {
         </div>
         <div className="w-[250px]">
 
-        <Text 
-          placeholder="Search" 
-          className="pl-[30px]" 
-          getValue={(value) => {setSearchTerm(value)}} 
-          getError={() => { }}
-          onChange={handleInputChange} 
+          <Text
+            placeholder="Search"
+            className="pl-[30px]"
+            getValue={(value) => { setSearchTerm(value) }}
+            getError={() => { }}
+            onChange={handleInputChange}
           />
         </div>
 
