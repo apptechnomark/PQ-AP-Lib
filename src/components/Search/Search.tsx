@@ -52,18 +52,25 @@ function SearchBar({ variant, options, type, Data, getValue, number }: SearchPro
     const newSearchTerm = e.target.value;
     setSearchTerm(newSearchTerm);
 
-    if (number === 0 || (newSearchTerm.length >= number || (searchTerm.length-1 >= number && newSearchTerm.length < number))) {
-      if (variant === "dropdown") {
-        if (newSearchTerm.trim() !== "") {
-          getValue(filteredData);
-        }
-      } else {
-        if (newSearchTerm.trim().length >= number || number === 0) {
+    if (newSearchTerm === "") {
+      getValue("");
+    } else {
+      if (number === 0 || newSearchTerm.length >= number) {
+        if (variant === "dropdown") {
+          if (newSearchTerm.trim() !== "") {
+            getValue(filteredData);
+          }
+          if (filteredData.length > 0) {
+            getValue(filteredData);
+          } else {
+            getValue("");
+          }
+        } else {
           getValue(newSearchTerm);
         }
+      } else {
+        getValue("");
       }
-    } else {
-      getValue("");
     }
   };
 
