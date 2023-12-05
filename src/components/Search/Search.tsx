@@ -52,13 +52,13 @@ function SearchBar({ variant, options, type, Data, getValue, number }: SearchPro
     const newSearchTerm = e.target.value;
     setSearchTerm(newSearchTerm);
 
-    if (number && (newSearchTerm.length >= number || (searchTerm.length >= number && newSearchTerm.length < number))) {
+    if (number === 0 || (newSearchTerm.length >= number || (searchTerm.length-1 >= number && newSearchTerm.length < number))) {
       if (variant === "dropdown") {
         if (newSearchTerm.trim() !== "") {
           getValue(filteredData);
         }
       } else {
-        if (newSearchTerm.trim().length >= number) {
+        if (newSearchTerm.trim().length >= number || number === 0) {
           getValue(newSearchTerm);
         }
       }
@@ -66,8 +66,6 @@ function SearchBar({ variant, options, type, Data, getValue, number }: SearchPro
       getValue("");
     }
   };
-
-
 
   const selectRef = useRef<HTMLDivElement>(null);
 
