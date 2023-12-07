@@ -25,6 +25,7 @@ interface DatepickerProps {
     getError: (arg1: boolean) => void;
     validate?: boolean;
     disabled?: boolean;
+    hideIcon?: boolean;
 }
 
 const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
@@ -36,6 +37,7 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
     disabled,
     hasError,
     errorMessage = "This is required field!",
+    hideIcon,
     getValue,
     getError,
     ...props }) => {
@@ -329,7 +331,7 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
 
     useEffect(() => {
         if (inputStartDate != "" && inputEndDate != "") {
-        getValue(inputStartDate + " to " + inputEndDate);
+            getValue(inputStartDate + " to " + inputEndDate);
         }
     }, [inputStartDate, inputEndDate]);
 
@@ -380,12 +382,13 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
                         onChange={(e: any) => updateFromInput(e.target.value)}
                         onBlur={handleInputBlur}
                     />
-                    <span
-                        className="absolute right-2 top-0.5 cursor-pointer"
-                        onClick={calendarShow}
-                    >
-                        <CalendarIcon bgColor={err ? "#DC3545" : "#333333"} />
-                    </span>
+                    {!hideIcon &&
+                        <span
+                            className="absolute right-2 top-0.5 cursor-pointer"
+                            onClick={calendarShow}
+                        >
+                            <CalendarIcon bgColor={err ? "#DC3545" : "#333333"} />
+                        </span>}
                 </div>
             </div>
             {toggleOpen && (

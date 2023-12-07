@@ -30,6 +30,7 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
     noText?: boolean;
     regexPattern?: any;
     regexMessage?: string;
+    hideIcon?: boolean;
 }
 
 const DropdownList: React.FC<SelectProps> = ({
@@ -54,6 +55,7 @@ const DropdownList: React.FC<SelectProps> = ({
     noSpecialChar,
     regexPattern,
     regexMessage,
+    hideIcon,
     ...props
 }) => {
     const selectRef = useRef<HTMLDivElement>(null);
@@ -138,7 +140,7 @@ const DropdownList: React.FC<SelectProps> = ({
 
     const handleInnerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value.trim();
-        
+
         const checkRestriction = (regex: RegExp, errorMsg: string) => {
             if (regex.test(newValue)) {
                 setInputError(true);
@@ -148,7 +150,7 @@ const DropdownList: React.FC<SelectProps> = ({
                 setInputError(false);
             }
         };
-    
+
         if (noNumeric) {
             checkRestriction(/\d/, `Numeric characters not allowed.`);
         } else if (noText) {
@@ -291,11 +293,12 @@ const DropdownList: React.FC<SelectProps> = ({
                         style={{ background: "transparent" }}
                         onKeyDown={(e) => handleKeyDown(e)}
                     />
-                    <div
-                        onClick={handleToggleOpen}
-                        className={`text-[1.5rem] transition-transform  cursor-pointer  ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"} ${error ? "text-defaultRed" : "text-slatyGrey"}`}>
-                        <ChevronDown />
-                    </div>
+                    {!hideIcon &&
+                        <div
+                            onClick={handleToggleOpen}
+                            className={`text-[1.5rem] transition-transform  cursor-pointer  ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"} ${error ? "text-defaultRed" : "text-slatyGrey"}`}>
+                            <ChevronDown />
+                        </div>}
                 </div>
 
                 <ul

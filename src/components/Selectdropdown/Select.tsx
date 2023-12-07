@@ -43,7 +43,7 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onDeleteButton?: (value: any) => void;
   disabled?: boolean;
   noborder?: boolean
-
+  hideIcon?: boolean;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -76,6 +76,7 @@ const Select: React.FC<SelectProps> = ({
   addDynamicForm_Icons_Edit,
   addDynamicForm_Icons_Delete,
   disabled,
+  hideIcon,
   noborder
 }) => {
   const [inputValue, setInputValue] = useState("");
@@ -251,7 +252,7 @@ const Select: React.FC<SelectProps> = ({
       setFocusedIndex(focusedIndex + 1);
     }
   }
-  
+
   return (
     <>
       <div
@@ -316,7 +317,7 @@ const Select: React.FC<SelectProps> = ({
                         : inputValue
             }
             autoComplete="off"
-            className={`${error&&"placeholder:text-defaultRed text-defaultRed"} flex-grow outline-none bg-white ${disabled
+            className={`${error && "placeholder:text-defaultRed text-defaultRed"} flex-grow outline-none bg-white ${disabled
               ? "text-slatyGrey"
               : isOpen
                 ? "text-primary"
@@ -333,16 +334,16 @@ const Select: React.FC<SelectProps> = ({
             style={{ background: "transparent" }}
             onKeyDown={(e) => handleKeyDown(e)}
           />
-
-          <div
-            onClick={handleToggleOpen}
-            className={`text-[1.5rem] transition-transform ${disabled
-              ? "text-slatyGrey cursor-default"
-              : "text-darkCharcoal cursor-pointer"
-              } ${error&&" text-defaultRed"} ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"}`}
-          >
-            <ChevronDown />
-          </div>
+          {!hideIcon &&
+            <div
+              onClick={handleToggleOpen}
+              className={`text-[1.5rem] transition-transform ${disabled
+                ? "text-slatyGrey cursor-default"
+                : "text-darkCharcoal cursor-pointer"
+                } ${error && " text-defaultRed"} ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"}`}
+            >
+              <ChevronDown />
+            </div>}
         </div>
 
 

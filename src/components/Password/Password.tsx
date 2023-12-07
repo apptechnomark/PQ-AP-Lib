@@ -19,6 +19,7 @@ interface PasswordProps extends InputHTMLAttributes<HTMLInputElement> {
   props?: any;
   minChar?: number;
   maxChar?: number;
+  hideIcon?: boolean;
 }
 
 const Password: React.FC<PasswordProps> = ({
@@ -34,6 +35,7 @@ const Password: React.FC<PasswordProps> = ({
   disabled,
   minChar = 8,
   maxChar = 20,
+  hideIcon,
   ...props
 }) => {
   const [password, setPassword] = useState("");
@@ -116,10 +118,9 @@ const Password: React.FC<PasswordProps> = ({
             </span>
           )}
           <span
-            className={`${
-              isValid &&
+            className={`${isValid &&
               "line-through ml-[7px] decoration-slatyGrey text-slatyGrey"
-            }`}
+              }`}
           >
             {requirementList[item.index]}
           </span>
@@ -221,13 +222,12 @@ const Password: React.FC<PasswordProps> = ({
         {label && (
           <span className="flex">
             <label
-              className={`${
-                err
-                  ? "text-defaultRed"
-                  : focus
+              className={`${err
+                ? "text-defaultRed"
+                : focus
                   ? "text-primary"
                   : "text-slatyGrey"
-              }`}
+                }`}
             >
               {label}
             </label>
@@ -243,19 +243,17 @@ const Password: React.FC<PasswordProps> = ({
       </div>
 
       <div
-        className={`${
-          !err &&
+        className={`${!err &&
           "relative inline-block before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:bg-primary before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full"
-        }`}
+          }`}
       >
         <input
-          className={`${className} py-1 border-b outline-none w-full pr-10 ${
-            err
-              ? "border-defaultRed text-defaultRed placeholder-defaultRed"
-              : focus
+          className={`${className} py-1 border-b outline-none w-full pr-10 ${err
+            ? "border-defaultRed text-defaultRed placeholder-defaultRed"
+            : focus
               ? "border-primary"
               : "border-lightSilver"
-          }`}
+            }`}
           type={type}
           value={password}
           onChange={handlePasswordChange}
@@ -263,63 +261,59 @@ const Password: React.FC<PasswordProps> = ({
             novalidate
               ? validateNull
               : onBlur
-              ? onBlur
-              : validate
-              ? validateInput
-              : validate
-              ? focusHandler
-              : undefined
+                ? onBlur
+                : validate
+                  ? validateInput
+                  : validate
+                    ? focusHandler
+                    : undefined
           }
           onFocus={handleFocus}
           disabled={disabled}
           {...props}
         />
       </div>
-      {type === "password" ? (
+      {!hideIcon &&(
+        type === "password" ? (
         <span
-          className={`absolute ${
-            !label ? "top-2" : "top-6"
-          } right-1 text-md sm:text-lg ${
-            err ? "text-defaultRed" : "text-darkCharcoal"
-          }`}
+          className={`absolute ${!label ? "top-2" : "top-6"
+            } right-1 text-md sm:text-lg ${err ? "text-defaultRed" : "text-darkCharcoal"
+            }`}
           onClick={() => setType("text")}
         >
           <EyeClose />
         </span>
       ) : (
         <span
-          className={`absolute ${
-            !label ? "top-2" : "top-6"
-          } right-[7px] text-md sm:text-lg ${
-            err ? "text-defaultRed" : "text-darkCharcoal"
-          }`}
+          className={`absolute ${!label ? "top-2" : "top-6"
+            } right-[7px] text-md sm:text-lg ${err ? "text-defaultRed" : "text-darkCharcoal"
+            }`}
           onClick={() => setType("password")}
         >
           <EyeOpen />
         </span>
-      )}
+      ))}
 
       <div className="flex flex-col justify-center w-full">
         {!novalidate && password && (
           <div className="mt-2 flex items-center">
             <div className="relative w-[150px] sm:w-[180px] h-[5px] rounded-lg bg-[#979797]">
               <span
-                className={`absolute rounded-l-lg h-[5px] ${
-                  data.match(/[A-Z]/) &&
+                className={`absolute rounded-l-lg h-[5px] ${data.match(/[A-Z]/) &&
                   data.match(/[a-z]/) &&
                   data.match(/[0-9]/) &&
                   !data.match(/\s/) &&
                   data.length >= minChar &&
                   data.length <= maxChar
-                    ? "bg-successColor w-[150px] sm:w-[180px] rounded-lg"
-                    : data.match(/[A-Z]/) &&
-                      data.match(/[a-z]/) &&
-                      data.match(/[0-9]/)
+                  ? "bg-successColor w-[150px] sm:w-[180px] rounded-lg"
+                  : data.match(/[A-Z]/) &&
+                    data.match(/[a-z]/) &&
+                    data.match(/[0-9]/)
                     ? "bg-[#FFBF00] sm:w-[100px]"
                     : password.length >= 3 && data.match(/[a-z]/)
-                    ? "bg-defaultRed sm:w-[45px]"
-                    : "bg-[#979797]"
-                }`}
+                      ? "bg-defaultRed sm:w-[45px]"
+                      : "bg-[#979797]"
+                  }`}
               ></span>
             </div>
             <span className="ml-4 text-xs sm:text-sm">

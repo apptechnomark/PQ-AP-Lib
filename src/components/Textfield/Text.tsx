@@ -51,7 +51,7 @@ const Text: React.FC<InputProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [err, setErr] = useState<boolean>(false);
   const [focus, setFocus] = useState<boolean>(false);
-  const [errMsg, setErrMsg] = useState<string>(errorMessage);
+  const [errMsg, setErrMsg] = useState<string>('');
 
   useEffect(() => {
     setFocus(hasError);

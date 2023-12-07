@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import ChevronRight from "./icons/ChevronRight";
 import SortIcon from "./icons/SortIcon";
@@ -75,7 +76,7 @@ const DataTable = ({
     // } else {
     //   newExpandedRows.add(rowIndex);
     // }
-    
+
     if (newExpandedRows.has(rowIndex)) {
       newExpandedRows.delete(rowIndex);
     } else {
@@ -156,9 +157,13 @@ const DataTable = ({
     };
     document.addEventListener("click", handleOutsideClick);
     return () => {
-        document.removeEventListener("click", handleOutsideClick);
+      document.removeEventListener("click", handleOutsideClick);
     };
-}, []);
+  }, []);
+
+  const handleGetIdHover = (rowIndex: any) => {
+    getExpandableData(data[rowIndex]);
+  };
 
   return (
     <div className={`h-full`}>
@@ -208,7 +213,9 @@ const DataTable = ({
         <tbody>
           {sortedData?.map((row, rowIndex) => (
             <React.Fragment key={rowIndex}>
-              <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""}`}>
+              <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""}`}
+                onMouseEnter={() => handleGetIdHover(rowIndex)}
+              >
                 {expandable &&
                   (row.details ? (
                     <td

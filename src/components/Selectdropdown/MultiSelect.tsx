@@ -26,7 +26,8 @@ interface MultiSelectProps {
   errorClass?: string;
   validate?: boolean;
   placeholder?: any;
-  noborder?: boolean
+  noborder?: boolean;
+  hideIcon?:boolean;
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -49,6 +50,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   errorClass,
   validate,
   placeholder,
+  hideIcon,
   noborder
 }) => {
   const selectRef = useRef<HTMLDivElement>(null);
@@ -234,12 +236,13 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
               }`} style={{ background: "transparent" }}
             onKeyDown={(e) => handleKeyDown(e)}
           />
+          {!hideIcon &&
           <div
             onClick={handleToggleOpen}
             className={`${error&&" text-defaultRed"} text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer  ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"}
               }`}>
             <ChevronDown />
-          </div>
+          </div>}
         </div>
 
         <ul

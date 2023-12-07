@@ -25,6 +25,7 @@ interface DatepickerProps {
     validate?: boolean;
     disabled?: boolean;
     format?: "dd/mm/yyyy" | "mm/dd/yyyy";
+    hideIcon?: boolean;
 }
 
 const Datepicker: React.FC<DatepickerProps> = ({
@@ -37,6 +38,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
     hasError,
     errorMessage = "This is required field!",
     format = "dd/mm/yyyy",
+    hideIcon,
     getValue,
     getError,
     ...props }) => {
@@ -283,9 +285,10 @@ const Datepicker: React.FC<DatepickerProps> = ({
                     onBlur={handleInputBlur}
                     onFocus={handleFocus}
                 />
-                <span className={`absolute right-1 bottom-1 cursor-pointer`} onClick={calendarShow}>
-                    <CalendarIcon bgColor={err ? "#DC3545" : focus ? "#02B89D" : "#333333"} />
-                </span>
+                {!hideIcon &&
+                    <span className={`absolute right-1 bottom-1 cursor-pointer`} onClick={calendarShow}>
+                        <CalendarIcon bgColor={err ? "#DC3545" : focus ? "#02B89D" : "#333333"} />
+                    </span>}
             </div>
             {toggleOpen && (
                 <div className="relative">

@@ -19,6 +19,7 @@ interface DatepickerProps {
     getError: (arg1: boolean) => void;
     validate?: boolean;
     disabled?: boolean;
+    hideIcon?: boolean;
 }
 const DatepickerYear: React.FC<DatepickerProps> = ({
     value,
@@ -31,6 +32,7 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
     errorMessage = "This is required field!",
     getValue,
     getError,
+    hideIcon,
     ...props }) => {
     const currentDate: Date = new Date();
     const inputRef = useRef(null);
@@ -238,9 +240,10 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
                     onBlur={handleInputBlur}
                     onFocus={handleFocus}
                 />
-                <span className={`absolute right-1 bottom-1 cursor-pointer`} onClick={calendarShow}>
-                    <CalendarIcon bgColor={err ? "#DC3545" : focus ? "#02B89D" : "#333333"} />
-                </span>
+                {!hideIcon &&
+                    <span className={`absolute right-1 bottom-1 cursor-pointer`} onClick={calendarShow}>
+                        <CalendarIcon bgColor={err ? "#DC3545" : focus ? "#02B89D" : "#333333"} />
+                    </span>}
             </div>
 
             {toggleOpen && (

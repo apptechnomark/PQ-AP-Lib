@@ -28,6 +28,7 @@ interface MultiSelectChipProps {
   errorClass?: string;
   validate?: boolean;
   placeholder?: any;
+  hideIcon?: boolean;
 }
 
 const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
@@ -51,6 +52,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
   errorClass,
   validate,
   placeholder,
+  hideIcon
 }) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -286,14 +288,14 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               onKeyDown={(e) => handleKeyDown(e)}
             />
           </div>
-
-          <div
-            onClick={handleToggleOpen}
-            className={`${error && " text-defaultRed"} absolute right-0 text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer ${isOpen ? "rotate-180 text-primary duration-400" : " duration-200"
-              }`}
-          >
-            <ChevronDown />
-          </div>
+          {!hideIcon &&
+            <div
+              onClick={handleToggleOpen}
+              className={`${error && " text-defaultRed"} absolute right-0 text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer ${isOpen ? "rotate-180 text-primary duration-400" : " duration-200"
+                }`}
+            >
+              <ChevronDown />
+            </div>}
         </div>
 
         <ul

@@ -22,10 +22,11 @@ interface CompanyListProps {
     noborder?: boolean;
     showAvatar?: number;
     disabled?: boolean;
-    type?:"avatar"|"text";
+    type?: "avatar" | "text";
     checkbox?: boolean;
-    variant?: "user"|"company";
-    values?: any;
+    variant?: "user" | "company";
+    values?: string[];
+    hideIcon?: boolean;
 }
 const CompanyList: React.FC<CompanyListProps> = ({
     id,
@@ -45,12 +46,13 @@ const CompanyList: React.FC<CompanyListProps> = ({
     showAvatar = 3,
     disabled,
     variant = "company",
-    type="avatar",
+    type = "avatar",
     checkbox = true,
+    hideIcon,
     ...props
 }) => {
     const selectRef = useRef<HTMLDivElement>(null);
-    const [selectedValues, setSelectedValues] = useState<string[]>([]);
+    const [selectedValues, setSelectedValues] = useState<string[]>(values && values.length > 0 ? values : []);
     const [inputValue, setInputValue] = useState<string>("");
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [focusedIndex, setFocusedIndex] = useState<number>(-1);
@@ -81,11 +83,13 @@ const CompanyList: React.FC<CompanyListProps> = ({
     };
 
     useEffect(() => {
-        if (values && values.length > 0) {
+        if (values?.length > 0) {
             setSelectedValues(values);
+        } else {
+            setSelectedValues([]);
         }
     }, [values]);
-    
+
     const handleSelect = (value: string) => {
         const updatedValues = [...selectedValues];
         const index = updatedValues.indexOf(value);
@@ -124,6 +128,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
     const updatedAvatars = selectedValues.map((value, index) => {
         const option = options.find((item) => item.value == value);
         return (
+
             <Avatar
                 key={index}
                 name={option ? option.label : ''}
@@ -215,16 +220,16 @@ const CompanyList: React.FC<CompanyListProps> = ({
                 )}
                 <div
                     className={`flex items-center transition-height duration-200 ease-out cursor-pointer ${disabled && "pointer-events-none"
-                        } ${selectedValues.length > 0 &&type=="avatar" ? "h-[42px]" : "h-[25px]"}`}
+                        } ${selectedValues.length > 0 && type == "avatar" ? "h-[42px]" : "h-[25px]"}`}
                     onClick={handleToggleOpen}
                 >
                     {selectedValues.length > 0 ? (
                         <>
-                        {type=="avatar"&&<AvatarGroup variant="small" show={showAvatar}>
-                            {updatedAvatars}
-                        </AvatarGroup>}
-                        {type=="text"&&<Typography type="h6">  {selectedValues.length > 0
-                        && `${selectedValues.length} selected.`} </Typography>}
+                            {type == "avatar" && <AvatarGroup variant="small" show={showAvatar}>
+                                {updatedAvatars}
+                            </AvatarGroup>}
+                            {type == "text" && <Typography type="h6">  {selectedValues.length > 0
+                                && `${selectedValues.length} selected.`} </Typography>}
                         </>
                     ) : (
                         <Typography
@@ -232,21 +237,22 @@ const CompanyList: React.FC<CompanyListProps> = ({
                             className={`!font-normal dark:text-pureWhite ${err && "text-defaultRed"} ${disabled && "text-slatyGrey dark:text-pureWhite"
                                 } select-none`}
                         >
-                            {isOpen ? "" :defaultValue?defaultValue: "Please Select"}
+                            {isOpen ? "" : defaultValue ? defaultValue : "Please Select"}
                         </Typography>
                     )}
-                    <div
-                        onClick={handleToggleOpen}
-                        className={`ml-1 text-[1.5rem]  absolute right-0 transition-transform ${err
-                            ? "text-defaultRed"
-                            : disabled
-                                ? "text-slatyGrey"
-                                : "text-darkCharcoal dark:text-pureWhite"
-                            }  cursor-pointer   ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
-                            }}`}
-                    >
-                        <ChevronDown />
-                    </div>
+                    {!hideIcon &&
+                        <div
+                            onClick={handleToggleOpen}
+                            className={`ml-1 text-[1.5rem]  absolute right-0 transition-transform ${err
+                                ? "text-defaultRed"
+                                : disabled
+                                    ? "text-slatyGrey"
+                                    : "text-darkCharcoal dark:text-pureWhite"
+                                }  cursor-pointer   ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
+                                }}`}
+                        >
+                            <ChevronDown />
+                        </div>}
                 </div>
                 <div>
                     <ul
