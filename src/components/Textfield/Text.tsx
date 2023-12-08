@@ -18,10 +18,11 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   maxChar?: number;
   errorMessage?: string;
   noNumeric?: boolean;
-  noborder?:boolean;
+  noborder?: boolean;
   noSpecialChar?: boolean;
   noText?: boolean;
   noSpecialCharRegex?: any;
+  rangeBetween?: number[];
 }
 
 const Text: React.FC<InputProps> = ({
@@ -45,13 +46,14 @@ const Text: React.FC<InputProps> = ({
   noborder,
   noSpecialChar,
   noSpecialCharRegex,
-  errorMessage = "This is a required field!",
+  errorMessage = 'This is a required field!',
+  rangeBetween,
   ...props
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [err, setErr] = useState<boolean>(false);
   const [focus, setFocus] = useState<boolean>(false);
-  const [errMsg, setErrMsg] = useState<string>('');
+  const [errMsg, setErrMsg] = useState<string>(errorMessage);
 
   useEffect(() => {
     setFocus(hasError);
@@ -64,10 +66,16 @@ const Text: React.FC<InputProps> = ({
     if (disabled) {
       return;
     }
-    if (inputValue === "") {
+    if (inputValue.length === 0) {
       setErr(true);
       getError(false);
       setErrMsg("This is a required field!");
+    } else if (rangeBetween) {
+      if (parseInt(inputValue) < rangeBetween[0] || parseInt(inputValue) > rangeBetween[1]) {
+        setErr(true);
+        getError(false);
+        setErrMsg(`Value should be between ${rangeBetween[0]}-${rangeBetween[1]} digit `);
+      }
     } else if (minChar && inputValue.length < minChar) {
       setErr(true);
       getError(false);
@@ -125,13 +133,12 @@ const Text: React.FC<InputProps> = ({
       {label && (
         <span className="flex">
           <label
-            className={`${
-              err
-                ? "text-defaultRed"
-                : focus
+            className={`${err
+              ? "text-defaultRed"
+              : focus
                 ? "text-primary"
                 : "text-slatyGrey"
-            }`}
+              }`}
           >
             {label}
           </label>
@@ -146,25 +153,21 @@ const Text: React.FC<InputProps> = ({
       )}
 
       <div
-        className={`${
-          !err
-            ? `flex w-full relative before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px ${noborder ? '' : 'before:bg-primary'}  before:transition-width before:duration-[800ms] before:ease-in ${
-                !disabled && "hover:before:w-full"
-              }`
-            : "w-full"
-        }`}
+        className={`${!err
+          ? `flex w-full relative before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px ${noborder ? '' : 'before:bg-primary'}  before:transition-width before:duration-[800ms] before:ease-in ${!disabled && "hover:before:w-full"
+          }`
+          : "w-full"
+          }`}
       >
         <input
           type="text"
-          className={`${className} placeholder:text-[14px] text-[14px] ${err&&"text-defaultRed placeholder:text-defaultRed "} py-1 ${noborder ? '' : 'border-b'} outline-none transition duration-600 w-full h-full ${
-            disabled ? "text-slatyGrey" : "text-darkCharcoal"
-          } ${
-            err
+          className={`${className} placeholder:text-[14px] text-[14px] ${err && "text-defaultRed placeholder:text-defaultRed "} py-1 ${noborder ? '' : 'border-b'} outline-none transition duration-600 w-full h-full ${disabled ? "text-slatyGrey" : "text-darkCharcoal"
+            } ${err
               ? "border-b-defaultRed"
               : focus
-              ? "border-b-primary"
-              : "border-b-lightSilver"
-          }`}
+                ? "border-b-primary"
+                : "border-b-lightSilver"
+            }`}
           ref={inputRef}
           id={id}
           name={name}
@@ -174,10 +177,10 @@ const Text: React.FC<InputProps> = ({
             onBlur
               ? onBlur
               : validate
-              ? validateInput
-              : !validate
-              ? focusHandler
-              : undefined
+                ? validateInput
+                : !validate
+                  ? focusHandler
+                  : undefined
           }
           onChange={handleInputChange}
           onFocus={handleFocus}
