@@ -32,7 +32,8 @@ interface DataTableProps {
   data: any[];
   align?: "left" | "center" | "right";
   expandable?: boolean;
-  getExpandableData: (arg1: any) => void;
+  getExpandableData?: (arg1: any) => void;
+  getRowId?:(arg1:any) => void;
   isExpanded?: boolean;
   expandableStyle?: ExpandableStyle;
   sticky?: boolean;
@@ -49,6 +50,7 @@ const DataTable = ({
   isExpanded = false,
   expandableStyle,
   getExpandableData,
+  getRowId,
   sticky,
   hoverEffect,
   noHeader
@@ -162,6 +164,10 @@ const DataTable = ({
   }, []);
 
   const handleGetIdHover = (rowIndex: any) => {
+    getRowId(data[rowIndex]);
+  };
+
+  const handleGetIdClick = (rowIndex: any) => {
     getExpandableData(data[rowIndex]);
   };
 
@@ -214,7 +220,8 @@ const DataTable = ({
           {sortedData?.map((row, rowIndex) => (
             <React.Fragment key={rowIndex}>
               <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""}`}
-                onMouseEnter={() => handleGetIdHover(rowIndex)}
+                onMouseEnter={getRowId ? () => handleGetIdHover(rowIndex) : undefined}
+                onClick={!getRowId && getExpandableData ? () => handleGetIdClick(rowIndex) : undefined}
               >
                 {expandable &&
                   (row.details ? (
