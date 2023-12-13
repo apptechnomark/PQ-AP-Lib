@@ -192,7 +192,7 @@ const DataTable = ({
                 {expandable &&
                   (row.details ? (
                     <td
-                      className={`${expandableStyle?.rows} text-[14px] font-proxima h-12 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"}  border-[#ccc] cursor-pointer`}
+                      className={`${expandableStyle?.rows}  text-[14px] font-proxima h-12 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"}  border-[#ccc] cursor-pointer`}
                       onClick={() => handleRowToggle(rowIndex)}
                     >
                       <div className={`flex justify-center items-center transition-transform ${expandedRows.has(rowIndex) || isExpanded ? "rotate-90 duration-300" : "duration-200"}`}>
@@ -221,7 +221,7 @@ const DataTable = ({
               </tr>
               {(expandedRows.has(rowIndex) || isExpanded) && (
                 <tr>
-                  <td className="text-[14px] font-proxima" colSpan={columns.length + 1}>
+                  <td className="text-[14px] font-semibold font-proxima" colSpan={columns.length + 1}>
                     {row.details ? (
                       row.details
                     ) : (
