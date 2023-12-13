@@ -34,6 +34,7 @@
         width: 226px;
         height: 24px;
     }
+    
 }
 
 .customScrollbar {
@@ -49,7 +50,7 @@
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-        background: #EEE;
+        background: #eee;
         border-radius: 10px;
         height: 20px;
     }

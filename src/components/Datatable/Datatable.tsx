@@ -1,5 +1,4 @@
-
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import ChevronRight from "./icons/ChevronRight";
 import SortIcon from "./icons/SortIcon";
 import styles from "./Datatable.module.scss";
@@ -32,13 +31,13 @@ interface DataTableProps {
   data: any[];
   align?: "left" | "center" | "right";
   expandable?: boolean;
-  getExpandableData?: (arg1: any) => void;
-  getRowId?:(arg1:any) => void;
+  getExpandableData: (arg1: any) => void;
   isExpanded?: boolean;
   expandableStyle?: ExpandableStyle;
   sticky?: boolean;
   hoverEffect?: boolean;
   noHeader?: boolean;
+  userClass?: string;
 }
 
 const DataTable = ({
@@ -50,10 +49,10 @@ const DataTable = ({
   isExpanded = false,
   expandableStyle,
   getExpandableData,
-  getRowId,
   sticky,
   hoverEffect,
-  noHeader
+  noHeader,
+  userClass
 }: DataTableProps) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "" });
@@ -73,16 +72,9 @@ const DataTable = ({
     const isRowExpanded = expandedRows.has(rowIndex);
     const newExpandedRows = new Set(expandedRows);
 
-    // if (isRowExpanded) {
-    //   newExpandedRows.delete(rowIndex);
-    // } else {
-    //   newExpandedRows.add(rowIndex);
-    // }
-
-    if (newExpandedRows.has(rowIndex)) {
+    if (isRowExpanded) {
       newExpandedRows.delete(rowIndex);
     } else {
-      newExpandedRows.clear();
       newExpandedRows.add(rowIndex);
     }
 
@@ -148,35 +140,12 @@ const DataTable = ({
     }
   };
 
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (
-        tableRef.current &&
-        !tableRef.current.contains(event.target as Node)
-      ) {
-        setExpandedRows(new Set());
-      }
-    };
-    document.addEventListener("click", handleOutsideClick);
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, []);
-
-  const handleGetIdHover = (rowIndex: any) => {
-    getRowId(data[rowIndex]);
-  };
-
-  const handleGetIdClick = (rowIndex: any) => {
-    getExpandableData(data[rowIndex]);
-  };
-
   return (
     <div className={`h-full`}>
-      <table ref={tableRef} className="w-full">
+      <table className="w-full">
         <thead className={`${sticky && styles.customDataTable} `}>
           <tr
-            className={`w-full z-[5] top-0 ${sticky ? `${stickyPostion} sticky bg-pureWhite ` : "static border-y border-pureBlack"
+            className={`w-full  z-[5] top-0 ${sticky ? `${userClass ? `${userClass}` : `${stickyPostion} sticky`}  bg-pureWhite` : "static border-y border-pureBlack"
               } ${noHeader ? "hidden " : ""}`}
           >
             {expandable && (
@@ -219,10 +188,7 @@ const DataTable = ({
         <tbody>
           {sortedData?.map((row, rowIndex) => (
             <React.Fragment key={rowIndex}>
-              <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""}`}
-                onMouseEnter={getRowId ? () => handleGetIdHover(rowIndex) : undefined}
-                onClick={!getRowId && getExpandableData ? () => handleGetIdClick(rowIndex) : undefined}
-              >
+              <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""}`}>
                 {expandable &&
                   (row.details ? (
                     <td

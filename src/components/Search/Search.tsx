@@ -6,6 +6,7 @@ import { Text } from "../Textfield/Text";
 import CrossIcon from "./icons/CrossIcon";
 import SearchIcon from "./icons/Search.js";
 import styles from "./search.module.scss";
+import { Tooltip } from "../Tooltip/Tooltip";
 
 interface SearchProps {
   variant?: 'rounded' | 'dropdown' | 'animated' | 'inputsearch';
@@ -177,9 +178,6 @@ function SearchBar({ variant, options, type, Data, getValue, number }: SearchPro
     openDropdownOnClick()
   }
 
-
-
-
   return (
 
     <div>
@@ -267,8 +265,7 @@ function SearchBar({ variant, options, type, Data, getValue, number }: SearchPro
         </>
 
       ) : variant === "animated" ? (
-
-        <form className={styles.search}>
+        <form className={`${styles.search} h-[40px]`}>
           <input
             type="text"
             id="search"
@@ -276,35 +273,38 @@ function SearchBar({ variant, options, type, Data, getValue, number }: SearchPro
             value={searchTerm}
             onChange={handleInputChange}
           />
-          <button
-            type="button"
-            className={styles.search__button}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <mask
-                id="mask0_8148_121547"
-                maskUnits="userSpaceOnUse"
-                x="0"
-                y="0"
-                width="24"
-                height="24"
+          <Tooltip content="search" position="bottom" >
+            <div className={styles.search__button}>
+              <button
+                type="button"
               >
-                <rect width="24" height="24" fill="#D9D9D9" />
-              </mask>
-              <g mask="url(#mask0_8148_121547)">
-                <path
-                  d="M10.0726 15.1424C8.6561 15.1424 7.45654 14.6512 6.47393 13.6689C5.49131 12.6865 5 11.4873 5 10.0712C5 8.65508 5.49131 7.45585 6.47393 6.4735C7.45654 5.49117 8.6561 5 10.0726 5C11.4891 5 12.6887 5.49117 13.6713 6.4735C14.6539 7.45585 15.1452 8.65508 15.1452 10.0712C15.1452 10.6634 15.0458 11.2289 14.8469 11.768C14.648 12.307 14.3827 12.7758 14.0509 13.1745L18.8237 17.9459C18.9385 18.0607 18.9973 18.2051 18.9999 18.3789C19.0026 18.5527 18.9438 18.6997 18.8237 18.8198C18.7035 18.9399 18.5578 19 18.3866 19C18.2154 19 18.0697 18.9399 17.9495 18.8198L13.1768 14.0484C12.762 14.3907 12.2851 14.6586 11.7459 14.8521C11.2068 15.0456 10.649 15.1424 10.0726 15.1424ZM10.0726 13.8985C11.1414 13.8985 12.0466 13.5278 12.7884 12.7862C13.5301 12.0447 13.901 11.1397 13.901 10.0712C13.901 9.00272 13.5301 8.09771 12.7884 7.35616C12.0466 6.61462 11.1414 6.24384 10.0726 6.24384C9.00383 6.24384 8.09857 6.61462 7.35682 7.35616C6.61508 8.09771 6.24421 9.00272 6.24421 10.0712C6.24421 11.1397 6.61508 12.0447 7.35682 12.7862C8.09857 13.5278 9.00383 13.8985 10.0726 13.8985Z"
-                  fill="#6E6D7A"
-                />
-              </g>
-            </svg>
-          </button>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <mask
+                    id="mask0_8148_121547"
+                    maskUnits="userSpaceOnUse"
+                    x="0"
+                    y="0"
+                    width="24"
+                    height="24"
+                  >
+                    <rect width="24" height="24" fill="#D9D9D9" />
+                  </mask>
+                  <g mask="url(#mask0_8148_121547)">
+                    <path
+                      d="M10.0726 15.1424C8.6561 15.1424 7.45654 14.6512 6.47393 13.6689C5.49131 12.6865 5 11.4873 5 10.0712C5 8.65508 5.49131 7.45585 6.47393 6.4735C7.45654 5.49117 8.6561 5 10.0726 5C11.4891 5 12.6887 5.49117 13.6713 6.4735C14.6539 7.45585 15.1452 8.65508 15.1452 10.0712C15.1452 10.6634 15.0458 11.2289 14.8469 11.768C14.648 12.307 14.3827 12.7758 14.0509 13.1745L18.8237 17.9459C18.9385 18.0607 18.9973 18.2051 18.9999 18.3789C19.0026 18.5527 18.9438 18.6997 18.8237 18.8198C18.7035 18.9399 18.5578 19 18.3866 19C18.2154 19 18.0697 18.9399 17.9495 18.8198L13.1768 14.0484C12.762 14.3907 12.2851 14.6586 11.7459 14.8521C11.2068 15.0456 10.649 15.1424 10.0726 15.1424ZM10.0726 13.8985C11.1414 13.8985 12.0466 13.5278 12.7884 12.7862C13.5301 12.0447 13.901 11.1397 13.901 10.0712C13.901 9.00272 13.5301 8.09771 12.7884 7.35616C12.0466 6.61462 11.1414 6.24384 10.0726 6.24384C9.00383 6.24384 8.09857 6.61462 7.35682 7.35616C6.61508 8.09771 6.24421 9.00272 6.24421 10.0712C6.24421 11.1397 6.61508 12.0447 7.35682 12.7862C8.09857 13.5278 9.00383 13.8985 10.0726 13.8985Z"
+                      fill="#6E6D7A"
+                    />
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </Tooltip>
         </form>
 
       ) : variant === "inputsearch" ? (<>

@@ -75,17 +75,15 @@
 
   &.fromMiddle:before,
   &.fromMiddle:after {
-    z-index: 9999;
     transition-delay: 150ms;
     transition: 400ms ease-in-out;
   }
 
   &.fromMiddle span {
-    background-color: #02B89D;
+    background-color: #02b89d;
     display: inline-block;
     position: absolute;
     border-radius: 100%;
-    z-index: -9999;
     transform: scale(0.01);
     opacity: 0.6;
     transition: 350ms ease-in-out;
@@ -94,7 +92,7 @@
   &.fromMiddle:hover:before,
   &.fromMiddle:hover:after {
     position: absolute;
-    background-color: #02B89D;
+    background-color: #02b89d;
   }
 
   &.fromMiddle:hover span {
