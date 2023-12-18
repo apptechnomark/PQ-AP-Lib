@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ChevronRight from "./icons/ChevronRight";
 import SortIcon from "./icons/SortIcon";
 import styles from "./Datatable.module.scss";
@@ -32,6 +32,7 @@ interface DataTableProps {
   align?: "left" | "center" | "right";
   expandable?: boolean;
   getExpandableData: (arg1: any) => void;
+  getRowId?: (arg1: any) => void;
   isExpanded?: boolean;
   expandableStyle?: ExpandableStyle;
   sticky?: boolean;
@@ -49,6 +50,7 @@ const DataTable = ({
   isExpanded = false,
   expandableStyle,
   getExpandableData,
+  getRowId,
   sticky,
   hoverEffect,
   noHeader,
@@ -123,6 +125,14 @@ const DataTable = ({
     return sorted;
   }, [data, sortConfig]);
 
+  const handleGetIdHover = (rowIndex: any) => {
+    getRowId(data[rowIndex]);
+  };
+
+  const handleGetIdClick = (rowIndex: any) => {
+    getExpandableData(data[rowIndex]);
+  };
+
   const getAlignment = (align: string) => {
     switch (align) {
       case "left":
@@ -188,26 +198,29 @@ const DataTable = ({
         <tbody>
           {sortedData?.map((row, rowIndex) => (
             <React.Fragment key={rowIndex}>
-              <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""}`}>
+              <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""}`}
+                onMouseEnter={getRowId ? () => handleGetIdHover(rowIndex) : undefined}
+                onClick={!getRowId && getExpandableData ? () => handleGetIdClick(rowIndex) : undefined}
+              >
                 {expandable &&
                   (row.details ? (
                     <td
-                      className={`${expandableStyle?.rows}  text-[14px] font-proxima h-12 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"}  border-[#ccc] cursor-pointer`}
+                      className={`${expandableStyle?.rows}  text-[14px] font-proxima h-12 ${expandedRows.has(rowIndex) && isExpanded ? "border-none" : "border-b"}  border-[#ccc] cursor-pointer`}
                       onClick={() => handleRowToggle(rowIndex)}
                     >
-                      <div className={`flex justify-center items-center transition-transform ${expandedRows.has(rowIndex) || isExpanded ? "rotate-90 duration-300" : "duration-200"}`}>
+                      <div className={`flex justify-center items-center transition-transform ${expandedRows.has(rowIndex) && isExpanded ? "rotate-90 duration-300" : "duration-200"}`}>
                         <ChevronRight />
                       </div>
                     </td>
                   ) : (
                     <td
-                      className={`w-8 ${expandableStyle?.rows} h-12 text-[14px] pl-2 font-proxima ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} ${noHeader && "border-t"} border-[#ccc] cursor-pointer`}
+                      className={`w-8 ${expandableStyle?.rows} h-12 text-[14px] pl-2 font-proxima ${(expandedRows.has(rowIndex) && isExpanded) ? "border-none" : "border-b"} ${noHeader && "border-t"} border-[#ccc] cursor-pointer`}
                     ></td>
                   ))}
                 {columns?.map((column, colIndex) => (
                   <td
                     key={colIndex}
-                    className={` ${row?.style} ${noHeader && column.colStyle} ${column.rowStyle} h-12 text-[14px] font-proxima py-2 px-1 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
+                    className={` ${row?.style} ${noHeader && column.colStyle} ${column.rowStyle} h-12 text-[14px] font-proxima py-2 px-1 ${expandedRows.has(rowIndex) && isExpanded ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
                   >
                     <span
                       className={`flex py-2 px-1 text-[14px] font-proxima items-center justify-${getAlignment(
@@ -219,7 +232,7 @@ const DataTable = ({
                   </td>
                 ))}
               </tr>
-              {(expandedRows.has(rowIndex) || isExpanded) && (
+              {(expandedRows.has(rowIndex) && isExpanded) && (
                 <tr>
                   <td className="text-[14px] font-semibold font-proxima" colSpan={columns.length + 1}>
                     {row.details ? (
