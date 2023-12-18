@@ -11,6 +11,7 @@ interface PasswordProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   validate?: boolean;
   novalidate?: boolean;
+  direction?: "top" | "bottom" | "left" | "right";
   errorMessage?: string;
   disabled?: boolean;
   getValue: (arg1: string) => void;
@@ -36,6 +37,7 @@ const Password: React.FC<PasswordProps> = ({
   minChar = 8,
   maxChar = 20,
   hideIcon,
+  direction,
   ...props
 }) => {
   const [password, setPassword] = useState("");
@@ -209,15 +211,24 @@ const Password: React.FC<PasswordProps> = ({
         {!novalidate && open && (
           <>
             <div
-              className={`absolute bottom-[30px] z-10 left-0 bg-pureWhite shadow-2xl py-4 pl-2 pr-4 text-[16px] sm-text-[14px] w-fit`}
+              className={`absolute 
+              z-10 left-0 bg-pureWhite shadow-2xl py-4 pl-2 pr-4 text-[16px] sm-text-[14px] w-fit
+              ${direction === "top" && "bottom-[30px]"} 
+              ${direction === "bottom" && "top-[70px]"}
+              ${direction === "right" && "left-[150px] top-[70px]"}
+              ${direction === "left" && "right-[0px] top-[70px]"
+                } `}
             >
               <ul className="requirement-list">{validatePassword()}</ul>
             </div>
             <span
-              className={`w-2 h-2 bg-pureWhite z-10 absolute bottom-[26px] left-[20px] rotate-[45deg]`}
+              className={`w-2 h-2 bg-pureWhite z-10 absolute left-[20px] rotate-[45deg]
+              ${direction === "top" && "bottom-[26px]"
+                } `}
             ></span>
           </>
         )}
+
 
         {label && (
           <span className="flex">
@@ -273,26 +284,26 @@ const Password: React.FC<PasswordProps> = ({
           {...props}
         />
       </div>
-      {!hideIcon &&(
+      {!hideIcon && (
         type === "password" ? (
-        <span
-          className={`absolute ${!label ? "top-2" : "top-6"
-            } right-1 text-md sm:text-lg ${err ? "text-defaultRed" : "text-darkCharcoal"
-            }`}
-          onClick={() => setType("text")}
-        >
-          <EyeClose />
-        </span>
-      ) : (
-        <span
-          className={`absolute ${!label ? "top-2" : "top-6"
-            } right-[7px] text-md sm:text-lg ${err ? "text-defaultRed" : "text-darkCharcoal"
-            }`}
-          onClick={() => setType("password")}
-        >
-          <EyeOpen />
-        </span>
-      ))}
+          <span
+            className={`absolute ${!label ? "top-2" : "top-6"
+              } right-1 text-md sm:text-lg ${err ? "text-defaultRed" : "text-darkCharcoal"
+              }`}
+            onClick={() => setType("text")}
+          >
+            <EyeClose />
+          </span>
+        ) : (
+          <span
+            className={`absolute ${!label ? "top-2" : "top-6"
+              } right-[7px] text-md sm:text-lg ${err ? "text-defaultRed" : "text-darkCharcoal"
+              }`}
+            onClick={() => setType("password")}
+          >
+            <EyeOpen />
+          </span>
+        ))}
 
       <div className="flex flex-col justify-center w-full">
         {!novalidate && password && (
