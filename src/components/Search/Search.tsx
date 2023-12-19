@@ -311,12 +311,14 @@ function SearchBar({ variant, options, type, Data, getValue, number }: SearchPro
         </>
 
       ) : variant === "animated" ? (
-        <form className={`search h-[40px]`} >
+        <form className={`search h-[40px]`} autoComplete="off" >
           {/* <div className={`${isAnimated ? styles.search__active : `${styles.search__shrink}`} flex`}> */}
           <div className='flex search_custom'>
             <input
               type="text"
               id="search"
+              name={`field-${Math.random()}`}
+              autoComplete="false"
               className={`inputSearch ${isAnimated ? 'active' : ''}`}
               value={searchTerm}
               onChange={handleInputChange}
