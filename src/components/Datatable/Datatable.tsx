@@ -39,6 +39,7 @@ interface DataTableProps {
   hoverEffect?: boolean;
   noHeader?: boolean;
   userClass?: string;
+  tableHeight?: string;
 }
 
 const DataTable = ({
@@ -54,7 +55,8 @@ const DataTable = ({
   sticky,
   hoverEffect,
   noHeader,
-  userClass
+  userClass,
+  tableHeight
 }: DataTableProps) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "" });
@@ -151,19 +153,18 @@ const DataTable = ({
   };
 
   return (
-    <div className={`h-full`}>
+    <div className={`${tableHeight ? tableHeight : ''} overflow-auto`}>
       <table className="w-full">
         <thead className={`${sticky && styles.customDataTable} `}>
           <tr
-            className={`w-full  z-[5] top-0 ${sticky ? `${userClass ? `${userClass}` : `${stickyPostion} sticky`}  bg-pureWhite` : "static border-y border-pureBlack"
-              } ${noHeader ? "hidden " : ""}`}
+            className={`w-full  ${noHeader ? "hidden " : ""}`}
           >
             {expandable && (
               <th className={`w-8 ${expandableStyle?.columns}`}></th>
             )}
             {columns?.map((column, colIndex) => (
               <th
-                className={`${column.colStyle} p-2 font-proxima h-12 text-sm font-bold whitespace-nowrap ${column.sortable ? "cursor-pointer" : "cursor-default"
+                className={`${column.colStyle} bg-pureWhite sticky top-0 p-2 font-proxima h-12 text-sm font-bold whitespace-nowrap ${column.sortable ? "cursor-pointer" : "cursor-default"
                   }`}
                 key={colIndex}
                 onClick={() => column.sortable && handleSort(column.accessor)}
@@ -223,7 +224,7 @@ const DataTable = ({
                     className={` ${row?.style} ${noHeader && column.colStyle} ${column.rowStyle} h-12 text-[14px] font-proxima py-2 px-1 ${expandedRows.has(rowIndex) && isExpanded ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
                   >
                     <span
-                      className={`flex py-2 px-1 text-[14px] font-proxima items-center justify-${getAlignment(
+                      className={`flex py-1.5 px-1 text-[14px] font-proxima items-center justify-${getAlignment(
                         column.colalign
                       )}`}
                     >
