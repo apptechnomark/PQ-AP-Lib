@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import ChevronRight from "./icons/ChevronRight";
 import SortIcon from "./icons/SortIcon";
 import styles from "./Datatable.module.scss";
@@ -39,7 +39,6 @@ interface DataTableProps {
   hoverEffect?: boolean;
   noHeader?: boolean;
   userClass?: string;
-  tableHeight?: string;
 }
 
 const DataTable = ({
@@ -55,8 +54,7 @@ const DataTable = ({
   sticky,
   hoverEffect,
   noHeader,
-  userClass,
-  tableHeight
+  userClass
 }: DataTableProps) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "" });
@@ -83,6 +81,14 @@ const DataTable = ({
     }
 
     setExpandedRows(newExpandedRows);
+  };
+
+  const handleGetIdHover = (rowIndex: any) => {
+    getRowId(data[rowIndex]);
+  };
+
+  const handleGetIdClick = (rowIndex: any) => {
+    getExpandableData(data[rowIndex]);
   };
 
   const sortedData = React.useMemo(() => {
@@ -127,14 +133,6 @@ const DataTable = ({
     return sorted;
   }, [data, sortConfig]);
 
-  const handleGetIdHover = (rowIndex: any) => {
-    getRowId(data[rowIndex]);
-  };
-
-  const handleGetIdClick = (rowIndex: any) => {
-    getExpandableData(data[rowIndex]);
-  };
-
   const getAlignment = (align: string) => {
     switch (align) {
       case "left":
@@ -153,18 +151,19 @@ const DataTable = ({
   };
 
   return (
-    <div className={`${tableHeight ? tableHeight : ''} overflow-auto`}>
+    <div className={`h-full`}>
       <table className="w-full">
         <thead className={`${sticky && styles.customDataTable} `}>
           <tr
-            className={`w-full  ${noHeader ? "hidden " : ""}`}
+            className={`w-full  z-[5] top-0 ${sticky ? `${userClass ? `${userClass}` : `${stickyPostion} sticky`}  bg-pureWhite` : "static border-y border-pureBlack"
+              } ${noHeader ? "hidden " : ""}`}
           >
             {expandable && (
               <th className={`w-8 ${expandableStyle?.columns}`}></th>
             )}
             {columns?.map((column, colIndex) => (
               <th
-                className={`${column.colStyle} bg-pureWhite sticky top-0 p-2 font-proxima h-12 text-sm font-bold whitespace-nowrap ${column.sortable ? "cursor-pointer" : "cursor-default"
+                className={`${column.colStyle} p-2 font-proxima h-12 text-sm font-bold whitespace-nowrap ${column.sortable ? "cursor-pointer" : "cursor-default"
                   }`}
                 key={colIndex}
                 onClick={() => column.sortable && handleSort(column.accessor)}
@@ -215,7 +214,7 @@ const DataTable = ({
                     </td>
                   ) : (
                     <td
-                      className={`w-8 ${expandableStyle?.rows} h-12 text-[14px] pl-2 font-proxima ${(expandedRows.has(rowIndex) && isExpanded) ? "border-none" : "border-b"} ${noHeader && "border-t"} border-[#ccc] cursor-pointer`}
+                      className={`w-8 ${expandableStyle?.rows} h-12 text-[14px] pl-2 font-proxima ${expandedRows.has(rowIndex) && isExpanded ? "border-none" : "border-b"} ${noHeader && "border-t"} border-[#ccc] cursor-pointer`}
                     ></td>
                   ))}
                 {columns?.map((column, colIndex) => (
@@ -224,7 +223,7 @@ const DataTable = ({
                     className={` ${row?.style} ${noHeader && column.colStyle} ${column.rowStyle} h-12 text-[14px] font-proxima py-2 px-1 ${expandedRows.has(rowIndex) && isExpanded ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
                   >
                     <span
-                      className={`flex py-1.5 px-1 text-[14px] font-proxima items-center justify-${getAlignment(
+                      className={`flex py-2 px-1 text-[14px] font-proxima items-center justify-${getAlignment(
                         column.colalign
                       )}`}
                     >
