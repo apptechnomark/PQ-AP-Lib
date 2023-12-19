@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+
+import React, { useEffect, useRef, useState } from "react";
 import ChevronRight from "./icons/ChevronRight";
 import SortIcon from "./icons/SortIcon";
 import styles from "./Datatable.module.scss";
@@ -74,9 +75,10 @@ const DataTable = ({
     const isRowExpanded = expandedRows.has(rowIndex);
     const newExpandedRows = new Set(expandedRows);
 
-    if (isRowExpanded) {
+    if (newExpandedRows.has(rowIndex)) {
       newExpandedRows.delete(rowIndex);
     } else {
+      newExpandedRows.clear();
       newExpandedRows.add(rowIndex);
     }
 
@@ -150,9 +152,24 @@ const DataTable = ({
     }
   };
 
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        tableRef.current &&
+        !tableRef.current.contains(event.target as Node)
+      ) {
+        setExpandedRows(new Set());
+      }
+    };
+    document.addEventListener("click", handleOutsideClick);
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, []);
+
   return (
     <div className={`h-full`}>
-      <table className="w-full">
+      <table ref={tableRef} className="w-full">
         <thead className={`${sticky && styles.customDataTable} `}>
           <tr
             className={`w-full  z-[5] top-0 ${sticky ? `${userClass ? `${userClass}` : `${stickyPostion} sticky`}  bg-pureWhite` : "static border-y border-pureBlack"
@@ -205,22 +222,22 @@ const DataTable = ({
                 {expandable &&
                   (row.details ? (
                     <td
-                      className={`${expandableStyle?.rows}  text-[14px] font-proxima h-12 ${expandedRows.has(rowIndex) && isExpanded ? "border-none" : "border-b"}  border-[#ccc] cursor-pointer`}
+                      className={`${expandableStyle?.rows} text-[14px] font-proxima h-12 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"}  border-[#ccc] cursor-pointer`}
                       onClick={() => handleRowToggle(rowIndex)}
                     >
-                      <div className={`flex justify-center items-center transition-transform ${expandedRows.has(rowIndex) && isExpanded ? "rotate-90 duration-300" : "duration-200"}`}>
+                      <div className={`flex justify-center items-center transition-transform ${expandedRows.has(rowIndex) || isExpanded ? "rotate-90 duration-300" : "duration-200"}`}>
                         <ChevronRight />
                       </div>
                     </td>
                   ) : (
                     <td
-                      className={`w-8 ${expandableStyle?.rows} h-12 text-[14px] pl-2 font-proxima ${expandedRows.has(rowIndex) && isExpanded ? "border-none" : "border-b"} ${noHeader && "border-t"} border-[#ccc] cursor-pointer`}
+                      className={`w-8 ${expandableStyle?.rows} h-12 text-[14px] pl-2 font-proxima ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} ${noHeader && "border-t"} border-[#ccc] cursor-pointer`}
                     ></td>
                   ))}
                 {columns?.map((column, colIndex) => (
                   <td
                     key={colIndex}
-                    className={` ${row?.style} ${noHeader && column.colStyle} ${column.rowStyle} h-12 text-[14px] font-proxima py-2 px-1 ${expandedRows.has(rowIndex) && isExpanded ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
+                    className={` ${row?.style} ${noHeader && column.colStyle} ${column.rowStyle} h-12 text-[14px] font-proxima py-2 px-1 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
                   >
                     <span
                       className={`flex py-2 px-1 text-[14px] font-proxima items-center justify-${getAlignment(
@@ -232,9 +249,9 @@ const DataTable = ({
                   </td>
                 ))}
               </tr>
-              {(expandedRows.has(rowIndex) && isExpanded) && (
+              {(expandedRows.has(rowIndex) || isExpanded) && (
                 <tr>
-                  <td className="text-[14px] font-semibold font-proxima" colSpan={columns.length + 1}>
+                   <td className="text-[14px] font-semibold font-proxima" colSpan={columns.length + 1}>
                     {row.details ? (
                       row.details
                     ) : (
