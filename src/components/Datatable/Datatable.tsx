@@ -217,6 +217,7 @@ const DataTable = ({
             <React.Fragment key={rowIndex}>
               <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""}`}
                 onMouseEnter={getRowId ? () => handleGetIdHover(rowIndex) : undefined}
+                onMouseLeave={getRowId ? () => handleGetIdHover(null) : undefined}
                 onClick={!getRowId && getExpandableData ? () => handleGetIdClick(rowIndex) : undefined}
               >
                 {expandable &&

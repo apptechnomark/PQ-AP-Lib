@@ -5,6 +5,7 @@ import ChevronDown from "./icons/ChevronDown.js";
 import Search from "./icons/Search.js";
 import Typography from "../Typography/Typography.js";
 import styles from "./CompanyList.module.scss";
+import { Button } from "../Button/Button.js";
 
 interface CompanyListProps {
     id: string;
@@ -27,6 +28,7 @@ interface CompanyListProps {
     variant?: "user" | "company";
     values?: string[];
     hideIcon?: boolean;
+    Savebtn?: boolean;
 }
 const CompanyList: React.FC<CompanyListProps> = ({
     id,
@@ -49,10 +51,13 @@ const CompanyList: React.FC<CompanyListProps> = ({
     type = "avatar",
     checkbox = true,
     hideIcon,
+    Savebtn,
     ...props
 }) => {
     const selectRef = useRef<HTMLDivElement>(null);
-    const [selectedValues, setSelectedValues] = useState<string[]>(values && values.length > 0 ? values : []);
+    const [selectedValues, setSelectedValues] = useState<string[]>(
+        values && values.length > 0 ? values : []
+    );
     const [inputValue, setInputValue] = useState<string>("");
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [focusedIndex, setFocusedIndex] = useState<number>(-1);
@@ -128,10 +133,9 @@ const CompanyList: React.FC<CompanyListProps> = ({
     const updatedAvatars = selectedValues.map((value, index) => {
         const option = options.find((item) => item.value == value);
         return (
-
             <Avatar
                 key={index}
-                name={option ? option.label : ''}
+                name={option ? option.label : ""}
                 variant="small"
                 imageUrl={option ? option.imageUrl : undefined}
             />
@@ -201,10 +205,10 @@ const CompanyList: React.FC<CompanyListProps> = ({
                         <Typography
                             type="h6"
                             className={`${err
-                                ? "text-defaultRed"
-                                : focus
-                                    ? "text-primary"
-                                    : "text-slatyGrey dark:text-pureWhite"
+                                    ? "text-defaultRed"
+                                    : focus
+                                        ? "text-primary"
+                                        : "text-slatyGrey dark:text-pureWhite"
                                 }`}
                         >
                             {label}
@@ -220,51 +224,66 @@ const CompanyList: React.FC<CompanyListProps> = ({
                 )}
                 <div
                     className={`flex items-center transition-height duration-200 ease-out cursor-pointer ${disabled && "pointer-events-none"
-                        } ${selectedValues.length > 0 && type == "avatar" ? "h-[42px]" : "h-[25px]"}`}
+                        } ${selectedValues.length > 0 && type == "avatar"
+                            ? "h-[42px]"
+                            : "h-[25px]"
+                        }`}
                     onClick={handleToggleOpen}
                 >
                     {selectedValues.length > 0 ? (
                         <>
-                            {type == "avatar" && <AvatarGroup variant="small" show={showAvatar}>
-                                {updatedAvatars}
-                            </AvatarGroup>}
-                            {type == "text" && <Typography type="h6">  {selectedValues.length > 0
-                                && `${selectedValues.length} selected.`} </Typography>}
+                            {type == "avatar" && (
+                                <AvatarGroup variant="small" show={showAvatar}>
+                                    {updatedAvatars}
+                                </AvatarGroup>
+                            )}
+                            {type == "text" && (
+                                <Typography type="h6">
+                                    {" "}
+                                    {selectedValues.length > 0 &&
+                                        `${selectedValues.length} selected.`}{" "}
+                                </Typography>
+                            )}
                         </>
                     ) : (
                         <Typography
                             type="h6"
-                            className={`!font-normal dark:text-pureWhite ${err && "text-defaultRed"} ${disabled && "text-slatyGrey dark:text-pureWhite"
+                            className={`!font-normal dark:text-pureWhite ${err && "text-defaultRed"
+                                } ${disabled && "text-slatyGrey dark:text-pureWhite"
                                 } select-none`}
                         >
                             {isOpen ? "" : defaultValue ? defaultValue : "Please Select"}
                         </Typography>
                     )}
-                    {!hideIcon &&
+                    {!hideIcon && (
                         <div
                             onClick={handleToggleOpen}
                             className={`ml-1 text-[1.5rem]  absolute right-0 transition-transform ${err
-                                ? "text-defaultRed"
-                                : disabled
-                                    ? "text-slatyGrey"
-                                    : "text-darkCharcoal dark:text-pureWhite"
+                                    ? "text-defaultRed"
+                                    : disabled
+                                        ? "text-slatyGrey"
+                                        : "text-darkCharcoal dark:text-pureWhite"
                                 }  cursor-pointer   ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
                                 }}`}
                         >
                             <ChevronDown />
-                        </div>}
+                        </div>
+                    )}
                 </div>
                 <div>
                     <ul
                         className={`absolute z-10 w-full bg-pureWhite dark:bg-[#1f2937] mt-[1px] overflow-y-auto shadow-md transition-transform ${isOpen
-                            ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
-                            : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
+                                ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
+                                : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
                             } ${isOpen ? "ease-out" : ""}`}
                     >
                         <li
                             className={`sticky top-0 z-[3] bg-pureWhite outline-none focus:bg-whiteSmoke p-[10px] text-sm font-normal cursor-pointer flex items-center`}
                         >
-                            <div className={`flex absolute  ${variant === "user" ? "left-3" : "left-2"}`}>
+                            <div
+                                className={`flex absolute  ${variant === "user" ? "left-3" : "left-2"
+                                    }`}
+                            >
                                 <Search />
                             </div>
                             <input
@@ -276,7 +295,8 @@ const CompanyList: React.FC<CompanyListProps> = ({
                                         ? `${inputValue.substring(0, 20)}...`
                                         : inputValue
                                 }
-                                className={`dark:placeholder:text-pureWhite text-sm placeholder:text-sm  w-full pl-6 py-1 ${variant === "user" ? "border rounded" : "border-b"} border-lightSilver flex-grow outline-none font-normal ${isOpen ? "text-primary" : ""
+                                className={`dark:placeholder:text-pureWhite text-sm placeholder:text-sm  w-full pl-6 py-1 ${variant === "user" ? "border rounded" : "border-b"
+                                    } border-lightSilver flex-grow outline-none font-normal ${isOpen ? "text-primary" : ""
                                     } ${!isOpen ? "cursor-pointer" : "cursor-default"} ${!isOpen ? "placeholder-darkCharcoal" : "placeholder-primary"
                                     }`}
                                 style={{ background: "transparent" }}
@@ -289,9 +309,11 @@ const CompanyList: React.FC<CompanyListProps> = ({
                             options.map((option, index) => (
                                 <li
                                     key={option.value + index}
-                                    className={`outline-none focus:bg-whiteSmoke dark:focus:bg-secondaryGray dark:hover:bg-secondaryGray p-[10px] text-sm hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selectedValues.includes(option.value)
-                                        && ""}
-                                        ${!option.label.toLowerCase().startsWith(inputValue)
+                                    className={`outline-none focus:bg-whiteSmoke dark:focus:bg-secondaryGray dark:hover:bg-secondaryGray p-[10px] text-sm hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selectedValues.includes(option.value) && ""
+                                        }
+                                        ${!option.label
+                                            .toLowerCase()
+                                            .startsWith(inputValue)
                                             ? "hidden"
                                             : ""
                                         }`}
@@ -310,14 +332,15 @@ const CompanyList: React.FC<CompanyListProps> = ({
                                         }
                                     }}
                                 >
-                                    {checkbox &&
+                                    {checkbox && (
                                         <CheckBox
                                             id={option.value}
                                             checked={selectedValues.includes(option.value)}
                                             onChange={() => {
                                                 handleCheckboxChange(option.value);
                                             }}
-                                        />}
+                                        />
+                                    )}
                                     <div className="mx-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
                                         <Avatar
                                             variant="small"
@@ -325,7 +348,9 @@ const CompanyList: React.FC<CompanyListProps> = ({
                                             imageUrl={option.imageUrl}
                                         />
                                     </div>
-                                    <Typography type="h6" className="dark:text-pureWhite">{option.label}</Typography>
+                                    <Typography type="h6" className="dark:text-pureWhite">
+                                        {option.label}
+                                    </Typography>
                                 </li>
                             ))
                         ) : (
@@ -333,6 +358,11 @@ const CompanyList: React.FC<CompanyListProps> = ({
                                 No matching data found.
                             </span>
                         )}
+                        {Savebtn && options.length > 0 && isOpen && <div className="w-full sticky bottom-0">
+                            <Button variant="btn-primary" className="w-full font-semibold">
+                                Save
+                            </Button>
+                        </div>}
                     </ul>
                 </div>
             </div>
