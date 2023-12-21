@@ -283,9 +283,9 @@ const CompanyList: React.FC<CompanyListProps> = ({
         </div>
         <div>
           <ul
-            className={`absolute z-10 w-full bg-pureWhite dark:bg-[#1f2937] mt-[1px] overflow-y-auto shadow-md transition-transform ${
+            className={`absolute z-10 w-full bg-pureWhite dark:bg-[#1f2937] mt-[1px] overflow-y-auto shadow-md transition-transform  ${
               isOpen
-                ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
+                ? "max-h-60 translate-y-0 transition-opacity z-[1] opacity-100 duration-500"
                 : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
             } ${isOpen ? "ease-out" : ""}`}
           >
