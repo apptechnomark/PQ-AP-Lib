@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { LegacyRef, useEffect, useRef, useState } from "react";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  inputRef?: LegacyRef<HTMLInputElement>;
   label?: string;
   className?: string;
   id?: string;
@@ -26,6 +27,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Text: React.FC<InputProps> = ({
+  inputRef,
   label,
   className,
   id,
@@ -50,7 +52,7 @@ const Text: React.FC<InputProps> = ({
   rangeBetween,
   ...props
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  // const inputRef = useRef<HTMLInputElement>(null);
   const [err, setErr] = useState<boolean>(false);
   const [focus, setFocus] = useState<boolean>(false);
   const [errMsg, setErrMsg] = useState<string>(errorMessage);
