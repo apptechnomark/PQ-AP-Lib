@@ -133,7 +133,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
   };
 
   const updatedAvatars = selectedValues.map((value, index) => {
-    const option = options.find((item) => item.value == value);
+    const option = options?.find((item) => item.value == value);
     return (
       <Avatar
         key={index}
@@ -318,7 +318,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
                 style={{ background: "transparent" }}
               />
             </li>
-            {options.length > 0 &&
+            {options && options.length > 0 &&
             options.some((option) =>
               option.label.toLowerCase().startsWith(inputValue)
             ) ? (
@@ -376,8 +376,8 @@ const CompanyList: React.FC<CompanyListProps> = ({
                 No matching data found.
               </span>
             )}
-            {Savebtn && options.length > 0 && isOpen && (
-              <div className="w-full sticky bottom-0">
+            {Savebtn && options?.length > 0 && isOpen && (
+              <div className="w-full sticky bottom-0" onClick={()=> setIsOpen(false)}>
                 <Button
                   variant="btn-primary"
                   className="w-full font-semibold"
