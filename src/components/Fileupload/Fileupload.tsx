@@ -26,6 +26,7 @@ interface UploaderProps {
   multiSelect?: boolean;
   variant?: string;
   type?: string;
+  getValue?: (uploadedFiles: any) => void
 }
 
 interface UploadedFile {
@@ -33,7 +34,7 @@ interface UploadedFile {
   uploadedAt: string;
 }
 
-function Uploader({ multiSelect, variant, type }: UploaderProps) {
+function Uploader({ multiSelect, variant, type, getValue }: UploaderProps) {
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [uploaded, setUploaded] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -58,6 +59,7 @@ function Uploader({ multiSelect, variant, type }: UploaderProps) {
   const handleFileChange = (files: FileList) => {
     const names = Array.from(files).map((file) => file.name);
     setFileNames(names);
+    getValue(files)
 
     setTimeout(() => {
       setIsChecked(true);
