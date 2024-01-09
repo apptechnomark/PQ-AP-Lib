@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import ChevronRight from "./icons/ChevronRight";
 import SortIcon from "./icons/SortIcon";
@@ -40,6 +39,7 @@ interface DataTableProps {
   hoverEffect?: boolean;
   noHeader?: boolean;
   userClass?: string;
+  isTableLayoutFixed?: boolean
 }
 
 const DataTable = ({
@@ -55,7 +55,8 @@ const DataTable = ({
   sticky,
   hoverEffect,
   noHeader,
-  userClass
+  userClass,
+  isTableLayoutFixed
 }: DataTableProps) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "" });
@@ -168,106 +169,104 @@ const DataTable = ({
   }, []);
 
   return (
-    <div className={`h-full`}>
-      <table ref={tableRef} className="w-full">
-        <thead className={`${sticky && styles.customDataTable} `}>
-          <tr
-            className={`w-full  z-[5] top-0 ${sticky ? `${userClass ? `${userClass}` : `${stickyPostion} sticky`}  bg-pureWhite` : "static border-y border-pureBlack"
-              } ${noHeader ? "hidden " : ""}`}
-          >
-            {expandable && (
-              <th className={`w-8 ${expandableStyle?.columns}`}></th>
-            )}
-            {columns?.map((column, colIndex) => (
-              <th
-                className={`${column.colStyle} p-2 font-proxima h-12 text-sm font-bold whitespace-nowrap ${column.sortable ? "cursor-pointer" : "cursor-default"
-                  }`}
-                key={colIndex}
-                onClick={() => column.sortable && handleSort(column.accessor)}
-              >
-                {column.sortable ? (
-                  <span
-                    className={`flex items-center font-proxima justify-${getAlignment(
-                      column.colalign
-                    )} gap-2`}
+    <table ref={tableRef} className={`w-full ${!!isTableLayoutFixed ? 'table-fixed' : ''}`}>
+      <thead className={`${sticky && styles.customDataTable} `}>
+        <tr
+          className={`w-full z-[5] top-0 ${sticky ? `${userClass ? `${userClass}` : `${stickyPostion} sticky`}  bg-pureWhite` : "static border-y border-pureBlack"
+            } ${noHeader ? "hidden " : ""}`}
+        >
+          {expandable && (
+            <th className={`w-8 ${expandableStyle?.columns}`}></th>
+          )}
+          {columns?.map((column, colIndex) => (
+            <th
+              className={`${column.colStyle} p-2 font-proxima h-12 text-sm font-bold whitespace-nowrap ${column.sortable ? "cursor-pointer" : "cursor-default"
+                }`}
+              key={colIndex}
+              onClick={() => column.sortable && handleSort(column.accessor)}
+            >
+              {column.sortable ? (
+                <span
+                  className={`flex items-center font-proxima justify-${getAlignment(
+                    column.colalign
+                  )} gap-2`}
+                >
+                  {column.header}
+                  <SortIcon
+                    order={
+                      sortConfig.key === column.accessor &&
+                      sortConfig.direction
+                    }
+                  />
+                </span>
+              ) : (
+                <span
+                  className={`flex font-proxima items-center justify-${getAlignment(
+                    column.colalign
+                  )}`}
+                >
+                  {column.header}
+                </span>
+              )}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {sortedData?.map((row, rowIndex) => (
+          <React.Fragment key={rowIndex}>
+            <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""}`}
+              onMouseEnter={getRowId ? () => handleGetIdHover(rowIndex) : undefined}
+              onMouseLeave={getRowId ? () => handleGetIdHover(null) : undefined}
+              onClick={!getRowId && getExpandableData ? () => handleGetIdClick(rowIndex) : undefined}
+            >
+              {expandable &&
+                (row.details ? (
+                  <td
+                    className={`${expandableStyle?.rows} text-[14px] font-proxima h-12 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"}  border-[#ccc] cursor-pointer`}
+                    onClick={() => handleRowToggle(rowIndex)}
                   >
-                    {column.header}
-                    <SortIcon
-                      order={
-                        sortConfig.key === column.accessor &&
-                        sortConfig.direction
-                      }
-                    />
-                  </span>
+                    <div className={`flex justify-center items-center transition-transform ${expandedRows.has(rowIndex) || isExpanded ? "rotate-90 duration-300" : "duration-200"}`}>
+                      <ChevronRight />
+                    </div>
+                  </td>
                 ) : (
+                  <td
+                    className={`w-8 ${expandableStyle?.rows} h-12 text-[14px] pl-2 font-proxima ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} ${noHeader && "border-t"} border-[#ccc] cursor-pointer`}
+                  ></td>
+                ))}
+              {columns?.map((column, colIndex) => (
+                <td
+                  key={colIndex}
+                  className={` ${row?.style} ${noHeader && column.colStyle} ${column.rowStyle} h-12 text-[14px] font-proxima py-1 px-1 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
+                >
                   <span
-                    className={`flex font-proxima items-center justify-${getAlignment(
+                    className={`flex py-2 px-1 text-[14px] font-proxima items-center justify-${getAlignment(
                       column.colalign
                     )}`}
                   >
-                    {column.header}
+                    {row[column.accessor]}
                   </span>
-                )}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {sortedData?.map((row, rowIndex) => (
-            <React.Fragment key={rowIndex}>
-              <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""}`}
-                onMouseEnter={getRowId ? () => handleGetIdHover(rowIndex) : undefined}
-                onMouseLeave={getRowId ? () => handleGetIdHover(null) : undefined}
-                onClick={!getRowId && getExpandableData ? () => handleGetIdClick(rowIndex) : undefined}
-              >
-                {expandable &&
-                  (row.details ? (
-                    <td
-                      className={`${expandableStyle?.rows} text-[14px] font-proxima h-12 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"}  border-[#ccc] cursor-pointer`}
-                      onClick={() => handleRowToggle(rowIndex)}
-                    >
-                      <div className={`flex justify-center items-center transition-transform ${expandedRows.has(rowIndex) || isExpanded ? "rotate-90 duration-300" : "duration-200"}`}>
-                        <ChevronRight />
-                      </div>
-                    </td>
+                </td>
+              ))}
+            </tr>
+            {(expandedRows.has(rowIndex) || isExpanded) && (
+              <tr>
+                <td className="text-[14px] font-semibold font-proxima" colSpan={columns.length + 1}>
+                  {row.details ? (
+                    row.details
                   ) : (
-                    <td
-                      className={`w-8 ${expandableStyle?.rows} h-12 text-[14px] pl-2 font-proxima ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} ${noHeader && "border-t"} border-[#ccc] cursor-pointer`}
-                    ></td>
-                  ))}
-                {columns?.map((column, colIndex) => (
-                  <td
-                    key={colIndex}
-                    className={` ${row?.style} ${noHeader && column.colStyle} ${column.rowStyle} h-12 text-[14px] font-proxima py-1 px-1 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
-                  >
-                    <span
-                      className={`flex py-2 px-1 text-[14px] font-proxima items-center justify-${getAlignment(
-                        column.colalign
-                      )}`}
-                    >
-                      {row[column.accessor]}
-                    </span>
-                  </td>
-                ))}
+                    <div className={`m-3 text-[14px] font-proxima ${expandableStyle?.rows}`}>
+                      No data to display
+                    </div>
+                  )}
+                </td>
               </tr>
-              {(expandedRows.has(rowIndex) || isExpanded) && (
-                <tr>
-                   <td className="text-[14px] font-semibold font-proxima" colSpan={columns.length + 1}>
-                    {row.details ? (
-                      row.details
-                    ) : (
-                      <div className={`m-3 text-[14px] font-proxima ${expandableStyle?.rows}`}>
-                        No data to display
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              )}
-            </React.Fragment>
-          ))}
-        </tbody>
-      </table>
-    </div >
+            )}
+          </React.Fragment>
+        ))}
+      </tbody>
+    </table>
   );
 };
 
