@@ -6,9 +6,9 @@ interface RadioPropsTypes extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label?: string;
   variant?: string;
+  className?:string
 }
-
-const Radio = ({ id, label, variant, ...props }: RadioPropsTypes) => {
+const Radio = ({ id, label, variant,className, ...props }: RadioPropsTypes) => {
   return (
     <div className={`${styles.container} relative min-w-fit w-full flex`}>
       <input
@@ -19,7 +19,7 @@ const Radio = ({ id, label, variant, ...props }: RadioPropsTypes) => {
       />
       <label
         htmlFor={id}
-        className={variant === "invalid" ? styles.invalidLabel : ""}
+        className={`${className} ${variant === "invalid" ? styles.invalidLabel : ""}`}
       >
         <svg
           className={`${styles.check} ${

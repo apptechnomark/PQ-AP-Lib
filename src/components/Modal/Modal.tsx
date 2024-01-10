@@ -8,6 +8,7 @@ interface ModalProps {
   size?: "sm" | "md" | "lg" | "extra-lg" | "full";
   closeIcon?: boolean;
   width?: string;
+  Height?: string;
   className?: string;
 }
 
@@ -17,6 +18,7 @@ const Modal: React.FC<ModalProps> = ({
   children,
   size,
   width,
+  Height,
   className
 }) => {
   if (!isOpen) return null;
@@ -39,6 +41,7 @@ const Modal: React.FC<ModalProps> = ({
 
   const modalStyles = {
     width: width,
+    height:Height
   };
 
   const handleModalClick = (event: React.MouseEvent<HTMLDivElement>) => {
