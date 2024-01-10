@@ -177,6 +177,12 @@ function SearchBar({ variant, options, type, Data, getValue, number }: SearchPro
     };
   }, []);
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  }
+
 
   const clearValue = () => {
     setSelected([]);
@@ -187,7 +193,7 @@ function SearchBar({ variant, options, type, Data, getValue, number }: SearchPro
     // setIsHover(!isHover)
     setIsAnimated(!isAnimated)
   }
-  
+
   const SearchButton = () => {
     return (
       <div className="search__button flex items-center">
@@ -330,7 +336,7 @@ function SearchBar({ variant, options, type, Data, getValue, number }: SearchPro
                   <SearchButton />
                 </div>
               ) : (
-                <Tooltip content="search" position="bottom" >
+                <Tooltip content="Search" position="bottom" >
                   <SearchButton />
                 </Tooltip>
               )}
@@ -359,6 +365,7 @@ function SearchBar({ variant, options, type, Data, getValue, number }: SearchPro
             getValue={(value) => { setSearchTerm(value) }}
             getError={() => { }}
             onChange={handleInputChange}
+            onKeyPress={handleKeyPress}
           />
         </div>
 

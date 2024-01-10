@@ -39,6 +39,7 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
     errorMessage = "This is required field!",
     hideIcon,
     getValue,
+    className,
     getError,
     ...props }) => {
     const days: string[] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -367,7 +368,7 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
                     <input
                         type="text"
                         placeholder="dd/mm/yyyy"
-                        className={`w-full border-b placeholder:text-sm text-sm bg-transparent ${disabled
+                        className={`${className} w-full border-b placeholder:text-sm text-sm bg-transparent ${disabled
                             ? "border-lightSilver"
                             : toggleOpen
                                 ? "border-primary"
