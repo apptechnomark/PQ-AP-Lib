@@ -59,19 +59,11 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
     const [focus, setFocus] = useState<boolean>(false);
     const [errorMsg, setErrorMsg] = useState<string>("");
 
-    let splitDate = value && value.split(" to ");
-    let startDateString = splitDate && splitDate[0];
-    let endDateString = splitDate && splitDate[1];
-    let updatedStartDate = new Date(startDateString);
-    updatedStartDate.setHours(0, 0, 0, 0);
-    let updatedEndDate = new Date(endDateString);
-    updatedEndDate.setHours(0, 0, 0, 0);
-
-    const [startDate, setStartDate] = useState<Date | null>(updatedStartDate);
-    const [endDate, setEndDate] = useState<Date | null>(new Date(updatedEndDate));
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(new Date(null));
     const [rangeDates, setRangeDates] = useState<Date[]>([]);
-    const [inputStartDate, setInputStartDate] = useState<string>(startDateString || "");
-    const [inputEndDate, setInputEndDate] = useState<string>(endDateString || "");
+    const [inputStartDate, setInputStartDate] = useState<string>("");
+    const [inputEndDate, setInputEndDate] = useState<string>("");
 
     const currentMonth = today.getMonth();
     const [selectedMonth, setSelectedMonth] = useState<number>(currentMonth);
@@ -91,6 +83,22 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
             return year <= endYear ? year : null;
         }
     ).filter((year) => year !== null);
+
+    useEffect(() => {
+        let splitDate = value && value.split(" to ");
+        let startDateString = splitDate && splitDate[0];
+        let endDateString = splitDate && splitDate[1];
+        let updatedStartDate = new Date(startDateString);
+        updatedStartDate.setHours(0, 0, 0, 0);
+        let updatedEndDate = new Date(endDateString);
+        updatedEndDate.setHours(0, 0, 0, 0);
+
+        setStartDate(updatedStartDate)
+        setEndDate(updatedEndDate)
+        setInputStartDate(startDateString || "")
+        setInputEndDate(endDateString || "")
+
+    }, [value])
 
     useEffect(() => {
         if (validate) {

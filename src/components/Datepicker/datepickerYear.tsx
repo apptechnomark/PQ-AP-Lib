@@ -129,6 +129,10 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
     };
 
     useEffect(() => {
+        setFullDate(value)
+    }, [value])
+    
+    useEffect(() => {
         getValue(fullDate);
     }, [fullDate]);
 
