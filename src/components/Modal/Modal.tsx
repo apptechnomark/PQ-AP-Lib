@@ -51,14 +51,14 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <>
       <div
-        className={`${className} fixed inset-0 bg-black bg-opacity-40 backdrop-blur-[1px] z-50`}
+        className={`fixed inset-0 bg-black bg-opacity-40 backdrop-blur-[1px] z-50`}
         onClick={onClose}
       >
         <div
           className={`fixed inset-0 z-50 flex items-center justify-center ${Style.modal}`}
         >
           <div
-            className={`my-6 mx-auto ${getSizeClasses()} `}
+            className={`${className} my-6 mx-auto ${getSizeClasses()} `}
             style={modalStyles}
             onClick={handleModalClick}
           >
