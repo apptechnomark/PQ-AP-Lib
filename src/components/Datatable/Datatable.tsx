@@ -158,8 +158,8 @@ const DataTable = ({
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (
-        tableRef.current &&
-        !tableRef.current.contains(event.target as Node)
+        tableRef?.current &&
+        !tableRef?.current.contains(event?.target as Node)
       ) {
         setExpandedRows(new Set());
       }
@@ -172,7 +172,7 @@ const DataTable = ({
 
   return (
     <table ref={tableRef} className={`w-full ${!!isTableLayoutFixed ? 'table-fixed' : ''}`}>
-      <thead className={`${sticky && styles.customDataTable} `}>
+      <thead className={`${sticky && styles?.customDataTable} `}>
         <tr
           className={`w-full z-[5] top-0 ${sticky ? `${userClass ? `${userClass}` : `${stickyPostion} sticky`}  bg-pureWhite` : "static border-y border-pureBlack"
             } ${noHeader ? "hidden " : ""}`}
@@ -204,10 +204,10 @@ const DataTable = ({
               ) : (
                 <span
                   className={`flex font-proxima items-center justify-${getAlignment(
-                    column.colalign
+                    column?.colalign
                   )}`}
                 >
-                  {column.header}
+                  {column?.header}
                 </span>
               )}
             </th>
@@ -217,7 +217,7 @@ const DataTable = ({
       <tbody>
         {sortedData?.map((row, rowIndex) => (
           <React.Fragment key={rowIndex}>
-            <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""} ${isRowDisabled && sortedData.length !== (rowIndex + 1) ? `row-disabled` : ''}`}
+            <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""} ${isRowDisabled && sortedData?.length !== (rowIndex + 1) ? `row-disabled` : ''}`}
               onMouseEnter={getRowId ? () => handleGetIdHover(rowIndex) : undefined}
               onMouseLeave={getRowId ? () => handleGetIdHover(null) : undefined}
               onClick={!getRowId && getExpandableData ? () => handleGetIdClick(rowIndex) : undefined}
@@ -254,7 +254,7 @@ const DataTable = ({
             </tr>
             {(expandedRows.has(rowIndex) || isExpanded) && (
               <tr>
-                <td className="text-[14px] font-semibold font-proxima" colSpan={columns.length + 1}>
+                <td className="text-[14px] font-semibold font-proxima" colSpan={columns?.length + 1}>
                   {row?.details ? (
                     row?.details
                   ) : (
