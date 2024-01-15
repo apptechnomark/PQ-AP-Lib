@@ -40,6 +40,7 @@ interface DataTableProps {
   noHeader?: boolean;
   userClass?: string;
   isTableLayoutFixed?: boolean
+  isRowDisabled?: boolean
 }
 
 const DataTable = ({
@@ -56,7 +57,8 @@ const DataTable = ({
   hoverEffect,
   noHeader,
   userClass,
-  isTableLayoutFixed
+  isTableLayoutFixed,
+  isRowDisabled = false
 }: DataTableProps) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "" });
@@ -180,22 +182,22 @@ const DataTable = ({
           )}
           {columns?.map((column, colIndex) => (
             <th
-              className={`${column.colStyle} p-2 font-proxima h-12 text-sm font-bold whitespace-nowrap ${column.sortable ? "cursor-pointer" : "cursor-default"
+              className={`${column?.colStyle} p-2 font-proxima h-12 text-sm font-bold whitespace-nowrap ${column?.sortable ? "cursor-pointer" : "cursor-default"
                 }`}
               key={colIndex}
-              onClick={() => column.sortable && handleSort(column.accessor)}
+              onClick={() => column?.sortable && handleSort(column?.accessor)}
             >
-              {column.sortable ? (
+              {column?.sortable ? (
                 <span
                   className={`flex items-center font-proxima justify-${getAlignment(
-                    column.colalign
+                    column?.colalign
                   )} gap-2`}
                 >
-                  {column.header}
+                  {column?.header}
                   <SortIcon
                     order={
-                      sortConfig.key === column.accessor &&
-                      sortConfig.direction
+                      sortConfig?.key === column?.accessor &&
+                      sortConfig?.direction
                     }
                   />
                 </span>
@@ -215,13 +217,13 @@ const DataTable = ({
       <tbody>
         {sortedData?.map((row, rowIndex) => (
           <React.Fragment key={rowIndex}>
-            <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""}`}
+            <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""} ${isRowDisabled && sortedData.length !== (rowIndex + 1) ? `row-disabled` : ''}`}
               onMouseEnter={getRowId ? () => handleGetIdHover(rowIndex) : undefined}
               onMouseLeave={getRowId ? () => handleGetIdHover(null) : undefined}
               onClick={!getRowId && getExpandableData ? () => handleGetIdClick(rowIndex) : undefined}
             >
               {expandable &&
-                (row.details ? (
+                (row?.details ? (
                   <td
                     className={`${expandableStyle?.rows} text-[14px] font-proxima h-12 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"}  border-[#ccc] cursor-pointer`}
                     onClick={() => handleRowToggle(rowIndex)}
@@ -238,14 +240,14 @@ const DataTable = ({
               {columns?.map((column, colIndex) => (
                 <td
                   key={colIndex}
-                  className={` ${row?.style} ${noHeader && column.colStyle} ${column.rowStyle} h-12 text-[14px] font-proxima py-1 px-1 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
+                  className={` ${row?.style} ${noHeader && column?.colStyle} ${column?.rowStyle} h-12 text-[14px] font-proxima py-1 px-1 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
                 >
                   <span
                     className={`flex py-2 px-1 text-[14px] font-proxima items-center justify-${getAlignment(
-                      column.colalign
+                      column?.colalign
                     )}`}
                   >
-                    {row[column.accessor]}
+                    {row[column?.accessor]}
                   </span>
                 </td>
               ))}
@@ -253,8 +255,8 @@ const DataTable = ({
             {(expandedRows.has(rowIndex) || isExpanded) && (
               <tr>
                 <td className="text-[14px] font-semibold font-proxima" colSpan={columns.length + 1}>
-                  {row.details ? (
-                    row.details
+                  {row?.details ? (
+                    row?.details
                   ) : (
                     <div className={`m-3 text-[14px] font-proxima ${expandableStyle?.rows}`}>
                       No data to display

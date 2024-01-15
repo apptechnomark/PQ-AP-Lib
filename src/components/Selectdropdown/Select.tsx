@@ -106,7 +106,13 @@ const Select: React.FC<SelectProps> = ({
   useEffect(() => {
     if (!!defaultValue) {
       setInputValue(defaultValue);
+      setSelectedOption(options.find((option) => option.value === defaultValue))
+      !!defaultValue && getError(true);
     } else {
+      setErrMsg(errorMessage);
+      setError(hasError);
+      hasError && getError(false);
+
       setInputValue("");
     }
   }, [defaultValue])
@@ -115,7 +121,7 @@ const Select: React.FC<SelectProps> = ({
     if (validate) {
       setErrMsg(errorMessage);
       setError(hasError);
-      hasError && getError(false);
+      // hasError && getError(false);
 
       if (defaultValue !== "" && defaultValue !== null && defaultValue !== 0) {
         setInputValue(defaultValue);

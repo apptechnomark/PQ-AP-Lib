@@ -90,7 +90,7 @@ function Uploader({ multiSelect, variant, type, getValue }: UploaderProps) {
     const updatedFileNames = [...fileNames];
     updatedFileNames.splice(index, 1);
     setFileNames(updatedFileNames);
-    setFiles(files.filter((i, inx) => inx !== index))
+    setFiles(Array.from(files).filter((i, inx) => inx !== index))
     
     getValue(Array.from(files).filter((i, inx) => inx !== index))
 
