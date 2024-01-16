@@ -41,7 +41,7 @@ const Modal: React.FC<ModalProps> = ({
 
   const modalStyles = {
     width: width,
-    height:Height
+    height: Height
   };
 
   const handleModalClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -62,7 +62,7 @@ const Modal: React.FC<ModalProps> = ({
             style={modalStyles}
             onClick={handleModalClick}
           >
-            <div className="border-[1px] border-lightSilver rounded-lg flex flex-col bg-pureWhite outline-none focus:outline-none">
+            <div className={`${className} border-[1px] border-lightSilver rounded-lg flex flex-col bg-pureWhite outline-none focus:outline-none`}>
               {children}
             </div>
           </div>
