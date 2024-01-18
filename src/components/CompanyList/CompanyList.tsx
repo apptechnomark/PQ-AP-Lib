@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { Avatar, AvatarGroup } from "../Avatar/Avatar.js";
 import CheckBox from "../Checkbox/Checkbox.js";
 import ChevronDown from "./icons/ChevronDown.js";
@@ -9,7 +9,7 @@ import { Button } from "../Button/Button.js";
 
 interface CompanyListProps {
   id: string;
-  options: { value: string; label: string; imageUrl?: string }[];
+  options: { value: string; label: string; imageUrl?: string; isEnable?: any; isChecked?: any }[];
   label?: string;
   className?: string;
   required?: boolean;
@@ -29,6 +29,7 @@ interface CompanyListProps {
   values?: string[];
   hideIcon?: boolean;
   Savebtn?: boolean;
+  avatarSize?: "small" | "large" | "x-small"
   onSaveClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 const CompanyList: React.FC<CompanyListProps> = ({
@@ -54,6 +55,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
   hideIcon,
   Savebtn,
   onSaveClick,
+  avatarSize = "small",
   ...props
 }) => {
   const selectRef = useRef<HTMLDivElement>(null);
@@ -90,37 +92,13 @@ const CompanyList: React.FC<CompanyListProps> = ({
   };
 
   useEffect(() => {
-    if (values?.length > 0) {
+    if (values.length > 0) {
       setSelectedValues(values);
     } else {
       setSelectedValues([]);
     }
-  }, [values]);
+  }, [values.length]);
 
-  const handleSelect = (value: string) => {
-    const updatedValues = [...selectedValues];
-    const index = updatedValues.indexOf(value);
-    if (index > -1) {
-      updatedValues.splice(index, 1);
-    } else {
-      updatedValues.push(value);
-    }
-    if (validate) {
-      if (updatedValues.length === 0) {
-        setErr(true);
-        setErrorMsg("Please select at least one option.");
-        getError(false);
-      } else {
-        setErr(false);
-        setErrorMsg("");
-        getError(true);
-      }
-    }
-    setInputValue("");
-    setSelectedValues(updatedValues);
-    setFocusedIndex(-1);
-    getValue(updatedValues);
-  };
 
   const handleCheckboxChange = (value: string) => {
     setSelectedValues((prevSelected) => {
@@ -132,13 +110,46 @@ const CompanyList: React.FC<CompanyListProps> = ({
     });
   };
 
+  const handleSelect = (value: string) => {
+    if (checkbox) {
+      handleCheckboxChange(value);
+    } else {
+      const updatedValues = selectedValues.includes(value)
+        ? selectedValues.filter((item) => item !== value)
+        : [...selectedValues, value];
+
+      if (validate) {
+        if (updatedValues.length === 0) {
+          setErr(true);
+          setErrorMsg("Please select at least one option.");
+          getError(false);
+        } else {
+          setErr(false);
+          setErrorMsg("");
+          getError(true);
+        }
+
+      }
+      setInputValue("");
+      setFocusedIndex(-1);
+      setSelectedValues(updatedValues);
+      getValue(updatedValues);
+    }
+  };
+
+  const getValueRef = useRef(getValue);
+
+  useEffect(() => {
+    getValueRef.current(selectedValues);
+  }, [selectedValues]);
+
   const updatedAvatars = selectedValues.map((value, index) => {
     const option = options?.find((item) => item.value == value);
     return (
       <Avatar
         key={index}
         name={option ? option.label : ""}
-        variant="small"
+        variant={avatarSize}
         imageUrl={option ? option.imageUrl : undefined}
       />
     );
@@ -185,36 +196,35 @@ const CompanyList: React.FC<CompanyListProps> = ({
     }
   }, [focusedIndex]);
 
+
+
   return (
     <>
       <div
-        className={`relative font-medium ${
-          noborder ? "" : "border-b"
-        } ${className} ${styles.customScrollbar}
-            ${
-              disabled
-                ? "border-lightSilver"
-                : isOpen
-                ? "border-primary"
-                : inputValue
+        className={`relative font-medium ${noborder ? "" : "border-b"
+          } ${className} ${styles.customScrollbar}
+            ${disabled
+            ? "border-lightSilver"
+            : isOpen
+              ? "border-primary"
+              : inputValue
                 ? "border-primary"
                 : err
-                ? "border-defaultRed"
-                : "border-lightSilver hover:border-primary transition-colors duration-300"
-            }`}
+                  ? "border-defaultRed"
+                  : "border-lightSilver hover:border-primary transition-colors duration-300"
+          }`}
         ref={selectRef}
       >
         {label && (
           <span className="flex">
             <Typography
               type="h6"
-              className={`${
-                err
-                  ? "text-defaultRed"
-                  : focus
+              className={`${err
+                ? "text-defaultRed"
+                : focus
                   ? "text-primary"
                   : "text-slatyGrey dark:text-pureWhite"
-              }`}
+                }`}
             >
               {label}
             </Typography>
@@ -228,19 +238,17 @@ const CompanyList: React.FC<CompanyListProps> = ({
           </span>
         )}
         <div
-          className={`flex items-center transition-height duration-200 ease-out cursor-pointer ${
-            disabled && "pointer-events-none"
-          } ${
-            selectedValues.length > 0 && type == "avatar"
+          className={`flex items-center transition-height duration-200 ease-out cursor-pointer ${disabled && "pointer-events-none"
+            } ${selectedValues.length > 0 && type == "avatar" && avatarSize !== "x-small"
               ? "h-[42px]"
               : "h-[25px]"
-          }`}
+            }`}
           onClick={handleToggleOpen}
         >
           {selectedValues.length > 0 ? (
             <>
               {type == "avatar" && (
-                <AvatarGroup variant="small" show={showAvatar}>
+                <AvatarGroup variant={avatarSize} show={showAvatar}>
                   {updatedAvatars}
                 </AvatarGroup>
               )}
@@ -255,11 +263,9 @@ const CompanyList: React.FC<CompanyListProps> = ({
           ) : (
             <Typography
               type="h6"
-              className={`!font-normal dark:text-pureWhite ${
-                err && "text-defaultRed"
-              } ${
-                disabled && "text-slatyGrey dark:text-pureWhite"
-              } select-none`}
+              className={`!font-normal dark:text-pureWhite ${err && "text-defaultRed"
+                } ${disabled && "text-slatyGrey dark:text-pureWhite"
+                } select-none`}
             >
               {isOpen ? "" : defaultValue ? defaultValue : "Please Select"}
             </Typography>
@@ -267,15 +273,13 @@ const CompanyList: React.FC<CompanyListProps> = ({
           {!hideIcon && (
             <div
               onClick={handleToggleOpen}
-              className={`ml-1 text-[1.5rem]  absolute right-0 transition-transform ${
-                err
-                  ? "text-defaultRed"
-                  : disabled
+              className={`ml-1 text-[1.5rem]  absolute right-0 transition-transform ${err
+                ? "text-defaultRed"
+                : disabled
                   ? "text-slatyGrey"
                   : "text-darkCharcoal dark:text-pureWhite"
-              }  cursor-pointer   ${
-                isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
-              }}`}
+                }  cursor-pointer   ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
+                }}`}
             >
               <ChevronDown />
             </div>
@@ -283,19 +287,17 @@ const CompanyList: React.FC<CompanyListProps> = ({
         </div>
         <div>
           <ul
-            className={`absolute z-10 w-full bg-pureWhite dark:bg-[#1f2937] mt-[1px] overflow-y-auto shadow-md transition-transform  ${
-              isOpen
-                ? "max-h-60 translate-y-0 transition-opacity z-[1] opacity-100 duration-500"
-                : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
-            } ${isOpen ? "ease-out" : ""}`}
+            className={`absolute z-10 w-full bg-pureWhite dark:bg-[#1f2937] mt-[1px] overflow-y-auto shadow-md transition-transform  ${isOpen
+              ? "max-h-60 translate-y-0 transition-opacity z-[1] opacity-100 duration-500"
+              : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
+              } ${isOpen ? "ease-out" : ""}`}
           >
             <li
               className={`sticky top-0 z-[3] bg-pureWhite outline-none focus:bg-whiteSmoke p-[10px] text-sm font-normal cursor-pointer flex items-center`}
             >
               <div
-                className={`flex absolute  ${
-                  variant === "user" ? "left-3" : "left-2"
-                }`}
+                className={`flex absolute  ${variant === "user" ? "left-3" : "left-2"
+                  }`}
               >
                 <Search />
               </div>
@@ -308,33 +310,30 @@ const CompanyList: React.FC<CompanyListProps> = ({
                     ? `${inputValue.substring(0, 20)}...`
                     : inputValue
                 }
-                className={`dark:placeholder:text-pureWhite text-sm placeholder:text-sm  w-full pl-6 py-1 ${
-                  variant === "user" ? "border rounded" : "border-b"
-                } border-lightSilver flex-grow outline-none font-normal ${
-                  isOpen ? "text-primary" : ""
-                } ${!isOpen ? "cursor-pointer" : "cursor-default"} ${
-                  !isOpen ? "placeholder-darkCharcoal" : "placeholder-primary"
-                }`}
+                className={`dark:placeholder:text-pureWhite text-sm placeholder:text-sm  w-full pl-6 py-1 ${variant === "user" ? "border rounded" : "border-b"
+                  } border-lightSilver flex-grow outline-none font-normal ${isOpen ? "text-primary" : ""
+                  } ${!isOpen ? "cursor-pointer" : "cursor-default"} ${!isOpen ? "placeholder-darkCharcoal" : "placeholder-primary"
+                  }`}
                 style={{ background: "transparent" }}
               />
             </li>
             {options && options.length > 0 &&
-            options.some((option) =>
-              option.label.toLowerCase().startsWith(inputValue)
-            ) ? (
+              options.some((option) =>
+                option.label.toLowerCase().startsWith(inputValue)
+              ) ? (
               options.map((option, index) => (
                 <li
                   key={option.value + index}
-                  className={`outline-none focus:bg-whiteSmoke dark:focus:bg-secondaryGray dark:hover:bg-secondaryGray p-[10px] text-sm hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${
-                    selectedValues.includes(option.value) && ""
-                  }
-                                        ${
-                                          !option.label
-                                            .toLowerCase()
-                                            .startsWith(inputValue)
-                                            ? "hidden"
-                                            : ""
-                                        }`}
+                  className={`outline-none focus:bg-whiteSmoke dark:focus:bg-secondaryGray dark:hover:bg-secondaryGray p-[10px] text-sm hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selectedValues.includes(option.value) && ""
+                    }
+                    ${!option.label
+                      .toLowerCase()
+                      .startsWith(inputValue)
+                      ? "hidden"
+                      : ""
+                    }
+                    ${option && option.isEnable !== false ? "" : "pointer-events-none opacity-60"}
+                    `}
                   onClick={() => {
                     if (option.value !== inputValue) {
                       handleSelect(option.value);
@@ -351,13 +350,16 @@ const CompanyList: React.FC<CompanyListProps> = ({
                   }}
                 >
                   {checkbox && (
-                    <CheckBox
-                      id={option.value}
-                      checked={selectedValues.includes(option.value)}
-                      onChange={() => {
-                        handleCheckboxChange(option.value);
-                      }}
-                    />
+                    <div className={option && option.isEnable !== false ? "" : "pointer-events-none opacity-60"}>
+                      <CheckBox
+                        id={Math.random() + ""}
+                        checked={selectedValues.includes(option.value)}
+                        onChange={() => {
+                          handleCheckboxChange(option.value);
+                        }}
+
+                      />
+                    </div>
                   )}
                   <div className="mx-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
                     <Avatar
@@ -377,7 +379,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
               </span>
             )}
             {Savebtn && options?.length > 0 && isOpen && (
-              <div className="w-full sticky bottom-0" onClick={()=> setIsOpen(false)}>
+              <div className="w-full sticky bottom-0" onClick={() => setIsOpen(false)}>
                 <Button
                   variant="btn-primary"
                   className="w-full font-semibold"

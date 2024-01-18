@@ -71,7 +71,7 @@ const Avatar: FC<AvatarProps> = ({
               : Green.includes(Name.charAt(0))
               ? "bg-primary"
               : SkyBlue.includes(Name.charAt(0))
-              ? "bg-infoColor"
+              ? "bg-[#E1B100]"
               : "bg-defaultOrange"
           } ${className}`}
         >

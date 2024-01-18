@@ -253,8 +253,8 @@ const Datepicker: React.FC<DatepickerProps> = ({
                         className={` ${err
                             ? "text-defaultRed"
                             : focus
-                                ? "text-primary"
-                                : "text-slatyGrey"
+                                ? "text-primary !font-normal"
+                                : "text-slatyGrey !font-normal"
                             }`}
                     >
                         {label}
