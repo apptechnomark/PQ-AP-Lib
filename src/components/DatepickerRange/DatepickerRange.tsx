@@ -365,7 +365,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                             ? "text-defaultRed"
                             : focus
                                 ? "text-primary"
-                                : "text-slatyGrey"
+                                : "text-slatyGrey !text-sm"
                             }`}
                     >
                         {label}

@@ -18,6 +18,7 @@ interface CompanyListProps {
   hasError?: boolean;
   getValue: (value: any) => void;
   getError: (arg1: boolean) => void;
+  onChange?: (value: any) => void;
   validate?: boolean;
   placeholder?: any;
   noborder?: boolean;
@@ -40,6 +41,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
   className,
   required,
   defaultValue,
+  onChange,
   errorMessage = "This is required field!",
   hasError,
   getValue,
@@ -92,12 +94,12 @@ const CompanyList: React.FC<CompanyListProps> = ({
   };
 
   useEffect(() => {
-    if (values.length > 0) {
+    if (values?.length > 0) {
       setSelectedValues(values);
     } else {
       setSelectedValues([]);
     }
-  }, [values.length]);
+  }, [values?.length]);
 
 
   const handleCheckboxChange = (value: string) => {
@@ -195,6 +197,12 @@ const CompanyList: React.FC<CompanyListProps> = ({
       optionsElements[focusedIndex];
     }
   }, [focusedIndex]);
+
+  useEffect(() => {
+    if (onChange) {
+      onChange(selectedValues); // Convert array to string if needed
+    }
+  }, [selectedValues, onChange]);
 
 
 
@@ -352,7 +360,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
                   {checkbox && (
                     <div className={option && option.isEnable !== false ? "" : "pointer-events-none opacity-60"}>
                       <CheckBox
-                        id={Math.random() + ""}
+                        id={Math.random() + "" + index}
                         checked={selectedValues.includes(option.value)}
                         onChange={() => {
                           handleCheckboxChange(option.value);
