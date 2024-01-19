@@ -11,7 +11,7 @@ const ModalContent: React.FC<ModalContentProps> = ({ children,className,isScroll
 
   return (
     <div
-    className={`${className} flex-auto max-h-96 ${isScrollable && "overflow-y-scroll"} text-pureBlack`}
+    className={`${className} flex-auto ${isScrollable && "overflow-y-scroll max-h-96"} text-pureBlack`}
   >
         {children || 'Modal Content'}
       </div>
