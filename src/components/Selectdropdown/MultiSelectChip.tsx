@@ -152,6 +152,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
       getValue([]);
       setFocusedIndex(-1);
     } else {
+      setError(hasError)
       const allOptionValues = options.map((option) => option.value);
       setSelected(allOptionValues);
       getValue(allOptionValues.map(value => value.toString()));

@@ -177,6 +177,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       getValue([]);
       setFocusedIndex(-1);
     } else {
+      setError(hasError)
       const allOptionValues = options.map((option) => option.value);
       setSelectedValues(allOptionValues);
       getValue(allOptionValues.map(value => value.toString()));

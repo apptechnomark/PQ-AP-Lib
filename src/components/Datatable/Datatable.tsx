@@ -100,8 +100,11 @@ const DataTable = ({
     if (!sortConfig.key) return data;
 
     const sorted = [...data].sort((a, b) => {
-      const aValue = a[sortConfig.key];
-      const bValue = b[sortConfig.key];
+      let aValue = a[sortConfig.key] ?? '';
+      let bValue = b[sortConfig.key] ?? '';
+
+      if (aValue == null) aValue = '';
+      if (bValue == null) bValue = '';
 
       if (React.isValidElement(aValue) && React.isValidElement(bValue)) {
         const aProps = aValue.props as AComponentProps;
