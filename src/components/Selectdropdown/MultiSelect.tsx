@@ -20,14 +20,14 @@ interface MultiSelectProps {
   avatarImgUrl?: string;
   errorMessage?: string;
   hasError?: boolean;
-  getValue: (value: string) => void;
+  getValue: (value: any) => void;
   getError: (arg1: boolean) => void;
   supportingText?: string;
   errorClass?: string;
   validate?: boolean;
   placeholder?: any;
   noborder?: boolean;
-  hideIcon?:boolean;
+  hideIcon?: boolean;
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -108,33 +108,80 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     }
   };
 
+  // const handleSelect = (value: string) => {
+  //   const updatedValues = [...selectedValues];
+  //   const index = updatedValues.indexOf(value);
+
+  //   if (index > -1) {
+  //     updatedValues.splice(index, 1);
+  //   } else {
+  //     updatedValues.push(value);
+  //   }
+
+  //   setSelectedValues(updatedValues);
+  //   setInputValue("");
+  //   onSelect(updatedValues);
+
+  //   if (validate) {
+  //     if (updatedValues.length === 0) {
+  //       setError(true);
+  //       setErrMsg("Please select at least one option.");
+  //       getError(false);
+  //     } else {
+  //       setError(false);
+  //       setErrMsg("");
+  //       getError(true);
+  //     }
+  //   }
+  //   setFocusedIndex(-1);
+
+  // };
+
   const handleSelect = (value: string) => {
-    const updatedValues = [...selectedValues];
-    const index = updatedValues.indexOf(value);
+    const selectedIndex = selectedValues.indexOf(value);
+    let updatedSelected: string[];
 
-    if (index > -1) {
-      updatedValues.splice(index, 1);
+    if (selectedIndex === -1) {
+      // Value is not selected, add it to the selection
+      const selectedOption = options.find((option) => option.value === value);
+      updatedSelected = [
+        ...selectedValues,
+        selectedOption ? selectedOption.value : value,
+      ];
     } else {
-      updatedValues.push(value);
+      // Value is already selected, remove it from the selection
+      updatedSelected = [
+        ...selectedValues.slice(0, selectedIndex),
+        ...selectedValues.slice(selectedIndex + 1),
+      ];
     }
 
-    setSelectedValues(updatedValues);
-    setInputValue("");
-    onSelect(updatedValues);
-
-    if (validate) {
-      if (updatedValues.length === 0) {
-        setError(true);
-        setErrMsg("Please select at least one option.");
-        getError(false);
-      } else {
-        setError(false);
-        setErrMsg("");
-        getError(true);
-      }
+    if (updatedSelected.length > 0) {
+      setError(false);
+      setErrMsg("");
+      getError(true);
     }
+
+    setSelectedValues(updatedSelected);
+    getValue(updatedSelected);
     setFocusedIndex(-1);
+  };
 
+  const allOptionsSelected = options.every((option) =>
+    selectedValues.includes(option.value)
+  );
+
+  const handleToggleAll = () => {
+    if (allOptionsSelected) {
+      setSelectedValues([]);
+      getValue([]);
+      setFocusedIndex(-1);
+    } else {
+      const allOptionValues = options.map((option) => option.value);
+      setSelectedValues(allOptionValues);
+      getValue(allOptionValues.map(value => value.toString()));
+      setFocusedIndex(-1);
+    }
   };
 
   const handleBlur = () => {
@@ -231,18 +278,18 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                 ? `${inputValue.substring(0, 20)}...`
                 : inputValue
             }
-            className={`${error&&"placeholder:text-defaultRed text-defaultRed"} w-full  flex-grow bg-white outline-none text-darkCharcoal text-[14px] font-normal ${isOpen ? "text-primary" : ""
+            className={`${error && "placeholder:text-defaultRed text-defaultRed"} w-full  flex-grow bg-white outline-none text-darkCharcoal text-[14px] font-normal ${isOpen ? "text-primary" : ""
               } ${!isOpen ? "placeholder-darkCharcoal cursor-pointer" : "placeholder-primary cursor-default"
               }`} style={{ background: "transparent" }}
             onKeyDown={(e) => handleKeyDown(e)}
           />
           {!hideIcon &&
-          <div
-            onClick={handleToggleOpen}
-            className={`${error&&" text-defaultRed"} text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer  ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"}
+            <div
+              onClick={handleToggleOpen}
+              className={`${error && " text-defaultRed"} text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer  ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"}
               }`}>
-            <ChevronDown />
-          </div>}
+              <ChevronDown />
+            </div>}
         </div>
 
         <ul
@@ -251,6 +298,12 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
             } ${isOpen ? "ease-out" : ""}`}
         >
+          <label
+            className={`pt-3 pb-1 pl-3 text-[14px] font-normal text-primary cursor-pointer flex`}
+            onClick={handleToggleAll}
+          >
+            {allOptionsSelected ? "Clear All" : "Select All"}
+          </label>
           {options.length > 0 &&
             options.some((option) =>
               option.label.toLowerCase().startsWith(inputValue)

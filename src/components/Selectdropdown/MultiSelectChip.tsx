@@ -142,10 +142,21 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
     setFocusedIndex(-1);
   };
 
+  const allOptionsSelected = options.every((option) =>
+    selected.includes(option.value)
+  );
+
   const handleClearAll = () => {
-    setSelected([]);
-    getValue([]);
-    setFocusedIndex(-1);
+    if (allOptionsSelected) {
+      setSelected([]);
+      getValue([]);
+      setFocusedIndex(-1);
+    } else {
+      const allOptionValues = options.map((option) => option.value);
+      setSelected(allOptionValues);
+      getValue(allOptionValues.map(value => value.toString()));
+      setFocusedIndex(-1);
+    }
   };
 
   const handleToggleOpen = () => {
@@ -311,7 +322,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               className={`pt-3 pb-1 pl-3 text-[14px] font-normal text-primary cursor-pointer flex`}
               onClick={handleClearAll}
             >
-              Clear All
+              {allOptionsSelected ? "Clear All" : "Select All"}
             </label>}
           {filteredOptions.length == 0
             ? <span className="p-[10px] outline-none focus:bg-whiteSmoke text-[15px] hover:bg-whiteSmoke font-medium cursor-pointer flex flex-row items-center space-x-2 ">No matching data found.</span>
