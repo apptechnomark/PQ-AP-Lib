@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useRef } from "react";
 import Style from "./Modal.module.scss";
 
 interface ModalProps {
@@ -44,30 +44,79 @@ const Modal: React.FC<ModalProps> = ({
     height: Height
   };
 
-  const handleModalClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
+  const modalRef = useRef(null);
+  const isDragging = useRef(false);
+
+
+  const handleMouseDown = (e) => {
+    console.log("modalRef", e.key);
+    
+    if (!isDragging.current) {
+      isDragging.current = true;
+    }
   };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+
+  };
+
+  const handleModalClick = (event: any) => {
+    event.stopPropagation();
+    console.log("modalRef eeeee", event.key);
+    if (!isDragging.current && !modalRef.current.contains(event.target)) {
+      onClose();
+    }
+  };
+
+  // const handleBackdropClick = (event) => {
+  //   console.log("modalRef eeeee back", event, event.keyCode);
+  //   if (!isDragging.current && !modalRef.current.contains(event.target)) {
+  //     onClose();
+  //   }
+  // };
+
+  const handleClickOutside = (event) => {
+    if (modalRef.current && !modalRef.current.contains(event.target)) {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   return (
     <>
-      <div
-        className={`fixed inset-0 bg-black bg-opacity-40 backdrop-blur-[1px] z-50`}
-        onClick={onClose}
-      >
+      {isOpen && (
         <div
-          className={`fixed inset-0 z-50 flex items-center justify-center ${Style.modal}`}
+          className={`fixed inset-0 bg-black bg-opacity-40 backdrop-blur-[1px] z-50`}
         >
           <div
-            className={`${className} my-6 mx-auto ${getSizeClasses()} `}
-            style={modalStyles}
-            onClick={handleModalClick}
+            className={`fixed inset-0 z-50 flex items-center justify-center ${Style.modal}`}
           >
-            <div className={`${className} border-[1px] border-lightSilver rounded-lg flex flex-col bg-pureWhite outline-none focus:outline-none`}>
-              {children}
+            <div
+              className={`${className} my-6 mx-auto ${getSizeClasses()} `}
+              style={modalStyles}
+              ref={modalRef}
+              onClick={handleModalClick}
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
+            >
+              <div className={`${className} border-[1px] border-lightSilver rounded-lg flex flex-col bg-pureWhite outline-none focus:outline-none`}>
+                {children}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
