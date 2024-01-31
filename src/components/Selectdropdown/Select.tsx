@@ -42,7 +42,7 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onClickButton?: (value: any) => void;
   onDeleteButton?: (value: any) => void;
   disabled?: boolean;
-  noborder?: boolean
+  noborder?: boolean;
   hideIcon?: boolean;
 }
 
@@ -77,7 +77,7 @@ const Select: React.FC<SelectProps> = ({
   addDynamicForm_Icons_Delete,
   disabled,
   hideIcon,
-  noborder
+  noborder,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [inputLabel, setInputLabel] = useState("");
@@ -98,30 +98,15 @@ const Select: React.FC<SelectProps> = ({
   const [textNameHasError, setTextNameHasError] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
 
-
   const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(searchValue)
   );
 
   useEffect(() => {
-    if (!!defaultValue) {
-      setInputValue(defaultValue);
-      setSelectedOption(options.find((option) => option.value === defaultValue))
-      !!defaultValue && getError(true);
-    } else {
-      setErrMsg(errorMessage);
-      setError(hasError);
-      hasError && getError(false);
-
-      setInputValue("");
-    }
-  }, [defaultValue])
-
-  useEffect(() => {
     if (validate) {
       setErrMsg(errorMessage);
       setError(hasError);
-      // hasError && getError(false);
+      hasError && getError(false);
 
       if (defaultValue !== "" && defaultValue !== null && defaultValue !== 0) {
         setInputValue(defaultValue);
@@ -132,19 +117,47 @@ const Select: React.FC<SelectProps> = ({
   }, [errorMessage, hasError, validate, defaultValue]);
 
   useEffect(() => {
-    window.addEventListener("click", handleOutsideClick);
+    const handleOutsideClick = (event: any) => {
+      const isdropdownClick = event.target.closest(".bottomAnimation");
+      const selectDropdownRef = selectRef.current && selectRef.current.contains(event.target as Node)
+      if (
+        !selectDropdownRef &&
+        !isdropdownClick
+      ) {
+        setIsOpen(false);
+        setEditing(false);
+      }
+    };
+
+    const handleMouseDown = (event: any) => {
+      setTimeout(() => {
+        handleOutsideClick(event);
+      }, 0);
+    };
+    window.addEventListener("mousedown", handleMouseDown);
 
     return () => {
-      window.removeEventListener("click", handleOutsideClick);
+      window.removeEventListener("mousedown", handleMouseDown);
     };
   }, []);
 
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
-      setIsOpen(false);
-      setEditing(false);
-    }
-  };
+  //   useEffect(() => {
+  //     const handleOutsideClick = (event: any) => {
+  //       const isdropdownClick = event.target.closest(".bottomAnimation");
+  //       const selectDropdownRef = selectRef.current && selectRef.current.contains(event.target as Node)
+  //       if (
+  //         !selectDropdownRef &&
+  //         !isdropdownClick
+  //       ) {
+  //         setIsOpen(false);
+  //         setEditing(false);
+  //       }
+  //     };
+  //     window.addEventListener("click", handleOutsideClick);
+  //     return () => {
+  //         window.removeEventListener("click", handleOutsideClick);
+  //     };
+  // }, []);
 
   const handleToggleOpen = () => {
     if (disabled) {
@@ -237,7 +250,11 @@ const Select: React.FC<SelectProps> = ({
     value: string,
     index: number
   ) => {
-    if (e.key === "Enter" && e.target instanceof HTMLElement && e.target.tagName == 'LI') {
+    if (
+      e.key === "Enter" &&
+      e.target instanceof HTMLElement &&
+      e.target.tagName == "LI"
+    ) {
       handleSelect(value);
     } else if (e.key === "ArrowUp" && index > 0) {
       e.preventDefault();
@@ -265,32 +282,33 @@ const Select: React.FC<SelectProps> = ({
       value.preventDefault();
       setFocusedIndex(focusedIndex + 1);
     }
-  }
+  };
 
   return (
     <>
       <div
-        className={`relative font-medium w-full flex-row  ${noborder ? '' : 'border-b'} ${disabled
-          ? "border-lightSilver"
-          : isOpen
-            ? "border-primary"
-            : inputValue
+        className={` relative font-medium w-full flex-row  ${noborder ? "" : "border-b"
+          } ${disabled
+            ? "border-lightSilver"
+            : isOpen
               ? "border-primary"
-              : error
-                ? "border-defaultRed"
-                : "border-lightSilver hover:border-primary transition-colors duration-300"
+              : inputValue
+                ? "border-primary"
+                : error
+                  ? "border-defaultRed"
+                  : "border-lightSilver hover:border-primary transition-colors duration-300"
           } ${className}`}
         ref={selectRef}
       >
         {label && (
           <label
             className={`text-[14px] font-normal w-full ${isOpen
-              ? "text-primary"
-              : inputValue
                 ? "text-primary"
-                : error
-                  ? "text-defaultRed"
-                  : "text-slatyGrey"
+                : inputValue
+                  ? "text-primary"
+                  : error
+                    ? "text-defaultRed"
+                    : "text-slatyGrey"
               }`}
             htmlFor={id}
           >
@@ -331,14 +349,19 @@ const Select: React.FC<SelectProps> = ({
                         : inputValue
             }
             autoComplete="off"
-            className={`${error && "placeholder:text-defaultRed text-defaultRed"} flex-grow outline-none bg-white ${disabled
-              ? "text-slatyGrey"
-              : isOpen
-                ? "text-primary"
-                : "text-darkCharcoal"
+            className={`${error && "placeholder:text-defaultRed text-defaultRed"
+              } flex-grow outline-none bg-white ${disabled
+                ? "text-slatyGrey"
+                : isOpen
+                  ? "text-primary"
+                  : "text-darkCharcoal"
               } text-[14px] font-normal w-full
 
-     ${disabled ? "cursor-default" : !isOpen ? "cursor-pointer" : "cursor-default"
+     ${disabled
+                ? "cursor-default"
+                : !isOpen
+                  ? "cursor-pointer"
+                  : "cursor-default"
               } ${!isOpen
                 ? "placeholder-darkCharcoal"
                 : disabled
@@ -348,47 +371,48 @@ const Select: React.FC<SelectProps> = ({
             style={{ background: "transparent" }}
             onKeyDown={(e) => handleKeyDown(e)}
           />
-          {!hideIcon &&
+          {!hideIcon && (
             <div
               onClick={handleToggleOpen}
               className={`text-[1.5rem] transition-transform ${disabled
-                ? "text-slatyGrey cursor-default"
-                : "text-darkCharcoal cursor-pointer"
-                } ${error && " text-defaultRed"} ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"}`}
+                  ? "text-slatyGrey cursor-default"
+                  : "text-darkCharcoal cursor-pointer"
+                } ${error && " text-defaultRed"} ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
+                }`}
             >
               <ChevronDown />
-            </div>}
+            </div>
+          )}
         </div>
 
-
         <ul
-          className={`absolute z-10 w-full bg-pureWhite mt-[${noborder ? 13 : 1}px] overflow-y-auto shadow-md transition-transform ${isOpen
-            ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
-            : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
+          className={`bottomAnimation absolute z-10 w-full bg-pureWhite mt-[${noborder ? 13 : 1
+            }px] overflow-y-auto shadow-md transition-transform ${isOpen
+              ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
+              : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
             } ${isOpen ? "ease-out" : ""}`}
         >
-          {filteredOptions.length == 0
-            ? <span className="p-[10px] outline-none focus:bg-whiteSmoke text-[15px] hover:bg-whiteSmoke font-medium cursor-pointer flex flex-row items-center space-x-2 ">No matching data found.</span>
-            : filteredOptions.map((option, index) => (
+          {filteredOptions.length == 0 ? (
+            <span className="p-[10px] outline-none focus:bg-whiteSmoke text-[15px] hover:bg-whiteSmoke font-medium cursor-pointer flex flex-row items-center space-x-2 ">
+              No matching data found.
+            </span>
+          ) : (
+            filteredOptions.map((option, index) => (
               <li
                 key={index}
                 className={`p-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
-                  addDynamicForm_Icons_Edit ||
-                  addDynamicForm_Icons_Delete
-                  ? "justify-between"
-                  : ""
-                  } ${option.value === selectedOption?.value
-                    ? "bg-whiteSmoke"
+                    addDynamicForm_Icons_Edit ||
+                    addDynamicForm_Icons_Delete
+                    ? "justify-between"
                     : ""
+                  } ${option.value === selectedOption?.value ? "bg-whiteSmoke" : ""
                   }`}
                 onClick={() => {
                   if (option.value !== inputValue) {
                     handleSelect(option.value);
                   }
                 }}
-                onKeyDown={(e) =>
-                  handleListItemKeyDown(e, option.value, index)
-                }
+                onKeyDown={(e) => handleListItemKeyDown(e, option.value, index)}
                 tabIndex={0}
                 ref={(el) => {
                   if (index === focusedIndex) {
@@ -405,9 +429,7 @@ const Select: React.FC<SelectProps> = ({
                     />
                   </div>
                 )}
-
                 {option.label}&nbsp;{option.JsxElement}
-
                 {(addDynamicForm ||
                   addDynamicForm_Icons_Edit ||
                   addDynamicForm_Icons_Delete) && (
@@ -443,9 +465,9 @@ const Select: React.FC<SelectProps> = ({
                       </div>
                     </a>
                   )}
-
               </li>
-            ))}
+            ))
+          )}
           {(addDynamicForm || editing) && (
             <li className="w-full z-50 bg-pureWhite">
               <div className="bg-gray-100 flex flex-row items-center justify-between ">
