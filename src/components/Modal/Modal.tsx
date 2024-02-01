@@ -49,7 +49,6 @@ const Modal: React.FC<ModalProps> = ({
 
 
   const handleMouseDown = (e) => {
-    console.log("modalRef", e.key);
     
     if (!isDragging.current) {
       isDragging.current = true;
@@ -63,7 +62,6 @@ const Modal: React.FC<ModalProps> = ({
 
   const handleModalClick = (event: any) => {
     event.stopPropagation();
-    console.log("modalRef eeeee", event.key);
     if (!isDragging.current && !modalRef.current.contains(event.target)) {
       onClose();
     }

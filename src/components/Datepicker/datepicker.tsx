@@ -78,6 +78,15 @@ const Datepicker: React.FC<DatepickerProps> = ({
         }
     ).filter((year) => year !== null);
 
+    useEffect(() => {
+        const newValueDate = new Date(value ? value : "");
+        setToday(value ? newValueDate : currentDate)
+        setSelectedDate(value ? newValueDate : currentDate)
+        setSelectedMonth(value ? newValueDate.getMonth() : currentMonth)
+        setSelectedYear(value ? newValueDate.getFullYear() : currentYear)
+        setFullDate(value)
+    }, [value])
+
     const toggleMonthList = () => {
         setAnimate("");
         setShowMonthList(!showMonthList);
@@ -177,10 +186,6 @@ const Datepicker: React.FC<DatepickerProps> = ({
             setAnimate("");
         }, 100);
     };
-
-    useEffect(() => {
-        setFullDate(value)
-    }, [value])
 
     useEffect(() => {
         const handleOutsideClick = (event: any) => {
