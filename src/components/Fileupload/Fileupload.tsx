@@ -57,11 +57,14 @@ function Uploader({ multiSelect, variant, type, getValue }: UploaderProps) {
     handleFileChange(files);
   };
 
-  const handleFileChange = (files: FileList) => {
-    const names = Array.from(files).map((file) => file.name);
-    setFileNames(names);
-    setFiles(files)
-    getValue(files)
+  const handleFileChange = (newFiles: FileList) => {
+    const updatedFiles = [...files, ...Array.from(newFiles)];
+    setFiles(updatedFiles);
+
+    const updatedFileNames = updatedFiles.map((file) => file.name);
+    setFileNames(updatedFileNames);
+
+    getValue(updatedFiles);
 
     setTimeout(() => {
       setIsChecked(true);
@@ -91,7 +94,7 @@ function Uploader({ multiSelect, variant, type, getValue }: UploaderProps) {
     updatedFileNames.splice(index, 1);
     setFileNames(updatedFileNames);
     setFiles(Array.from(files).filter((i, inx) => inx !== index))
-    
+
     getValue(Array.from(files).filter((i, inx) => inx !== index))
 
     if (updatedFileNames.length === 0) {
@@ -201,8 +204,8 @@ function Uploader({ multiSelect, variant, type, getValue }: UploaderProps) {
           />
           <div
             className={`text-[15px] text-slatyGrey ${variant === "small"
-                ? ""
-                : "border-2 border-lightSilver rounded-[4px] p-2"
+              ? ""
+              : "border-2 border-lightSilver rounded-[4px] p-2"
               }`}
           >
             <UploadIcon />
@@ -277,9 +280,9 @@ function Uploader({ multiSelect, variant, type, getValue }: UploaderProps) {
       ) : (
         <section
           className={`${variant === "small"
-              ? fileNames.length > 0 &&
-              "flex justify-between items-center border border-lightSilver h-[36px] px-[20px] rounded-[4px]"
-              : "mt-2 flex justify-between items-center border border-lightSilver h-[36px] px-[20px] rounded-[4px]"
+            ? fileNames.length > 0 &&
+            "flex justify-between items-center border border-lightSilver h-[36px] px-[20px] rounded-[4px]"
+            : "mt-2 flex justify-between items-center border border-lightSilver h-[36px] px-[20px] rounded-[4px]"
             }`}
         >
           {fileNames.length > 0 && !uploaded ? (
@@ -335,8 +338,8 @@ function Uploader({ multiSelect, variant, type, getValue }: UploaderProps) {
               />
               <div
                 className={`text-[15px] text-slatyGrey ${variant === "small"
-                    ? ""
-                    : "border-2 border-lightSilver rounded-[4px] p-2"
+                  ? ""
+                  : "border-2 border-lightSilver rounded-[4px] p-2"
                   }`}
               >
                 <UploadIcon />
