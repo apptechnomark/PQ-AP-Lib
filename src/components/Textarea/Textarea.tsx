@@ -50,11 +50,11 @@ const Textarea: React.FC<TextareaProps> = ({
       setErr(true);
       getError(false);
       setErrMsg("This is a required field!");
-    } else if (e.target.value.trim().length <= minChar) {
+    } else if (e.target.value.trim().length < minChar) {
       setErr(true);
       getError(false);
       setErrMsg(`Please enter minimum ${minChar} characters.`);
-    } else if (e.target.value.trim().length >= maxChar) {
+    } else if (e.target.value.trim().length > maxChar) {
       setErr(true);
       getError(false);
       setErrMsg(`You can enter maximum ${maxChar} characters.`);

@@ -63,9 +63,10 @@ const DataTable = ({
   const tableRef = useRef<HTMLTableElement>(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "" });
   const [expandedRows, setExpandedRows] = useState(new Set());
-  const [columnStyle, setColumnStyle] = useState([])
+  const [sortedRowIndices, setSortedRowIndices] = useState({});
 
   const handleSort = (columnKey: any) => {
+
     let direction = "asc";
     if (sortConfig.key === columnKey && sortConfig.direction === "asc") {
       direction = "desc";
@@ -88,9 +89,7 @@ const DataTable = ({
     setExpandedRows(newExpandedRows);
   };
 
-  const handleGetIdHover = (rowIndex: any) => {
-    getRowId(data[rowIndex]);
-  };
+ 
 
   const handleGetIdClick = (rowIndex: any) => {
     getExpandableData(data[rowIndex]);
@@ -140,6 +139,25 @@ const DataTable = ({
 
     return sorted;
   }, [data, sortConfig]);
+
+
+  useEffect(() => {
+    const newSortedRowIndices = {};
+    sortedData?.forEach((row, index) => {
+      newSortedRowIndices[index] = index;
+    });
+    setSortedRowIndices(newSortedRowIndices);
+  }, [sortedData]);
+
+  const handleGetIdHover = (itemKey: any) => {
+    const currentIndex = sortedRowIndices[itemKey];
+    if (currentIndex !== undefined) {
+      getRowId(sortedData[currentIndex]);
+    }
+    else {
+      getRowId(null)
+    }
+  };
 
   const getAlignment = (align: string) => {
     switch (align) {
@@ -220,9 +238,15 @@ const DataTable = ({
       <tbody>
         {sortedData?.map((row, rowIndex) => (
           <React.Fragment key={rowIndex}>
-            <tr className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""} ${isRowDisabled && sortedData?.length !== (rowIndex + 1) ? `row-disabled` : ''}`}
-              onMouseEnter={getRowId ? () => handleGetIdHover(rowIndex) : undefined}
-              onMouseLeave={getRowId ? () => handleGetIdHover(null) : undefined}
+            <tr key={row} className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""} ${isRowDisabled && sortedData?.length !== (rowIndex + 1) ? `row-disabled` : ''}`}
+              onMouseEnter={() => {
+                setSortedRowIndices({ ...sortedRowIndices, [rowIndex]: rowIndex });
+                handleGetIdHover(rowIndex);
+              }}
+              onMouseLeave={() => {
+                setSortedRowIndices({ ...sortedRowIndices, [rowIndex]: undefined });
+                handleGetIdHover(undefined);
+              }}
               onClick={!getRowId && getExpandableData ? () => handleGetIdClick(rowIndex) : undefined}
             >
               {expandable &&
