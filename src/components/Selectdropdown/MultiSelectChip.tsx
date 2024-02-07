@@ -184,7 +184,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
           >
             <span title={selectedOption?.label}>
               {selectedOption?.label.length > 8
-                ? selectedOption?.label.substring(0, 8) + "..."
+                ? selectedOption?.label.substring(0, 5) + "..."
                 : selectedOption?.label}
             </span>
 
