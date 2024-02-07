@@ -134,7 +134,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
     const tabLabel = (index: number, label: any) => {
         return <Typography className={`whitespace-nowrap border-r ${index > (tabs.length - (direction === "row-reverse" ? 5 : 2)) ? `border-none` : `border-r-lightSilver`} px-5 cursor-pointer ${selectedTabIndex === index
             ? "text-primary text-base font-semibold"
-            : "text-slatyGrey dark:text-pureWhite font-medium text-sm"
+            : "text-slatyGrey font-medium text-sm"
             }`} type="h6">
             {label}
 
@@ -171,9 +171,9 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                                     >
                                         {variant === "modal"
                                             ? <a href={`#${tab.id}`}>
-                                                <Typography type="h6" className="cursor-pointer whitespace-nowrap dark:text-pureWhite">{tab.label}</Typography>
+                                                <Typography type="h6" className="cursor-pointer whitespace-nowrap">{tab.label}</Typography>
                                             </a>
-                                            : <Typography type="h6" className="cursor-pointer whitespace-nowrap dark:text-pureWhite">{tab.label}</Typography>}
+                                            : <Typography type="h6" className="cursor-pointer whitespace-nowrap">{tab.label}</Typography>}
                                     </li>
                                 ))}
                             </ul>
@@ -216,9 +216,9 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                                     >
                                         {variant === "modal"
                                             ? <a href={`#${tab.id}`}>
-                                                <Typography type="h6" className="cursor-pointer whitespace-nowrap dark:text-pureWhite">{tab.label}</Typography>
+                                                <Typography type="h6" className="cursor-pointer whitespace-nowrap ">{tab.label}</Typography>
                                             </a>
-                                            : <Typography type="h6" className="cursor-pointer whitespace-nowrap dark:text-pureWhite">{tab.label}</Typography>}
+                                            : <Typography type="h6" className="cursor-pointer whitespace-nowrap ">{tab.label}</Typography>}
                                     </li>
                                 ))}
                             </ul>

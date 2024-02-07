@@ -377,7 +377,7 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
                         type="text"
                         placeholder="dd/mm/yyyy"
                         className={`${className} w-full border-b placeholder:text-sm text-sm bg-transparent ${disabled
-                            ? "border-lightSilver"
+                            ? "border-lightSilver pointer-events-none"
                             : toggleOpen
                                 ? "border-primary"
                                 : err
@@ -390,6 +390,7 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
                         defaultValue={(inputStartDate && inputEndDate) ? inputStartDate + " to " + inputEndDate : inputStartDate && inputStartDate + " to "}
                         onChange={(e: any) => updateFromInput(e.target.value)}
                         onBlur={handleInputBlur}
+                        {...props}
                     />
                     {!hideIcon &&
                         <span

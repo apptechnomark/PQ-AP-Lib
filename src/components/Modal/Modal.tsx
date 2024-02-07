@@ -10,6 +10,7 @@ interface ModalProps {
   width?: string;
   Height?: string;
   className?: string;
+  noneOutSideClicked?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -19,7 +20,8 @@ const Modal: React.FC<ModalProps> = ({
   size,
   width,
   Height,
-  className
+  className,
+  noneOutSideClicked
 }) => {
   if (!isOpen) return null;
 
@@ -62,20 +64,14 @@ const Modal: React.FC<ModalProps> = ({
 
   const handleModalClick = (event: any) => {
     event.stopPropagation();
-    if (!isDragging.current && !modalRef.current.contains(event.target)) {
+    if (!isDragging.current && !modalRef.current.contains(event.target) && !noneOutSideClicked) {
       onClose();
     }
   };
 
-  // const handleBackdropClick = (event) => {
-  //   console.log("modalRef eeeee back", event, event.keyCode);
-  //   if (!isDragging.current && !modalRef.current.contains(event.target)) {
-  //     onClose();
-  //   }
-  // };
 
-  const handleClickOutside = (event) => {
-    if (modalRef.current && !modalRef.current.contains(event.target)) {
+  const handleClickOutside = (event:any) => {
+    if (!noneOutSideClicked && modalRef.current && !modalRef.current.contains(event.target)) {
       onClose();
     }
   };

@@ -292,6 +292,7 @@ const DropdownList: React.FC<SelectProps> = ({
                         `}
                         style={{ background: "transparent" }}
                         onKeyDown={(e) => handleKeyDown(e)}
+                        {...props}
                     />
                     {!hideIcon &&
                         <div

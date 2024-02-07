@@ -277,8 +277,9 @@ const Datepicker: React.FC<DatepickerProps> = ({
                 <input
                     type="text"
                     placeholder={format}
-                    className={`text-[14px] py-[1px] w-full tracking-wider placeholder:tracking-wider font-proxima border-b placeholder:text-[14px] bg-transparent ${disabled
-                        ? "border-lightSilver"
+                    className={`text-[14px] py-[1px] w-full tracking-wider placeholder:tracking-wider font-proxima border-b placeholder:text-[14px] bg-transparent 
+                    ${disabled
+                        ? "border-lightSilver pointer-events-none"
                         : (toggleOpen && !err)
                             ? "border-primary placeholder:text-primary"
                             : fullDate
@@ -293,6 +294,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
                     onChange={(e: any) => updateFromInput(e.target.value)}
                     onBlur={handleInputBlur}
                     onFocus={handleFocus}
+                    {...props}
                 />
                 {!hideIcon &&
                     <span className={`absolute right-1 bottom-1 cursor-pointer`} onClick={calendarShow}>

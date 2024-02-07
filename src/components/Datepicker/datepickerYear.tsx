@@ -228,7 +228,7 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
                     type="text"
                     placeholder="mm/yyyy"
                     className={`text-[14px] py-[0.5px] w-full tracking-wider placeholder:tracking-wider font-proxima border-b placeholder:text-[14px] bg-transparent ${disabled
-                        ? "border-lightSilver"
+                        ? "border-lightSilver pointer-events-none"
                         : (toggleOpen && !err)
                             ? "border-primary placeholder:text-primary"
                             : fullDate
@@ -243,6 +243,7 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
                     onChange={(e: any) => updateFromInput(e.target.value)}
                     onBlur={handleInputBlur}
                     onFocus={handleFocus}
+                    {...props}
                 />
                 {!hideIcon &&
                     <span className={`absolute right-1 bottom-1 cursor-pointer`} onClick={calendarShow}>
