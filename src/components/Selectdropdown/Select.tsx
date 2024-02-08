@@ -11,7 +11,7 @@ interface Option {
   label: string;
   JsxElement?: any;
   isEnable?: any;
-  liClass?:any;
+  liClass?: any;
 }
 
 interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -359,7 +359,13 @@ const Select: React.FC<SelectProps> = ({
                 ? "text-slatyGrey"
                 : isOpen
                 ? "text-primary"
-                : selectedOption?"text-darkCharcoal":"text-slatyGrey opacity-70"
+                : selectedOption
+                ? "text-darkCharcoal"
+                : error
+                ? "text-defaultRed"
+                : defaultValue
+                ? "text-darkCharcoal"
+                : "text-slatyGrey opacity-70"
             } text-[14px] font-normal w-full
 
      ${
@@ -418,8 +424,9 @@ const Select: React.FC<SelectProps> = ({
                     ? "justify-between"
                     : ""
                 } ${
-                  option && option.liClass? option.value === selectedOption?.value
-                  && `${option.liClass}`
+                  option && option.liClass
+                    ? option.value === selectedOption?.value &&
+                      `${option.liClass}`
                     : ""
                 }
                  ${

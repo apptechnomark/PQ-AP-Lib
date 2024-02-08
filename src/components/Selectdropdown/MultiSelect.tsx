@@ -51,7 +51,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   validate,
   placeholder,
   hideIcon,
-  noborder
+  noborder,
 }) => {
   const selectRef = useRef<HTMLDivElement>(null);
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
@@ -67,7 +67,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
         setErrMsg(errorMessage);
         setError(hasError);
         hasError && getError(false);
-        defaultValue && setInputValue(defaultValue)
+        defaultValue && setInputValue(defaultValue);
       }, [errorMessage, hasError, defaultValue]);
   }
 
@@ -177,10 +177,10 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       getValue([]);
       setFocusedIndex(-1);
     } else {
-      setError(hasError)
+      setError(hasError);
       const allOptionValues = options.map((option) => option.value);
       setSelectedValues(allOptionValues);
-      getValue(allOptionValues.map(value => value.toString()));
+      getValue(allOptionValues.map((value) => value.toString()));
       setFocusedIndex(-1);
     }
   };
@@ -204,7 +204,11 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     value: string,
     index: number
   ) => {
-    if (e.key === "Enter" && e.target instanceof HTMLElement && e.target.tagName == 'LI') {
+    if (
+      e.key === "Enter" &&
+      e.target instanceof HTMLElement &&
+      e.target.tagName == "LI"
+    ) {
       handleSelect(value);
     } else if (e.key === "ArrowUp" && index > 0) {
       e.preventDefault();
@@ -232,29 +236,31 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       value.preventDefault();
       setFocusedIndex(focusedIndex + 1);
     }
-  }
+  };
 
   return (
     <>
       <div
-        className={`relative font-medium w-full ${noborder ? '' : 'border-b'} ${selectedValues.length > 0
-          ? "border-primary"
-          : error
+        className={`relative font-medium w-full ${noborder ? "" : "border-b"} ${
+          selectedValues.length > 0
+            ? "border-primary"
+            : error
             ? "border-defaultRed"
             : "border-lightSilver hover:border-primary transition-colors duration-300"
-          } ${className}`}
+        } ${className}`}
         ref={selectRef}
       >
         {label && (
           <label
-            className={`text-[14px] font-normal ${isOpen
-              ? "text-primary"
-              : selectedValues.length > 0
+            className={`text-[14px] font-normal ${
+              isOpen
+                ? "text-primary"
+                : selectedValues.length > 0
                 ? "text-primary"
                 : error
-                  ? "text-defaultRed"
-                  : "text-slatyGrey"
-              }`}
+                ? "text-defaultRed"
+                : "text-slatyGrey"
+            }`}
             htmlFor={id}
           >
             {label}
@@ -272,32 +278,50 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             placeholder={
               selectedValues.length > 0
                 ? `${selectedValues.length} selected`
-                : isOpen ? placeholder || "Search" : defaultValue || "Please select"
+                : isOpen
+                ? placeholder || "Search"
+                : defaultValue || "Please select"
             }
             value={
               inputValue.length > 25
                 ? `${inputValue.substring(0, 20)}...`
                 : inputValue
             }
-            className={`${error && "placeholder:text-defaultRed text-defaultRed"} w-full  flex-grow bg-white outline-none text-darkCharcoal text-[14px] font-normal ${isOpen ? "text-primary" : ""
-              } ${!isOpen ? "placeholder-darkCharcoal cursor-pointer" : "placeholder-primary cursor-default"
-              }`} style={{ background: "transparent" }}
+            className={`${
+              error && "placeholder:text-defaultRed text-defaultRed"
+            } w-full  flex-grow bg-white outline-none text-darkCharcoal text-[14px] font-normal ${
+              isOpen ? "text-primary" : ""
+            } ${
+              !isOpen
+                ? "placeholder-darkCharcoal cursor-pointer"
+                : "placeholder-primary cursor-default"
+            }`}
+            style={{ background: "transparent" }}
             onKeyDown={(e) => handleKeyDown(e)}
           />
-          {!hideIcon &&
+          {!hideIcon && (
             <div
               onClick={handleToggleOpen}
-              className={`${error && " text-defaultRed"} text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer  ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"}
-              }`}>
+              className={`${
+                error && " text-defaultRed"
+              } text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer  ${
+                isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
+              }
+              }`}
+            >
               <ChevronDown />
-            </div>}
+            </div>
+          )}
         </div>
 
         <ul
-          className={`absolute z-10 w-full bg-pureWhite ${noborder ? "mt-[13px]" : "mt-[1px]"} overflow-y-auto shadow-md transition-transform ${isOpen
-            ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
-            : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
-            } ${isOpen ? "ease-out" : ""}`}
+          className={`absolute z-10 w-full bg-pureWhite ${
+            noborder ? "mt-[13px]" : "mt-[1px]"
+          } overflow-y-auto shadow-md transition-transform ${
+            isOpen
+              ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
+              : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
+          } ${isOpen ? "ease-out" : ""}`}
         >
           <label
             className={`pt-3 pb-1 pl-3 text-[14px] font-normal text-primary cursor-pointer flex`}
@@ -306,35 +330,35 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             {allOptionsSelected ? "Clear All" : "Select All"}
           </label>
           {options.length > 0 &&
-            options.some((option) =>
-              option.label.toLowerCase().startsWith(inputValue)
-            ) ? (
+          options.some((option) =>
+            option.label.toLowerCase().startsWith(inputValue)
+          ) ? (
             options.map((option, index) => (
               <li
                 key={index}
-                className={`outline-none focus:bg-whiteSmoke p-[10px] text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selectedValues.includes(option.value) ? "bg-whiteSmoke" : ""
-                  } ${!option.label.toLowerCase().startsWith(inputValue)
+                className={`outline-none focus:bg-whiteSmoke p-[10px] text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${
+                  selectedValues.includes(option.value) ? "bg-whiteSmoke" : ""
+                } ${
+                  !option.label.toLowerCase().startsWith(inputValue)
                     ? "hidden"
                     : ""
-                  }`}
-                onClick={type !== "checkbox"
-                  ? () => {
-                    if (option.value !== inputValue) {
-                      handleSelect(option.value);
-                    }
-                  }
-                  : undefined
+                }`}
+                onClick={
+                  type !== "checkbox"
+                    ? () => {
+                        if (option.value !== inputValue) {
+                          handleSelect(option.value);
+                        }
+                      }
+                    : undefined
                 }
-                onKeyDown={(e) =>
-                  handleListItemKeyDown(e, option.value, index)
-                }
+                onKeyDown={(e) => handleListItemKeyDown(e, option.value, index)}
                 tabIndex={0}
                 ref={(el) => {
                   if (index === focusedIndex) {
                     el?.focus();
                   }
                 }}
-
               >
                 {avatar && (
                   <div className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
@@ -360,7 +384,8 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                 )}
                 {/* {option.label} */}
               </li>
-            ))) : (
+            ))
+          ) : (
             <span className="p-[10px] focus:bg-whiteSmoke text-[15px] hover:bg-whiteSmoke font-medium cursor-pointer flex flex-row items-center space-x-2 ">
               No matching data found.
             </span>

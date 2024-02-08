@@ -52,7 +52,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
   errorClass,
   validate,
   placeholder,
-  hideIcon
+  hideIcon,
 }) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -152,10 +152,10 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
       getValue([]);
       setFocusedIndex(-1);
     } else {
-      setError(hasError)
+      setError(hasError);
       const allOptionValues = options.map((option) => option.value);
       setSelected(allOptionValues);
-      getValue(allOptionValues.map(value => value.toString()));
+      getValue(allOptionValues.map((value) => value.toString()));
       setFocusedIndex(-1);
     }
   };
@@ -179,8 +179,9 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
         return (
           <div
             key={selectedValue}
-            className={`flex items-center  badge bg-[#E9ECEF] text-[#212529] border border-[#CED4DA] rounded-sm mr-[3px] ml-[1px] mt-[1px] mb-2 text-[14px] ${selectedOption?.label.length > 8 ? "max-w-[100px]" : ""
-              }`}
+            className={`flex items-center  badge bg-[#E9ECEF] text-[#212529] border border-[#CED4DA] rounded-sm mr-[3px] ml-[1px] mt-[1px] mb-2 text-[14px] ${
+              selectedOption?.label.length > 8 ? "max-w-[100px]" : ""
+            }`}
           >
             <span title={selectedOption?.label}>
               {selectedOption?.label.length > 8
@@ -205,13 +206,16 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
     </div>
   );
 
-
   const handleListItemKeyDown = (
     e: React.KeyboardEvent<HTMLLIElement>,
     value: string,
     index: number
   ) => {
-    if (e.key === "Enter" && e.target instanceof HTMLElement && e.target.tagName == 'LI') {
+    if (
+      e.key === "Enter" &&
+      e.target instanceof HTMLElement &&
+      e.target.tagName == "LI"
+    ) {
       handleSelect(value);
     } else if (e.key === "ArrowUp" && index > 0) {
       e.preventDefault();
@@ -239,7 +243,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
       value.preventDefault();
       setFocusedIndex(focusedIndex + 1);
     }
-  }
+  };
 
   return (
     <>
@@ -247,14 +251,15 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
         {label && (
           <label
             onClick={handleToggleOpen}
-            className={`text-[14px] font-normal ${isOpen
-              ? "text-primary"
-              : selected.length > 0
+            className={`text-[14px] font-normal ${
+              isOpen
+                ? "text-primary"
+                : selected.length > 0
                 ? "text-primary"
                 : error
-                  ? "text-defaultRed"
-                  : "text-slatyGrey"
-              }`}
+                ? "text-defaultRed"
+                : "text-slatyGrey"
+            }`}
           >
             {label}
             {validate && <span className="text-defaultRed">&nbsp;*</span>}
@@ -265,17 +270,19 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
           <div
             onBlur={handleBlur}
             onClick={handleToggleOpen}
-            className={`shrink-0 w-fit bg-white border-b max-h-[26px] text-[14px] font-normal  ${isOpen
-              ? "text-primary cursor-default"
-              : selected.length === 0
+            className={`shrink-0 w-fit bg-white border-b max-h-[26px] text-[14px] font-normal  ${
+              isOpen
+                ? "text-primary cursor-default"
+                : selected.length === 0
                 ? "text-darkCharcoal cursor-pointer"
                 : ""
-              } ${selected.length > 0
+            } ${
+              selected.length > 0
                 ? "border-primary"
                 : error
-                  ? "border-defaultRed hover:border-defaultRed"
-                  : "border-lightSilver transition-colors duration-300 hover:border-primary"
-              } ${className} @layer base {
+                ? "border-defaultRed hover:border-defaultRed"
+                : "border-lightSilver transition-colors duration-300 hover:border-primary"
+            } ${className} @layer base {
                 @screen firefox {
                   margin-top: 1rem;
                 }
@@ -291,55 +298,78 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               onChange={(e) => setSearchInput(e.target.value)}
               readOnly={!isOpen}
               placeholder={
-                isOpen ? placeholder : selected.length > 0 ? "" : "Please select"
+                isOpen
+                  ? placeholder
+                  : selected.length > 0
+                  ? ""
+                  : "Please select"
               }
               value={searchInput}
-              getError={() => { }}
-              getValue={() => { }}
-              className={` ${error && "placeholder:text-defaultRed text-defaultRed !border-defaultRed"} bg-pureWhite outline-none  text-[14px] font-normal ${!isOpen ? "text-darkCharcoal placeholder-darkCharcoal cursor-pointer" : "placeholder-primary cursor-default text-primary"}`}
+              getError={() => {}}
+              getValue={() => {}}
+              className={` ${
+                error &&
+                "placeholder:text-defaultRed text-defaultRed !border-defaultRed"
+              } bg-pureWhite outline-none  text-[14px] font-normal ${
+                !isOpen
+                  ? "text-darkCharcoal placeholder-darkCharcoal cursor-pointer"
+                  : "placeholder-primary cursor-default text-primary"
+              }`}
               onKeyDown={(e) => handleKeyDown(e)}
             />
           </div>
-          {!hideIcon &&
+          {!hideIcon && (
             <div
               onClick={handleToggleOpen}
-              className={`${error && " text-defaultRed"} absolute right-0 text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer ${isOpen ? "rotate-180 text-primary duration-400" : " duration-200"
-                }`}
+              className={`${
+                error && " text-defaultRed"
+              } absolute right-0 text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer ${
+                isOpen
+                  ? "rotate-180 text-primary duration-400"
+                  : " duration-200"
+              }`}
             >
               <ChevronDown />
-            </div>}
+            </div>
+          )}
         </div>
 
         <ul
-          className={`absolute z-10 bg-pureWhite mt-[1px] overflow-y-auto shadow-md transition-transform ${isOpen
-            ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500 ease-out"
-            : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500 ease-out"
-            }`}
+          className={`absolute z-10 bg-pureWhite mt-[1px] overflow-y-auto shadow-md transition-transform ${
+            isOpen
+              ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500 ease-out"
+              : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500 ease-out"
+          }`}
           // Setting the width inline style based on the client width of the parent div
           style={{ width: selectRef.current?.clientWidth }}
         >
-          {filteredOptions.length == 0 ? ""
-            : <label
+          {filteredOptions.length == 0 ? (
+            ""
+          ) : (
+            <label
               className={`pt-3 pb-1 pl-3 text-[14px] font-normal text-primary cursor-pointer flex`}
               onClick={handleClearAll}
             >
               {allOptionsSelected ? "Clear All" : "Select All"}
-            </label>}
-          {filteredOptions.length == 0
-            ? <span className="p-[10px] outline-none focus:bg-whiteSmoke text-[15px] hover:bg-whiteSmoke font-medium cursor-pointer flex flex-row items-center space-x-2 ">No matching data found.</span>
-            : filteredOptions.map((option, index) => (
+            </label>
+          )}
+          {filteredOptions.length == 0 ? (
+            <span className="p-[10px] outline-none focus:bg-whiteSmoke text-[15px] hover:bg-whiteSmoke font-medium cursor-pointer flex flex-row items-center space-x-2 ">
+              No matching data found.
+            </span>
+          ) : (
+            filteredOptions.map((option, index) => (
               <li
                 key={index}
-                className={`p-3 outline-none focus:bg-whiteSmoke text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex ${selected.includes(option.value) ? "bg-whiteSmoke" : ""
-                  }`}
+                className={`p-3 outline-none focus:bg-whiteSmoke text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex ${
+                  selected.includes(option.value) ? "bg-whiteSmoke" : ""
+                }`}
                 onClick={
                   type !== "checkbox"
                     ? () => handleSelect(option.value)
                     : undefined
                 }
-                onKeyDown={(e) =>
-                  handleListItemKeyDown(e, option.value, index)
-                }
+                onKeyDown={(e) => handleListItemKeyDown(e, option.value, index)}
                 tabIndex={0}
                 ref={(el) => {
                   if (index === focusedIndex) {
@@ -370,7 +400,8 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                 )}
                 {type !== "checkbox" && option.label}
               </li>
-            ))}
+            ))
+          )}
         </ul>
       </div>
       {error && (
