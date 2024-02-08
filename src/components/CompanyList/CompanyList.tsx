@@ -36,6 +36,7 @@ interface CompanyListProps {
   values?: string[];
   hideIcon?: boolean;
   Savebtn?: boolean;
+  listAvatarSize?: "small" | "large" | "x-small";
   avatarSize?: "small" | "large" | "x-small";
   onSaveClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
@@ -64,6 +65,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
   Savebtn,
   onSaveClick,
   avatarSize = "small",
+  listAvatarSize = "small",
   ...props
 }) => {
   const selectRef = useRef<HTMLDivElement>(null);
@@ -238,7 +240,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
               className={`${
                 err
                   ? "text-defaultRed"
-                  : focus
+                  : focus || selectedValues.length > 0
                   ? "text-primary"
                   : "text-slatyGrey "
               }`}
@@ -285,7 +287,11 @@ const CompanyList: React.FC<CompanyListProps> = ({
           ) : (
             <Typography
               type="h6"
-              className={`!font-normal  ${err && "text-defaultRed"} text-slatyGrey opacity-70 ${disabled && "text-slatyGrey"} select-none`}
+              className={`!font-normal  ${err && "text-defaultRed"} ${
+                !isOpen && "!text-slatyGrey opacity-70"
+              } ${defaultValue && "text-darkCharcoal"} ${
+                disabled && "text-slatyGrey"
+              } select-none`}
             >
               {isOpen ? "" : defaultValue ? defaultValue : "Please select"}
             </Typography>
@@ -400,7 +406,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
                   )}
                   <div className="mx-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
                     <Avatar
-                      variant="small"
+                      variant={listAvatarSize}
                       name={option.label}
                       imageUrl={option.imageUrl}
                     />
