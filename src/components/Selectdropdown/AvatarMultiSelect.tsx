@@ -38,7 +38,7 @@ interface CompanyListProps {
   hideIcon?: boolean;
   avatarSize?: "small" | "large" | "x-small";
 }
-const AvtarSelect: React.FC<CompanyListProps> = ({
+const AvatarMultiSelect: React.FC<CompanyListProps> = ({
   id,
   options,
   values,
@@ -141,7 +141,7 @@ const AvtarSelect: React.FC<CompanyListProps> = ({
     getValueRef.current(selectedValues);
   }, [selectedValues]);
 
-  const updatedAvatars = selectedValues.map((value, index) => {
+  const updatedAvatars = !!selectedValues && selectedValues?.map((value, index) => {
     const option = options?.find((item) => item.value == value);
     return (
       <Avatar
@@ -202,38 +202,34 @@ const AvtarSelect: React.FC<CompanyListProps> = ({
 
   return (
     <>
-      <div
-        className={`relative font-medium w-full ${
-          noborder ? "" : "border-b"
-        } ${className}
-            ${
-              disabled
-                ? "border-lightSilver"
-                : isOpen
-                ? "border-primary"
-                : inputValue
+      <div id={id}
+        className={`relative font-medium w-full ${noborder ? "" : "border-b"
+          } ${className}
+            ${disabled
+            ? "border-lightSilver"
+            : isOpen
+              ? "border-primary"
+              : inputValue
                 ? "border-primary"
                 : err
-                ? "border-defaultRed"
-                : `${
-                    selectedValues.length > 0
-                      ? "border-primary"
-                      : "border-lightSilver "
+                  ? "border-defaultRed"
+                  : `${selectedValues.length > 0
+                    ? "border-primary"
+                    : "border-lightSilver "
                   } hover:border-primary transition-colors duration-300`
-            }`}
+          }`}
         ref={selectRef}
       >
         {label && (
           <span className="flex">
             <Typography
               type="h6"
-              className={`${
-                err
+              className={`${err
                   ? "text-defaultRed"
                   : focus
-                  ? "text-primary"
-                  : "text-slatyGrey "
-              }`}
+                    ? "text-primary"
+                    : "text-slatyGrey "
+                }`}
             >
               {label}
             </Typography>
@@ -247,15 +243,14 @@ const AvtarSelect: React.FC<CompanyListProps> = ({
           </span>
         )}
         <div
-          className={`flex items-center  transition-height duration-200 ease-out cursor-pointer ${
-            disabled && "pointer-events-none"
-          } ${
-            selectedValues.length > 0 &&
-            type == "avatar" &&
-            avatarSize !== "x-small"
+        id={id}
+          className={`flex items-center  transition-height duration-200 ease-out cursor-pointer ${disabled && "pointer-events-none"
+            } ${selectedValues.length > 0 &&
+              type == "avatar" &&
+              avatarSize !== "x-small"
               ? "h-[42px]"
               : "h-[25px]"
-          }`}
+            }`}
           onClick={handleToggleOpen}
           {...props}
         >
@@ -304,11 +299,9 @@ const AvtarSelect: React.FC<CompanyListProps> = ({
           ) : (
             <Typography
               type="h6"
-              className={`!font-normal  ${
-                err && "text-defaultRed"
-              } text-slatyGrey opacity-70 ${
-                disabled && "text-slatyGrey"
-              } select-none`}
+              className={`!font-normal  ${err && "text-defaultRed"
+                } text-slatyGrey opacity-70 ${disabled && "text-slatyGrey"
+                } select-none`}
             >
               {isOpen ? "" : defaultValue ? defaultValue : "Please select"}
             </Typography>
@@ -316,15 +309,13 @@ const AvtarSelect: React.FC<CompanyListProps> = ({
           {!hideIcon && (
             <div
               onClick={handleToggleOpen}
-              className={`ml-1 text-[1.5rem]  absolute right-0 transition-transform ${
-                err
+              className={`ml-1 text-[1.5rem]  absolute right-0 transition-transform ${err
                   ? "text-defaultRed"
                   : disabled
-                  ? "text-slatyGrey pointer-events-none"
-                  : "text-darkCharcoal "
-              }  cursor-pointer   ${
-                isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
-              }}`}
+                    ? "text-slatyGrey pointer-events-none"
+                    : "text-darkCharcoal "
+                }  cursor-pointer   ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
+                }}`}
             >
               <ChevronDown />
             </div>
@@ -332,19 +323,17 @@ const AvtarSelect: React.FC<CompanyListProps> = ({
         </div>
         <div>
           <ul
-            className={`absolute z-10 w-full bg-pureWhite mt-[1px] overflow-y-auto shadow-md transition-transform  ${
-              isOpen
+            className={`absolute z-10 w-full bg-pureWhite mt-[1px] overflow-y-auto shadow-md transition-transform  ${isOpen
                 ? "max-h-60 translate-y-0 transition-opacity z-[1] opacity-100 duration-500"
                 : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
-            } ${isOpen ? "ease-out" : ""}`}
+              } ${isOpen ? "ease-out" : ""}`}
           >
             <li
               className={`sticky top-0 z-[3] bg-pureWhite outline-none focus:bg-whiteSmoke p-[10px] text-sm font-normal cursor-pointer flex items-center`}
             >
               <div
-                className={`flex absolute  ${
-                  variant === "user" ? "left-3" : "left-2"
-                }`}
+                className={`flex absolute  ${variant === "user" ? "left-3" : "left-2"
+                  }`}
               >
                 <Search />
               </div>
@@ -357,36 +346,30 @@ const AvtarSelect: React.FC<CompanyListProps> = ({
                     ? `${inputValue.substring(0, 20)}...`
                     : inputValue
                 }
-                className={` text-sm placeholder:text-sm  w-full pl-6 py-1 ${
-                  variant === "user" ? "border rounded" : "border-b"
-                } border-lightSilver flex-grow outline-none font-normal ${
-                  isOpen ? "text-primary" : ""
-                } ${!isOpen ? "cursor-pointer" : "cursor-default"} ${
-                  !isOpen ? "placeholder-darkCharcoal" : "placeholder-primary"
-                }`}
+                className={` text-sm placeholder:text-sm  w-full pl-6 py-1 ${variant === "user" ? "border rounded" : "border-b"
+                  } border-lightSilver flex-grow outline-none font-normal ${isOpen ? "text-primary" : ""
+                  } ${!isOpen ? "cursor-pointer" : "cursor-default"} ${!isOpen ? "placeholder-darkCharcoal" : "placeholder-primary"
+                  }`}
                 style={{ background: "transparent" }}
               />
             </li>
             {options &&
-            options.length > 0 &&
-            options.some((option) =>
-              option.label.toLowerCase().startsWith(inputValue)
-            ) ? (
+              options.length > 0 &&
+              options.some((option) =>
+                option.label.toLowerCase().startsWith(inputValue)
+              ) ? (
               options.map((option, index) => (
                 <li
                   key={option.value + index}
-                  className={`outline-none focus:bg-whiteSmoke p-[10px] text-sm hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${
-                    selectedValues.includes(option.value) && ""
-                  }
-                    ${
-                      !option.label.toLowerCase().startsWith(inputValue)
-                        ? "hidden"
-                        : ""
+                  className={`outline-none focus:bg-whiteSmoke p-[10px] text-sm hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selectedValues.includes(option.value) && ""
                     }
-                    ${
-                      option && option.isEnable !== false
-                        ? ""
-                        : "pointer-events-none opacity-60"
+                    ${!option.label.toLowerCase().startsWith(inputValue)
+                      ? "hidden"
+                      : ""
+                    }
+                    ${option && option.isEnable !== false
+                      ? ""
+                      : "pointer-events-none opacity-60"
                     }
                     `}
                   onClick={() => {
@@ -450,4 +433,4 @@ const AvtarSelect: React.FC<CompanyListProps> = ({
   );
 };
 
-export { AvtarSelect };
+export { AvatarMultiSelect };

@@ -1,7 +1,8 @@
 import { Accordion } from "./components/Accordian/Accordian";
 import { Alert } from "./components/Alert/Alert";
 import { Avatar, AvatarGroup } from "./components/Avatar/Avatar";
-import {AvtarSelect} from "./components/Selectdropdown/AvtarSelect";
+import {AvatarSelect} from "./components/Selectdropdown/AvatarSelect";
+import { AvatarMultiSelect } from "./components/Selectdropdown/AvatarMultiSelect";
 
 import Badge from "./components/Badge/Badge";
 import Breadcrumb from "./components/Breadcrumb/Breadcrumb";
@@ -84,7 +85,8 @@ import "./style.css";
 
 export {
   Accordion,
-  AvtarSelect,
+  AvatarSelect,
+  AvatarMultiSelect,
   Alert,
   Appbar,
   Hamburger,
