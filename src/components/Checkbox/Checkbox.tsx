@@ -39,7 +39,7 @@ const CheckBox = ({
             htmlFor={id}
           >
             <span className={`${style.checkBoxSpan}`}></span>
-            {label}
+            <span className={`${className}-checkbox`}>{label}</span>
           </label>
         </>
       ) : (
@@ -57,7 +57,7 @@ const CheckBox = ({
             htmlFor={id}
           >
             <span className={`${style.i__checkBoxSpan}`}></span>
-            {label}
+            <span className={`${className}-checkbox`}>{label}</span>
           </label>
         </>
       )}
