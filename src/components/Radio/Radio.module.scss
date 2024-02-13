@@ -52,6 +52,15 @@ $defaultRed: #dc3545;
   }
 }
 
+.disabledCheck {
+  #border {
+    stroke: #E6E6E6 !important;
+  }
+  #dot {
+    fill: #E6E6E6;
+  }
+}
+
 .__radio {
   height: 0;
   width: 0;
