@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState, ChangeEvent, MouseEvent } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  ChangeEvent,
+  MouseEvent,
+} from "react";
 import styles from "./MinMaxRange.module.scss";
 
 interface MinMaxRangeProps {
@@ -32,7 +38,6 @@ const MinMaxRange: React.FC<MinMaxRangeProps> = ({
   const [tooltipVisibleMin, setTooltipVisibleMin] = useState(false);
   const [tooltipVisibleMax, setTooltipVisibleMax] = useState(false);
   const [width, setWidth] = useState<number | null>(null); // Add this line
-
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -106,20 +111,26 @@ const MinMaxRange: React.FC<MinMaxRangeProps> = ({
   });
 
   return (
-    <div id="parentDiv" className={`relative ${styles.container}`} ref={parentDivRef}>
+    <div
+      id="parentDiv"
+      className={`relative ${styles.container}`}
+      ref={parentDivRef}
+    >
       <div className={`${styles.range_slider}`} onClick={handleLineClick}>
         <div
-          className={`flex items-center px-[7.5px] justify-between w-full absolute ${variant === "dot" && "top-[1.5px]"
-            }`}
+          className={`flex items-center px-[7.5px] justify-between w-full absolute ${
+            variant === "dot" && "top-[1.5px]"
+          }`}
         >
           {totalSteps.map((index) => (
             <div
-              className={` flex justify-center items-center ${variant === "line" ? `${styles.line}` : `${styles.dot}`
-                }`}
+              className={` flex justify-center items-center ${
+                variant === "line" ? `${styles.line}` : `${styles.dot}`
+              }`}
               key={index}
             >
               {Numbers && (
-                <div className="absolute -ml-1.5 top-2 text-[#6E6D7A]">
+                <div className="absolute top-2 text-[#6E6D7A]">
                   {minValue + index * numbers}
                 </div>
               )}
