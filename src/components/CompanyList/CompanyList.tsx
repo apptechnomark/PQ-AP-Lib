@@ -37,6 +37,7 @@ interface CompanyListProps {
   hideIcon?: boolean;
   Savebtn?: boolean;
   openUpside?: boolean;
+  iconRightPosition?: any
   listAvatarSize?: "small" | "large" | "x-small";
   avatarSize?: "small" | "large" | "x-small";
   onSaveClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -65,6 +66,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
   hideIcon,
   Savebtn,
   onSaveClick,
+  iconRightPosition = 0,
   avatarSize = "small",
   listAvatarSize = "small",
   openUpside,
@@ -232,37 +234,33 @@ const CompanyList: React.FC<CompanyListProps> = ({
   return (
     <>
       <div
-        className={`relative font-medium ${
-          noborder ? "" : "border-b"
-        } ${className} ${styles.customScrollbar}
-            ${
-              disabled
-                ? "border-lightSilver"
-                : isOpen
-                ? "border-primary"
-                : inputValue
+        className={`relative font-medium ${noborder ? "" : "border-b"
+          } ${className} ${styles.customScrollbar}
+            ${disabled
+            ? "border-lightSilver"
+            : isOpen
+              ? "border-primary"
+              : inputValue
                 ? "border-primary"
                 : err
-                ? "border-defaultRed"
-                : `${
-                    selectedValues.length > 0
-                      ? "border-primary"
-                      : "border-lightSilver "
+                  ? "border-defaultRed"
+                  : `${selectedValues.length > 0
+                    ? "border-primary"
+                    : "border-lightSilver "
                   } hover:border-primary transition-colors duration-300`
-            }`}
+          }`}
         ref={selectRef}
       >
         {label && (
           <span className="flex">
             <Typography
               type="h6"
-              className={`${
-                err
-                  ? "text-defaultRed"
-                  : focus || selectedValues.length > 0
+              className={`${err
+                ? "text-defaultRed"
+                : focus || selectedValues.length > 0
                   ? "text-primary"
                   : "text-slatyGrey "
-              }`}
+                }`}
             >
               {label}
             </Typography>
@@ -276,15 +274,13 @@ const CompanyList: React.FC<CompanyListProps> = ({
           </span>
         )}
         <div
-          className={`flex items-center transition-height duration-200 ease-out cursor-pointer ${
-            disabled && "pointer-events-none"
-          } ${
-            selectedValues.length > 0 &&
-            type == "avatar" &&
-            avatarSize !== "x-small"
+          className={`flex items-center transition-height duration-200 ease-out cursor-pointer ${disabled && "pointer-events-none"
+            } ${selectedValues.length > 0 &&
+              type == "avatar" &&
+              avatarSize !== "x-small"
               ? "h-[42px]"
               : "h-[25px]"
-          }`}
+            }`}
           onClick={handleToggleOpen}
           {...props}
         >
@@ -305,11 +301,9 @@ const CompanyList: React.FC<CompanyListProps> = ({
           ) : (
             <Typography
               type="h6"
-              className={`!font-normal  ${err && "!text-defaultRed"} ${
-                !isOpen && "!text-slatyGrey opacity-70"
-              } ${defaultValue && "text-darkCharcoal"} ${
-                disabled && "text-slatyGrey"
-              } select-none`}
+              className={`!font-normal  ${err && "!text-defaultRed"} ${!isOpen && "!text-slatyGrey opacity-70"
+                } ${defaultValue && "text-darkCharcoal"} ${disabled && "text-slatyGrey"
+                } select-none`}
             >
               {isOpen ? "" : defaultValue ? defaultValue : "Please select"}
             </Typography>
@@ -317,15 +311,13 @@ const CompanyList: React.FC<CompanyListProps> = ({
           {!hideIcon && (
             <div
               onClick={handleToggleOpen}
-              className={`ml-1 text-[1.5rem]  absolute right-0 transition-transform ${
-                err
-                  ? "text-defaultRed"
-                  : disabled
+              className={`text-[1.5rem] absolute right-${iconRightPosition} transition-transform ${err
+                ? "text-defaultRed"
+                : disabled
                   ? "text-slatyGrey pointer-events-none"
                   : "text-darkCharcoal "
-              }  cursor-pointer   ${
-                isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
-              }}`}
+                }  cursor-pointer   ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
+                }}`}
             >
               <ChevronDown />
             </div>
@@ -333,23 +325,19 @@ const CompanyList: React.FC<CompanyListProps> = ({
         </div>
         <div>
           <ul
-            className={`absolute z-10 w-full bg-pureWhite mt-[1px] overflow-y-auto shadow-lg transition-transform  ${
-              isOpen
-                ? `max-h-60 ${
-                    openUpside ? "-translate-y-[17.2rem]" : "translate-y-0"
-                  } transition-opacity z-[1] opacity-100 duration-500`
-                : `max-h-0 ${
-                    openUpside ? "-translate-y-[17.2rem]" : "translate-y-20"
-                  } transition-opacity opacity-0 duration-500`
-            } ${isOpen ? "ease-out" : ""}`}
+            className={`absolute z-10 w-full bg-pureWhite mt-[1px] overflow-y-auto shadow-lg transition-transform  ${isOpen
+              ? `max-h-60 ${openUpside ? "-translate-y-[17.2rem]" : "translate-y-0"
+              } transition-opacity z-[1] opacity-100 duration-500`
+              : `max-h-0 ${openUpside ? "-translate-y-[17.2rem]" : "translate-y-20"
+              } transition-opacity opacity-0 duration-500`
+              } ${isOpen ? "ease-out" : ""}`}
           >
             <li
               className={`sticky top-0 z-[3] bg-pureWhite outline-none focus:bg-whiteSmoke p-[10px] text-sm font-normal cursor-pointer flex items-center`}
             >
               <div
-                className={`flex absolute  ${
-                  variant === "user" ? "left-3" : "left-2"
-                }`}
+                className={`flex absolute  ${variant === "user" ? "left-3" : "left-2"
+                  }`}
               >
                 <Search />
               </div>
@@ -363,19 +351,16 @@ const CompanyList: React.FC<CompanyListProps> = ({
                     ? `${inputValue.substring(0, 20)}...`
                     : inputValue
                 }
-                className={` text-sm placeholder:text-sm  w-full pl-6 py-1 ${
-                  variant === "user" ? "border rounded" : "border-b"
-                } border-lightSilver flex-grow outline-none font-normal ${
-                  isOpen ? "text-primary" : ""
-                } ${!isOpen ? "cursor-pointer" : "cursor-default"} ${
-                  !isOpen ? "placeholder-darkCharcoal" : "placeholder-primary"
-                }`}
+                className={` text-sm placeholder:text-sm  w-full pl-6 py-1 ${variant === "user" ? "border rounded" : "border-b"
+                  } border-lightSilver flex-grow outline-none font-normal ${isOpen ? "text-primary" : ""
+                  } ${!isOpen ? "cursor-pointer" : "cursor-default"} ${!isOpen ? "placeholder-darkCharcoal" : "placeholder-primary"
+                  }`}
                 style={{ background: "transparent" }}
               />
             </li>
             {options.length > 0 && (
               <li
-                className={`sticky top-[50px] z-[3] bg-pureWhite outline-none focus:bg-whiteSmoke text-sm font-normal cursor-pointer flex items-center`}
+                className={`sticky top-[49px] z-[3]  bg-pureWhite outline-none focus:bg-whiteSmoke text-sm font-normal cursor-pointer flex items-center`}
               >
                 <label
                   className={`pl-3 w-full pb-1 text-primary cursor-pointer`}
@@ -386,25 +371,22 @@ const CompanyList: React.FC<CompanyListProps> = ({
               </li>
             )}
             {options &&
-            options.length > 0 &&
-            options.some((option) =>
-              option.label.toLowerCase().startsWith(inputValue)
-            ) ? (
+              options.length > 0 &&
+              options.some((option) =>
+                option.label.toLowerCase().startsWith(inputValue)
+              ) ? (
               options.map((option, index) => (
                 <li
                   key={option.value + index}
-                  className={`outline-none focus:bg-whiteSmoke p-[10px] text-sm hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${
-                    selectedValues.includes(option.value) && ""
-                  }
-                    ${
-                      !option.label.toLowerCase().startsWith(inputValue)
-                        ? "hidden"
-                        : ""
+                  className={`outline-none focus:bg-whiteSmoke p-[10px] text-sm hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selectedValues.includes(option.value) && ""
                     }
-                    ${
-                      option && option.isEnable !== false
-                        ? ""
-                        : "pointer-events-none opacity-60"
+                    ${!option.label.toLowerCase().startsWith(inputValue)
+                      ? "hidden"
+                      : ""
+                    }
+                    ${option && option.isEnable !== false
+                      ? ""
+                      : "pointer-events-none opacity-60"
                     }
                     `}
                   onClick={() => {
