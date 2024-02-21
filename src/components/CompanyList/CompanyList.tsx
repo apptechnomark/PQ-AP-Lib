@@ -37,6 +37,7 @@ interface CompanyListProps {
   hideIcon?: boolean;
   Savebtn?: boolean;
   openUpside?: boolean;
+  iconRightPosition?: any;
   listAvatarSize?: "small" | "large" | "x-small";
   avatarSize?: "small" | "large" | "x-small";
   onSaveClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
