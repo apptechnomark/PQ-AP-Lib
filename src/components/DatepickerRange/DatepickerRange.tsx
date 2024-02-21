@@ -380,7 +380,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                 </span>
             )}
             <div
-                className={`flex w-full -mt-1 before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:bg-primary before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full`}
+                className={`flex w-full -mt-1 before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full`}
                 ref={inputRef}
             >
                 <div className="flex w-full relative">
@@ -604,9 +604,9 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                                                             onMouseLeave={handleMouseOut}
                                                         ><Typography
                                                             type="h6"
-                                                            className={`h-[38px] w-[38px] m-0.5 grid place-content-center rounded-full cursor-pointer z-10 
+                                                            className={`h-[38px] w-[38px] m-0.5 grid place-content-center rounded-full cursor-pointer z-10
                                                                 ${currentMonth ? "" : "text-[#cbd5e0]"}
-                                                                ${(isSelected && !isStartDate && !isEndDate) && "bg-[#caf1ff] transition-color duration-[700ms] font-semibold"} 
+                                                                ${(isSelected && !isStartDate && !isEndDate) && "bg-[#caf1ff] transition-color duration-[700ms] font-semibold"}
                                                                 ${isInRange && "border-dashed border border-primary"}
                                                                 ${(value && value !== "" ? (isStartDate || isEndDate) : (isSameDay || isStartDate || isEndDate))
                                                                     ? " bg-primary font-semibold text-white border-none"

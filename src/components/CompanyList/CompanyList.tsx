@@ -65,6 +65,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
   hideIcon,
   Savebtn,
   onSaveClick,
+  iconRightPosition = 0,
   avatarSize = "small",
   listAvatarSize = "small",
   openUpside,
@@ -375,7 +376,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
             </li>
             {options.length > 0 && (
               <li
-                className={`sticky top-[50px] z-[3] bg-pureWhite outline-none focus:bg-whiteSmoke text-sm font-normal cursor-pointer flex items-center`}
+                className={`sticky top-[49px] z-[3]  bg-pureWhite outline-none focus:bg-whiteSmoke text-sm font-normal cursor-pointer flex items-center`}
               >
                 <label
                   className={`pl-3 w-full pb-1 text-primary cursor-pointer`}

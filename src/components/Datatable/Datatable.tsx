@@ -89,7 +89,7 @@ const DataTable = ({
     setExpandedRows(newExpandedRows);
   };
 
- 
+
 
   const handleGetIdClick = (rowIndex: any) => {
     getExpandableData(data[rowIndex]);
@@ -267,10 +267,10 @@ const DataTable = ({
               {columns?.map((column, colIndex) => (
                 <td
                   key={colIndex}
-                  className={` ${row?.style} ${noHeader && column?.colStyle} ${column?.rowStyle} h-12 text-[14px] font-proxima py-1 px-1 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
+                  className={`${row?.style} ${noHeader && column?.colStyle} ${column?.rowStyle} h-12 text-[14px] font-proxima py-1 px-1 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
                 >
                   <span
-                    className={`flex py-2 px-1 text-[14px] font-proxima items-center justify-${getAlignment(
+                    className={`flex p-1 break-normal text-[14px] font-proxima items-center justify-${getAlignment(
                       column?.colalign
                     )}`}
                   >
