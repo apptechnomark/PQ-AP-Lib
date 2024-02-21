@@ -335,11 +335,11 @@ const CompanyList: React.FC<CompanyListProps> = ({
           <ul
             className={`absolute z-10 w-full bg-pureWhite mt-[1px] overflow-y-auto shadow-lg transition-transform  ${
               isOpen
-                ? `max-h-60 ${
-                    openUpside ? "-translate-y-[17.2rem]" : "translate-y-0"
+                ? `${openUpside ? "max-h-[335px]" : "max-h-60"} ${
+                    openUpside ? "-translate-y-[23.4rem]" : "translate-y-0"
                   } transition-opacity z-[1] opacity-100 duration-500`
                 : `max-h-0 ${
-                    openUpside ? "-translate-y-[17.2rem]" : "translate-y-20"
+                    openUpside ? "-translate-y-[23.4rem]" : "translate-y-20"
                   } transition-opacity opacity-0 duration-500`
             } ${isOpen ? "ease-out" : ""}`}
           >
