@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ChevronRight from "./icons/ChevronRight";
 import SortIcon from "./icons/SortIcon";
 import styles from "./Datatable.module.scss";
@@ -20,6 +20,7 @@ interface Column {
   header: any;
   accessor: string;
   sortable: boolean;
+  colType?: "number" | "string" | "boolean" | "date"
   colStyle?: string;
   rowStyle?: string;
   colalign?: "left" | "center" | "right";
@@ -40,7 +41,15 @@ interface DataTableProps {
   noHeader?: boolean;
   userClass?: string;
   isTableLayoutFixed?: boolean
-  isRowDisabled?: boolean
+  isRowDisabled?: boolean,
+  lazyLoadRows?: number;
+  isHeaderTextBreak?: boolean;
+}
+
+interface SortConfig {
+  key: string | null;
+  direction: 'asc' | 'desc' | string;
+  colType?: 'number' | 'string' | 'boolean' | 'date';
 }
 
 const DataTable = ({
@@ -58,20 +67,68 @@ const DataTable = ({
   noHeader,
   userClass,
   isTableLayoutFixed,
-  isRowDisabled = false
+  isRowDisabled = false,
+  lazyLoadRows,
+  isHeaderTextBreak = false,
 }: DataTableProps) => {
   const tableRef = useRef<HTMLTableElement>(null);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "" });
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc', });
   const [expandedRows, setExpandedRows] = useState(new Set());
   const [sortedRowIndices, setSortedRowIndices] = useState({});
+  const [visibleRows, setVisibleRows] = useState(lazyLoadRows);
 
-  const handleSort = (columnKey: any) => {
+  const lastRowRef = useRef<HTMLTableRowElement>(null);
 
+  const [totalItems, setTotalItems] = useState(data.length);
+
+  const lazyLoadNext = (numRows: number) => {
+    setVisibleRows((prev) => Math.min(prev + numRows, totalItems));
+  }
+  useEffect(() => {
+    setTotalItems(data.length);
+  }, [data]);
+
+
+  const lazyLoadBuffer = useCallback(() => {
+    if (lastRowRef.current) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          lazyLoadNext(lazyLoadRows);
+        }
+      });
+      observer.observe(lastRowRef.current);
+      return () => observer.disconnect();
+    }
+  }, [lazyLoadRows]);
+
+  useEffect(() => {
+    const cleanupObserver = lazyLoadBuffer();
+    return cleanupObserver;
+  }, [lazyLoadBuffer]);
+
+
+  // const lazyLoadBuffer = () => {
+  //   if (!tableRef.current) return;
+
+  //   const { scrollTop, clientHeight, scrollHeight } = tableRef.current;
+  //   if (scrollTop + clientHeight >= scrollHeight) {
+  //     lazyLoadNext(lazyLoadRows);
+  //   }
+  // };
+
+  useEffect(() => {
+    window.addEventListener("scroll", lazyLoadBuffer);
+    return () => {
+      window.removeEventListener("scroll", lazyLoadBuffer);
+    };
+  }, []);
+
+  const handleSort = (columnKey: string, colType?: "number" | "string" | "boolean" | "date") => {
     let direction = "asc";
     if (sortConfig.key === columnKey && sortConfig.direction === "asc") {
       direction = "desc";
     }
-    setSortConfig({ key: columnKey, direction });
+    setSortConfig({ key: columnKey, direction, colType });
   };
 
   const handleRowToggle = (rowIndex: any) => {
@@ -89,8 +146,6 @@ const DataTable = ({
     setExpandedRows(newExpandedRows);
   };
 
-
-
   const handleGetIdClick = (rowIndex: any) => {
     getExpandableData(data[rowIndex]);
   };
@@ -105,41 +160,34 @@ const DataTable = ({
       if (aValue == null) aValue = '';
       if (bValue == null) bValue = '';
 
-      if (React.isValidElement(aValue) && React.isValidElement(bValue)) {
-        const aProps = aValue.props as AComponentProps;
-        const bProps = bValue.props as BComponentProps;
-        const aPropValue = aProps.children;
-        const bPropValue = bProps.children;
+      switch (sortConfig.colType) {
+        case 'number':
+          const numA = parseFloat(aValue);
+          const numB = parseFloat(bValue);
+          return sortConfig.direction === 'asc' ? numA - numB : numB - numA;
 
-        if (typeof aPropValue === "string" && typeof bPropValue === "string") {
-          return sortConfig.direction === "asc"
-            ? aPropValue.localeCompare(bPropValue)
-            : bPropValue.localeCompare(aPropValue);
-        } else if (
-          typeof aPropValue === "number" &&
-          typeof bPropValue === "number"
-        ) {
-          return sortConfig.direction === "asc"
-            ? aPropValue - bPropValue
-            : bPropValue - aPropValue;
-        }
-      } else if (typeof aValue === "string" && typeof bValue === "string") {
-        return sortConfig.direction === "asc"
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      } else if (typeof aValue === "number" && typeof bValue === "number") {
-        return sortConfig.direction === "asc"
-          ? aValue - bValue
-          : bValue - aValue;
-      } else {
-        // Handle other data types here if needed
-        return 0;
+        case 'string':
+          return sortConfig.direction === 'asc'
+            ? aValue.localeCompare(bValue)
+            : bValue.localeCompare(aValue);
+
+        case 'boolean':
+          const boolA = Boolean(aValue);
+          const boolB = Boolean(bValue);
+          return sortConfig.direction === 'asc' ? +boolA - +boolB : +boolB - +boolA;
+
+        case 'date':
+          const dateA = new Date(aValue).getTime();
+          const dateB = new Date(bValue).getTime();
+          return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+
+        default:
+          return 0;
       }
     });
 
     return sorted;
   }, [data, sortConfig]);
-
 
   useEffect(() => {
     const newSortedRowIndices = {};
@@ -203,7 +251,7 @@ const DataTable = ({
           )}
           {columns?.map((column, colIndex) => (
             <th
-              className={`${column?.colStyle} p-2 font-proxima h-12 text-sm font-bold whitespace-nowrap ${column?.sortable ? "cursor-pointer" : "cursor-default"
+              className={`${column?.colStyle} p-2 font-proxima h-12 text-sm font-bold  ${!isHeaderTextBreak ? 'whitespace-nowrap' : ''} ${column?.sortable ? "cursor-pointer" : "cursor-default"
                 }`}
               key={colIndex}
               onClick={() => column?.sortable && handleSort(column?.accessor)}
@@ -212,7 +260,7 @@ const DataTable = ({
                 <span
                   className={`flex items-center font-proxima justify-${getAlignment(
                     column?.colalign
-                  )} gap-2`}
+                  )} gap-2 ${!!isHeaderTextBreak ? 'break-all' : ''}`}
                 >
                   {column?.header}
                   <SortIcon
@@ -226,7 +274,7 @@ const DataTable = ({
                 <span
                   className={`flex font-proxima items-center justify-${getAlignment(
                     column?.colalign
-                  )}`}
+                  )} ${!!isHeaderTextBreak ? 'break-all' : ''}`}
                 >
                   {column?.header}
                 </span>
@@ -236,7 +284,7 @@ const DataTable = ({
         </tr>
       </thead>
       <tbody>
-        {sortedData?.map((row, rowIndex) => (
+        {sortedData?.slice(0, totalItems)?.map((row, rowIndex) => (
           <React.Fragment key={rowIndex}>
             <tr key={row} className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""} ${isRowDisabled && sortedData?.length !== (rowIndex + 1) ? `row-disabled` : ''}`}
               onMouseEnter={() => {
@@ -255,7 +303,7 @@ const DataTable = ({
                     className={`${expandableStyle?.rows} text-[14px] font-proxima h-12 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"}  border-[#ccc] cursor-pointer`}
                     onClick={() => handleRowToggle(rowIndex)}
                   >
-                    <div className={`flex justify-center items-center transition-transform ${expandedRows.has(rowIndex) || isExpanded ? "rotate-90 duration-300" : "duration-200"}`}>
+                    <div className={`flex justify-center items-center transition-transform p-4 ${expandedRows.has(rowIndex) || isExpanded ? "rotate-90 duration-300" : "duration-200"}`}>
                       <ChevronRight />
                     </div>
                   </td>
