@@ -73,6 +73,9 @@ const CompanyList: React.FC<CompanyListProps> = ({
   ...props
 }) => {
   const selectRef = useRef<HTMLDivElement>(null);
+  const staticSelectedValuesForClearAll =
+    values && values.length > 0 ? values : [];
+
   const [selectedValues, setSelectedValues] = useState<string[]>(
     values && values.length > 0 ? values : []
   );
@@ -214,17 +217,29 @@ const CompanyList: React.FC<CompanyListProps> = ({
     }
   }, [selectedValues, onChange]);
 
-  const allOptionsSelected = options.every((option) =>
-    selectedValues.includes(option.value)
-  );
+  const allOptionsSelected = options
+    .filter(
+      (option) =>
+        option.isEnable ||
+        option.isEnable === undefined ||
+        selectedValues.includes(option.value)
+    )
+    .every((option) => selectedValues.includes(option.value));
 
   const handleToggleAll = () => {
     if (allOptionsSelected) {
-      setSelectedValues([]);
-      getValue([]);
+       setSelectedValues(staticSelectedValuesForClearAll);
+      getValue(staticSelectedValuesForClearAll);
       setFocusedIndex(-1);
     } else {
-      const allOptionValues = options.map((option) => option.value);
+      const allOptionValues = options
+      .filter(
+        (option) =>
+          option.isEnable ||
+          option.isEnable === undefined ||
+          selectedValues.includes(option.value)
+      )
+      .map((option) => option.value);
       setSelectedValues(allOptionValues);
       getValue(allOptionValues.map((value) => value.toString()));
       setFocusedIndex(-1);
