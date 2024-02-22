@@ -14,6 +14,7 @@ interface CountryCodeProps extends React.InputHTMLAttributes<HTMLInputElement> {
     getValue: (arg1: string) => void;
     getError: (arg1: boolean) => void;
     hasError?: boolean;
+    value?: any
 }
 
 const CountrySelect: React.FC<CountryCodeProps> = ({
@@ -30,6 +31,7 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
     getError,
     errorMessage = "This is required field!",
     hasError,
+    value,
     ...props
 }) => {
     const [err, setErr] = useState<boolean>(false);
@@ -45,8 +47,6 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
     const [errorMsg, setErrorMsg] = useState<string>("");
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [searchValue, setSearchValue] = useState<string>("");
-    const [error, setError] = useState<boolean>(false);
-    const [errMsg, setErrMsg] = useState<string>("");
     const [inputValue, setInputValue] = useState<string>("");
     const [focusedIndex, setFocusedIndex] = useState<number>(-1);
 
@@ -60,6 +60,12 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
             setFocus(hasError);
         }
     }, [validate, errorMessage, hasError]);
+
+    useEffect(() => {
+        if (value) {
+            setTelValue(value)
+        }
+    }, [value])
 
     useEffect(() => {
         const selectedCountryJsxElement = country.find(
@@ -200,7 +206,7 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
                     <Typography type="h6"
                         className={`${err
                             ? "text-defaultRed"
-                            : focus
+                            : focus && value != undefined || value != ""
                                 ? "text-primary"
                                 : "text-slatyGrey"
                             }`}
@@ -225,7 +231,7 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
                 <div
                     className={`flex border-b outline-none transition duration-600 w-full h-full ${err
                         ? "border-b-defaultRed"
-                        : focus
+                        : focus&& value != undefined || value != ""
                             ? "border-b-primary"
                             : "border-b-lightSilver"
                         }`}>
@@ -310,7 +316,7 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
                         <ul
                             className={`z-[1] absolute w-full bg-pureWhite mt-[1px] overflow-y-auto shadow-md transition-transform ${isOpen
                                 ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500 ease-out"
-                                : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
+                                : "max-h-0 translate-y-10 transition-opacity opacity-0 duration-500"
                                 } `}
                         >
                             {filteredOptions.length == 0 && isOpen == true

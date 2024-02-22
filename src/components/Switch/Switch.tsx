@@ -33,7 +33,7 @@ const Switch: React.FC<SwitchProps> = ({ checked, disabled, variant }) => {
     return (
         <>
             <button
-                className={`group relative border-[1.5px] border-lightSilver ${variant === "invalid"
+                className={`group relative border-[1.5px] ${isChecked ? 'border-primary' : 'border-lightSilver'} ${variant === "invalid"
                         ? "hover:border-defaultRed"
                         : "hover:border-primary"
                     } focus:outline-none bg-lightGray rounded-full shadow-sm h-[22px] overflow-hidden w-[40px] relative ${disabled ? "cursor-not-allowed opacity-60 pointer-events-none" : ""

@@ -287,39 +287,37 @@ const Select: React.FC<SelectProps> = ({
   return (
     <>
       <div
-        className={` relative font-medium w-full flex-row  ${
-          noborder ? "" : "border-b"
-        } ${
-          disabled
+        className={`relative font-medium w-full flex-row  ${noborder ? "" : "border-b"}
+           ${disabled
             ? "border-lightSilver"
             : isOpen
-            ? "border-primary"
-            : inputValue
-            ? "border-primary"
-            : error
-            ? "border-defaultRed"
-            : "border-lightSilver hover:border-primary transition-colors duration-300"
-        } ${className}`}
+              ? "border-primary"
+              : inputValue
+                ? "border-primary"
+                : error
+                  ? "border-defaultRed"
+                  : "border-lightSilver hover:border-primary outline-none transition-width duration-1000 ease-out"
+          }
+          ${className}`}
         ref={selectRef}
       >
         {label && (
           <label
-            className={`text-[14px] font-normal w-full ${
-              isOpen
-                ? "text-primary"
-                : inputValue
+            className={`text-[14px] font-normal w-full ${isOpen
+              ? "text-primary"
+              : inputValue
                 ? "text-primary"
                 : error
-                ? "text-defaultRed"
-                : "text-slatyGrey"
-            }`}
+                  ? "text-defaultRed"
+                  : "text-slatyGrey"
+              } ${disabled && "text-slatyGrey"}`}
             htmlFor={id}
           >
             {label}
 
             {validate && (
               <span
-                className={`${disabled ? "lightSilver" : "text-defaultRed"}`}
+                className={`${disabled ? "text-lightSilver" : "text-defaultRed"}`}
               >
                 &nbsp;*
               </span>
@@ -340,60 +338,43 @@ const Select: React.FC<SelectProps> = ({
               search && isOpen
                 ? searchValue // If in search mode and input is open, use searchValue
                 : defaultValue !== null && defaultValue !== undefined
-                ? options.find((option) => option.value === defaultValue)
+                  ? options.find((option) => option.value === defaultValue)
                     ?.label ?? placeholder
-                : selectedOption
-                ? selectedOption.label
-                : defaultValue
-                ? options.find((option) => option.value === defaultValue)
-                    ?.label ?? ""
-                : inputValue.length > 25
-                ? inputValue.substring(0, 20) + "..."
-                : inputValue
+                  : selectedOption
+                    ? selectedOption.label
+                    : defaultValue
+                      ? options.find((option) => option.value === defaultValue)
+                        ?.label ?? ""
+                      : inputValue.length > 25
+                        ? inputValue.substring(0, 20) + "..."
+                        : inputValue
             }
             autoComplete="off"
-            className={`${
-              error && "placeholder:text-defaultRed text-defaultRed"
-            } flex-grow outline-none bg-white ${
-              disabled
-                ? "text-slatyGrey"
-                : isOpen
-                ? "text-primary"
-                : selectedOption
-                ? "text-darkCharcoal"
-                : error
-                ? "text-defaultRed"
-                : defaultValue
-                ? "text-darkCharcoal"
-                : "text-slatyGrey opacity-70"
-            } text-[14px] font-normal w-full
 
-     ${
-       disabled
-         ? "cursor-default"
-         : !isOpen
-         ? "cursor-pointer"
-         : "cursor-default"
-     } ${
-              !isOpen
-                ? "placeholder-darkCharcoal"
-                : disabled
-                ? "text-slatyGrey"
-                : "placeholder-primary"
-            }`}
+            className={`flex-grow text-[14px] font-normal w-full outline-none bg-white
+             ${disabled
+                ? "text-slatyGrey cursor-default"
+                : isOpen
+                  ? "text-primary cursor-pointer placeholder-primary"
+                  : selectedOption
+                    ? "text-darkCharcoal placeholder-darkCharcoal"
+                    : error
+                      ? "placeholder:text-defaultRed text-defaultRed"
+                      : defaultValue
+                        ? "text-darkCharcoal placeholder-darkCharcoal cursor-pointer"
+                        : "text-slatyGrey opacity-70 cursor-pointer"
+              }`}
             style={{ background: "transparent" }}
             onKeyDown={(e) => handleKeyDown(e)}
           />
           {!hideIcon && (
             <div
               onClick={handleToggleOpen}
-              className={`text-[1.5rem] transition-transform ${
-                disabled
-                  ? "text-slatyGrey cursor-default"
-                  : "text-darkCharcoal cursor-pointer"
-              } ${error && " text-defaultRed"} ${
-                isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
-              }`}
+              className={`text-[1.5rem] transition-transform ${disabled
+                ? "text-slatyGrey cursor-default"
+                : "text-darkCharcoal cursor-pointer"
+                } ${error && " text-defaultRed"} ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
+                }`}
             >
               <ChevronDown />
             </div>
@@ -401,13 +382,11 @@ const Select: React.FC<SelectProps> = ({
         </div>
 
         <ul
-          className={`bottomAnimation absolute z-10 w-full bg-pureWhite mt-[${
-            noborder ? 13 : 1
-          }px] overflow-y-auto shadow-md transition-transform ${
-            isOpen
+          className={`bottomAnimation absolute z-10 w-full bg-pureWhite mt-[${noborder ? 13 : 1
+            }px] overflow-y-auto shadow-md transition-transform ${isOpen
               ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
-              : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
-          } ${isOpen ? "ease-out" : ""}`}
+              : "max-h-0 translate-y-10 transition-opacity opacity-0 duration-500"
+            } ${isOpen ? "ease-out" : ""}`}
         >
           {filteredOptions.length == 0 ? (
             <span className="p-[10px] outline-none focus:bg-whiteSmoke text-[15px] hover:bg-whiteSmoke font-medium cursor-pointer flex flex-row items-center space-x-2 ">
@@ -417,23 +396,20 @@ const Select: React.FC<SelectProps> = ({
             filteredOptions.map((option, index) => (
               <li
                 key={index}
-                className={`p-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${
-                  addDynamicForm ||
+                className={`p-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
                   addDynamicForm_Icons_Edit ||
                   addDynamicForm_Icons_Delete
-                    ? "justify-between"
-                    : ""
-                } ${
-                  option && option.liClass
+                  ? "justify-between"
+                  : ""
+                  } ${option && option.liClass
                     ? option.value === selectedOption?.value &&
-                      `${option.liClass}`
+                    `${option.liClass}`
                     : ""
-                }
-                 ${
-                   option && option.isEnable !== false
-                     ? ""
-                     : "pointer-events-none opacity-60"
-                 }
+                  }
+                 ${option && option.isEnable !== false
+                    ? ""
+                    : "pointer-events-none opacity-60"
+                  }
                  `}
                 onClick={() => {
                   if (option.value !== inputValue) {
@@ -461,38 +437,38 @@ const Select: React.FC<SelectProps> = ({
                 {(addDynamicForm ||
                   addDynamicForm_Icons_Edit ||
                   addDynamicForm_Icons_Delete) && (
-                  <a className="group/edit invisible hover:bg-slate-100 group-hover/item:visible">
-                    <div className="flex flex-row right-0 mr-2 justify-end items-end">
-                      {addDynamicForm_Icons_Edit && (
-                        <div
-                          className="p-[2px]"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            setTextValue(option.value);
-                            setInputLabel(option.label);
-                            onChangeText(option.value, option.label);
-                            setEditing(true);
-                          }}
-                        >
-                          <EditIconDropdown />
-                        </div>
-                      )}
+                    <a className="group/edit invisible hover:bg-slate-100 group-hover/item:visible">
+                      <div className="flex flex-row right-0 mr-2 justify-end items-end">
+                        {addDynamicForm_Icons_Edit && (
+                          <div
+                            className="p-[2px]"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setTextValue(option.value);
+                              setInputLabel(option.label);
+                              onChangeText(option.value, option.label);
+                              setEditing(true);
+                            }}
+                          >
+                            <EditIconDropdown />
+                          </div>
+                        )}
 
-                      {addDynamicForm_Icons_Delete && (
-                        <div
-                          className="p-[2px]"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onChangeText(option.value, option.label);
-                            handleDeleteValue(option.value);
-                          }}
-                        >
-                          <DeleteIconDropdown />
-                        </div>
-                      )}
-                    </div>
-                  </a>
-                )}
+                        {addDynamicForm_Icons_Delete && (
+                          <div
+                            className="p-[2px]"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              onChangeText(option.value, option.label);
+                              handleDeleteValue(option.value);
+                            }}
+                          >
+                            <DeleteIconDropdown />
+                          </div>
+                        )}
+                      </div>
+                    </a>
+                  )}
               </li>
             ))
           )}
