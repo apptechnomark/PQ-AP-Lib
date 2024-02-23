@@ -287,7 +287,7 @@ const Select: React.FC<SelectProps> = ({
   return (
     <>
       <div
-        className={`relative font-medium w-full flex-row  ${noborder ? "" : "border-b"}
+        className={`relative font-medium w-full flex-row outline-none  ${noborder ? "" : "border-b"}
            ${disabled
             ? "border-lightSilver"
             : isOpen

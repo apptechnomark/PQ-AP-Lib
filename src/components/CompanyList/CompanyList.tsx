@@ -74,8 +74,12 @@ const CompanyList: React.FC<CompanyListProps> = ({
 }) => {
   const selectRef = useRef<HTMLDivElement>(null);
   const staticSelectedValuesForClearAll =
-    values && values.length > 0 ? values : [];
-
+  values && values.length > 0
+    ? options
+        .filter((option) => !option.isEnable && values.includes(option.value))
+        .map((option) => option.value)
+    : [];
+    
   const [selectedValues, setSelectedValues] = useState<string[]>(
     values && values.length > 0 ? values : []
   );
