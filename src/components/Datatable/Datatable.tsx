@@ -46,11 +46,11 @@ interface DataTableProps {
   isHeaderTextBreak?: boolean;
 }
 
-interface SortConfig {
-  key: string | null;
-  direction: 'asc' | 'desc' | string;
-  colType?: 'number' | 'string' | 'boolean' | 'date';
-}
+// interface SortConfig {
+//   key: string | null;
+//   direction: 'asc' | 'desc' | string;
+//   colType?: 'number' | 'string' | 'boolean' | 'date';
+// }
 
 const DataTable = ({
   columns,
@@ -72,7 +72,7 @@ const DataTable = ({
   isHeaderTextBreak = false,
 }: DataTableProps) => {
   const tableRef = useRef<HTMLTableElement>(null);
-  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc', });
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: '' });
   const [expandedRows, setExpandedRows] = useState(new Set());
   const [sortedRowIndices, setSortedRowIndices] = useState({});
   const [visibleRows, setVisibleRows] = useState(lazyLoadRows);
@@ -123,12 +123,12 @@ const DataTable = ({
     };
   }, []);
 
-  const handleSort = (columnKey: string, colType?: "number" | "string" | "boolean" | "date") => {
+  const handleSort = (columnKey: string) => {
     let direction = "asc";
     if (sortConfig.key === columnKey && sortConfig.direction === "asc") {
       direction = "desc";
     }
-    setSortConfig({ key: columnKey, direction, colType });
+    setSortConfig({ key: columnKey, direction });
   };
 
   const handleRowToggle = (rowIndex: any) => {
@@ -160,29 +160,35 @@ const DataTable = ({
       if (aValue == null) aValue = '';
       if (bValue == null) bValue = '';
 
-      switch (sortConfig.colType) {
-        case 'number':
-          const numA = parseFloat(aValue);
-          const numB = parseFloat(bValue);
-          return sortConfig.direction === 'asc' ? numA - numB : numB - numA;
+      if (React.isValidElement(aValue) && React.isValidElement(bValue)) {
+        const aProps = aValue.props as AComponentProps;
+        const bProps = bValue.props as BComponentProps;
+        const aPropValue = aProps.children;
+        const bPropValue = bProps.children;
 
-        case 'string':
-          return sortConfig.direction === 'asc'
-            ? aValue.localeCompare(bValue)
-            : bValue.localeCompare(aValue);
-
-        case 'boolean':
-          const boolA = Boolean(aValue);
-          const boolB = Boolean(bValue);
-          return sortConfig.direction === 'asc' ? +boolA - +boolB : +boolB - +boolA;
-
-        case 'date':
-          const dateA = new Date(aValue).getTime();
-          const dateB = new Date(bValue).getTime();
-          return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
-
-        default:
-          return 0;
+        if (typeof aPropValue === "string" && typeof bPropValue === "string") {
+          return sortConfig.direction === "asc"
+            ? aPropValue.localeCompare(bPropValue)
+            : bPropValue.localeCompare(aPropValue);
+        } else if (
+          typeof aPropValue === "number" &&
+          typeof bPropValue === "number"
+        ) {
+          return sortConfig.direction === "asc"
+            ? aPropValue - bPropValue
+            : bPropValue - aPropValue;
+        }
+      } else if (typeof aValue === "string" && typeof bValue === "string") {
+        return sortConfig.direction === "asc"
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      } else if (typeof aValue === "number" && typeof bValue === "number") {
+        return sortConfig.direction === "asc"
+          ? aValue - bValue
+          : bValue - aValue;
+      } else {
+        // Handle other data types here if needed
+        return 0;
       }
     });
 
