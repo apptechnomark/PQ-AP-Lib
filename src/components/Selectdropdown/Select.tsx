@@ -312,6 +312,7 @@ const Select: React.FC<SelectProps> = ({
                   : "text-slatyGrey"
               } ${disabled && "text-slatyGrey"}`}
             htmlFor={id}
+            tabIndex={-1}
           >
             {label}
 
@@ -325,7 +326,11 @@ const Select: React.FC<SelectProps> = ({
           </label>
         )}
 
-        <div className="flex flex-row items-center relative mb-0 w-full">
+        <div
+          className="flex flex-row items-center relative mb-0 w-full"
+          tabIndex={0}
+          onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleToggleOpen()}
+        >
           <input
             id={id}
             onBlur={handleBlur}
@@ -334,6 +339,7 @@ const Select: React.FC<SelectProps> = ({
             readOnly={!search || !isOpen}
             disabled={disabled}
             placeholder={placeholder || "Please select"}
+            tabIndex={-1}
             value={
               search && isOpen
                 ? searchValue // If in search mode and input is open, use searchValue
@@ -417,7 +423,7 @@ const Select: React.FC<SelectProps> = ({
                   }
                 }}
                 onKeyDown={(e) => handleListItemKeyDown(e, option.value, index)}
-                tabIndex={0}
+                tabIndex={isOpen ? index : -1}
                 ref={(el) => {
                   if (index === focusedIndex) {
                     el?.focus();

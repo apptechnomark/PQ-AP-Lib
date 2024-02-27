@@ -273,20 +273,25 @@ const Datepicker: React.FC<DatepickerProps> = ({
                     )}
                 </span>
             )}
-            <div className={`relative`} ref={inputRef}>
+            <div
+                className={`relative`}
+                ref={inputRef}
+                tabIndex={0}
+                onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && calendarShow()}
+            >
                 <input
                     type="text"
                     placeholder={format}
                     className={`text-[14px] py-[1px] w-full tracking-wider placeholder:tracking-wider font-proxima border-b placeholder:text-[14px] bg-transparent 
                     ${disabled
-                        ? "border-lightSilver pointer-events-none"
-                        : (toggleOpen && !err)
-                            ? "border-primary placeholder:text-primary"
-                            : fullDate
-                                ? "border-primary"
-                                : err
-                                    ? "border-defaultRed text-defaultRed placeholder:text-defaultRed"
-                                    : "text-darkCharcoal border-lightSilver hover:border-primary  transition-colors duration-300 ease-in-out"
+                            ? "border-lightSilver pointer-events-none"
+                            : (toggleOpen && !err)
+                                ? "border-primary placeholder:text-primary"
+                                : fullDate
+                                    ? "border-primary"
+                                    : err
+                                        ? "border-defaultRed text-defaultRed placeholder:text-defaultRed"
+                                        : "text-darkCharcoal border-lightSilver hover:border-primary  transition-colors duration-300 ease-in-out"
                         } outline-none`}
                     onClick={calendarShow}
                     readOnly
@@ -294,6 +299,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
                     onChange={(e: any) => updateFromInput(e.target.value)}
                     onBlur={handleInputBlur}
                     onFocus={handleFocus}
+                    tabIndex={-1}
                     {...props}
                 />
                 {!hideIcon &&
