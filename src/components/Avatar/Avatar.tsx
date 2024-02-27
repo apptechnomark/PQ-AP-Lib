@@ -40,80 +40,73 @@ const Avatar: FC<AvatarProps> = ({
     <div className={`${styles.avatar} relative w-fit`}>
       {imageUrl ? (
         <img
-          className={`${
-            variant === "large"
-              ? "w-[64px] h-[64px]"
-              : variant === "small"
+          className={`${variant === "large"
+            ? "w-[64px] h-[64px]"
+            : variant === "small"
               ? "w-[32px] h-[32px]"
               : variant === "x-small"
-              ? "w-[24px] h-[24px]"
-              : "w-[40px] h-[40px]"
-          } display-block object-fit-cover border-2 border-pureWhite ${avatarTypeClass} ${className}`}
+                ? "w-[24px] h-[24px]"
+                : "w-[40px] h-[40px]"
+            } display-block object-fit-cover border-2 border-pureWhite ${avatarTypeClass} ${className}`}
           src={imageUrl}
           alt={Name}
           onError={handleOnError}
         />
       ) : Name ? (
         <span
-          className={`${
-            variant === "large"
-              ? "w-[64px] h-[64px] text-2xl"
-              : variant === "small"
+          className={`${variant === "large"
+            ? "w-[64px] h-[64px] text-2xl"
+            : variant === "small"
               ? "w-[32px] h-[32px] text-sm"
               : variant === "x-small"
-              ? "w-[24px] h-[24px] text-xs"
-              : "w-[40px] h-[40px] text-base"
-          } text-pureWhite border-2 border-pureWhite flex justify-center items-center ${avatarTypeClass} ${
-            Red.includes(Name.charAt(0))
+                ? "w-[24px] h-[24px] text-xs"
+                : "w-[40px] h-[40px] text-base"
+            } text-pureWhite border-2 border-pureWhite flex justify-center items-center ${avatarTypeClass} ${Red.includes(Name.charAt(0))
               ? "bg-defaultRed"
               : Blue.includes(Name.charAt(0))
-              ? "bg-defaultBlue"
-              : Green.includes(Name.charAt(0))
-              ? "bg-primary"
-              : SkyBlue.includes(Name.charAt(0))
-              ? "bg-[#E1B100]"
-              : "bg-defaultOrange"
-          } ${className}`}
+                ? "bg-defaultBlue"
+                : Green.includes(Name.charAt(0))
+                  ? "bg-primary"
+                  : SkyBlue.includes(Name.charAt(0))
+                    ? "bg-[#E1B100]"
+                    : "bg-defaultOrange"
+            } ${className}`}
         >
-          {Name.length <= 2
-            ? Name.slice(0, 2)
-            : Name.match(/\s/)
-            ? Name.split(" ")
-                .map((word) => word.charAt(0))
-                .join("")
-            : Name.charAt(0)}
+          {Name.split(" ").length === 1
+            ? Name.charAt(0).toUpperCase()
+            : Name.split(" ")
+              .slice(0, 2)
+              .map((word) => word.charAt(0).toUpperCase())
+              .join("")}
         </span>
       ) : (
         <span
-          className={`${
-            variant === "large"
-              ? "w-[64px] h-[64px]"
-              : variant === "small"
+          className={`${variant === "large"
+            ? "w-[64px] h-[64px]"
+            : variant === "small"
               ? "w-[32px] h-[32px]"
               : variant === "x-small"
-              ? "w-[24px] h-[24px]"
-              : "w-[40px] h-[40px]"
-          } border-2 bg-pureWhite border-pureWhite rounded-full flex justify-center items-center`}
+                ? "w-[24px] h-[24px]"
+                : "w-[40px] h-[40px]"
+            } border-2 bg-pureWhite border-pureWhite rounded-full flex justify-center items-center`}
         >
           <svg
-            width={`${
-              variant === "large"
-                ? "35"
-                : variant === "small"
-                ? "35"
-                : variant === "x-small"
-                ? "35"
-                : "35"
-            }`}
-            height={`${
-              variant === "large"
-                ? "35"
-                : variant === "small"
+            width={`${variant === "large"
+              ? "35"
+              : variant === "small"
                 ? "35"
                 : variant === "x-small"
+                  ? "35"
+                  : "35"
+              }`}
+            height={`${variant === "large"
+              ? "35"
+              : variant === "small"
                 ? "35"
-                : "35"
-            }`}
+                : variant === "x-small"
+                  ? "35"
+                  : "35"
+              }`}
             viewBox="0 0 107 112"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -147,13 +140,12 @@ const Avatar: FC<AvatarProps> = ({
       )}
       {badge && (
         <span
-          className={`absolute ${
-            type === "square" ? "-top-1 -right-2" : (badgeText && badgeText.length > 1) ? "-top-1 -right-3":`-top-1 ${variant === "small" ? "-right-1": variant === "medium" ? "-right-0" : variant === "large" && "right-0"}`
-          }`}
+          className={`absolute ${type === "square" ? "-top-1 -right-2" : (badgeText && badgeText.length > 1) ? "-top-1 -right-3" : `-top-1 ${variant === "small" ? "-right-1" : variant === "medium" ? "-right-0" : variant === "large" && "right-0"}`
+            }`}
         >
           <Badge
             badgetype="primary"
-            width={badgeText && badgeText.length > 1 ? 30:undefined}
+            width={badgeText && badgeText.length > 1 ? 30 : undefined}
             variant="dot"
             text={badgeText}
           />

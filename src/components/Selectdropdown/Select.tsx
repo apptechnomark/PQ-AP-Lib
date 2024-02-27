@@ -5,6 +5,7 @@ import { EditIconDropdown } from "./icons/EditIconDropdown";
 import { DeleteIconDropdown } from "./icons/DeleteIconDropdown";
 import ChevronDown from "./icons/ChevronDown";
 import { Avatar } from "../Avatar/Avatar";
+import styles from "./selectdropdown.module.scss";
 
 interface Option {
   value: any;
@@ -141,24 +142,6 @@ const Select: React.FC<SelectProps> = ({
     };
   }, []);
 
-  //   useEffect(() => {
-  //     const handleOutsideClick = (event: any) => {
-  //       const isdropdownClick = event.target.closest(".bottomAnimation");
-  //       const selectDropdownRef = selectRef.current && selectRef.current.contains(event.target as Node)
-  //       if (
-  //         !selectDropdownRef &&
-  //         !isdropdownClick
-  //       ) {
-  //         setIsOpen(false);
-  //         setEditing(false);
-  //       }
-  //     };
-  //     window.addEventListener("click", handleOutsideClick);
-  //     return () => {
-  //         window.removeEventListener("click", handleOutsideClick);
-  //     };
-  // }, []);
-
   const handleToggleOpen = () => {
     if (disabled) {
       return;
@@ -286,109 +269,93 @@ const Select: React.FC<SelectProps> = ({
 
   return (
     <>
-      <div
-        className={`relative font-medium w-full flex-row outline-none  ${noborder ? "" : "border-b"}
-           ${disabled
-            ? "border-lightSilver"
-            : isOpen
-              ? "border-primary"
-              : inputValue
-                ? "border-primary"
-                : error
-                  ? "border-defaultRed"
-                  : "border-lightSilver hover:border-primary outline-none transition-width duration-1000 ease-out"
-          }
-          ${className}`}
-        ref={selectRef}
-      >
-        {label && (
-          <label
-            className={`text-[14px] font-normal w-full ${isOpen
+      {label && (
+        <label
+          className={`text-[14px] font-normal w-full ${isOpen
+            ? "text-primary"
+            : inputValue
               ? "text-primary"
-              : inputValue
-                ? "text-primary"
-                : error
-                  ? "text-defaultRed"
-                  : "text-slatyGrey"
-              } ${disabled && "text-slatyGrey"}`}
-            htmlFor={id}
-            tabIndex={-1}
-          >
-            {label}
-
-            {validate && (
-              <span
-                className={`${disabled ? "text-lightSilver" : "text-defaultRed"}`}
-              >
-                &nbsp;*
-              </span>
-            )}
-          </label>
-        )}
-
-        <div
-          className="flex flex-row items-center relative mb-0 w-full"
-          tabIndex={0}
-          onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleToggleOpen()}
+              : error
+                ? "text-defaultRed"
+                : "text-slatyGrey"
+            } ${disabled && "text-slatyGrey"}`}
+          htmlFor={id}
+          tabIndex={-1}
         >
-          <input
-            id={id}
-            onBlur={handleBlur}
-            onClick={handleToggleOpen}
-            onChange={handleInputChange}
-            readOnly={!search || !isOpen}
-            disabled={disabled}
-            placeholder={placeholder || "Please select"}
-            tabIndex={-1}
-            value={
-              search && isOpen
-                ? searchValue // If in search mode and input is open, use searchValue
-                : defaultValue !== null && defaultValue !== undefined
-                  ? options.find((option) => option.value === defaultValue)
-                    ?.label ?? placeholder
-                  : selectedOption
-                    ? selectedOption.label
-                    : defaultValue
-                      ? options.find((option) => option.value === defaultValue)
-                        ?.label ?? ""
-                      : inputValue.length > 25
-                        ? inputValue.substring(0, 20) + "..."
-                        : inputValue
-            }
-            autoComplete="off"
+          {label}
 
-            className={`flex-grow text-[14px] font-normal w-full outline-none bg-white
-             ${disabled
-                ? "text-slatyGrey cursor-default"
-                : isOpen
-                  ? "text-primary cursor-pointer placeholder-primary"
-                  : selectedOption
-                    ? "text-darkCharcoal placeholder-darkCharcoal"
-                    : error
-                      ? "placeholder:text-defaultRed text-defaultRed"
-                      : defaultValue
-                        ? "text-darkCharcoal placeholder-darkCharcoal cursor-pointer"
-                        : "text-slatyGrey opacity-70 cursor-pointer"
-              }`}
-            style={{ background: "transparent" }}
-            onKeyDown={(e) => handleKeyDown(e)}
-          />
-          {!hideIcon && (
-            <div
-              onClick={handleToggleOpen}
-              className={`text-[1.5rem] transition-transform ${disabled
-                ? "text-slatyGrey cursor-default"
-                : "text-darkCharcoal cursor-pointer"
-                } ${error && " text-defaultRed"} ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
-                }`}
+          {validate && (
+            <span
+              className={`${disabled ? "text-lightSilver" : "text-defaultRed"}`}
             >
-              <ChevronDown />
-            </div>
+              &nbsp;*
+            </span>
           )}
-        </div>
+        </label>
+      )}
 
+      <div className={`${styles.customScrollbar} outline-none relative ${error ? "" : "after:block"} w-full after:border-b after:border-primary after:scale-x-0 after:origin-left after:transition after:ease-in-out after:duration-1000 hover:after:scale-x-100
+
+          ${className}`} ref={selectRef}
+        tabIndex={0}
+        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleToggleOpen()}
+      >
+        <input
+          id={id}
+          onBlur={handleBlur}
+          onClick={handleToggleOpen}
+          onChange={handleInputChange}
+          readOnly={!search || !isOpen}
+          disabled={disabled}
+          placeholder={placeholder || "Please select"}
+          tabIndex={-1}
+          value={
+            search && isOpen
+              ? searchValue
+              : defaultValue !== null && defaultValue !== undefined
+                ? options.find((option) => option.value === defaultValue)
+                  ?.label ?? placeholder
+                : selectedOption
+                  ? selectedOption.label
+                  : defaultValue
+                    ? options.find((option) => option.value === defaultValue)
+                      ?.label ?? ""
+                    : inputValue.length > 25
+                      ? inputValue.substring(0, 20) + "..."
+                      : inputValue
+          }
+          autoComplete="off"
+
+          className={` absolute bottom-0 ${noborder ? "" : "border-b"} text-[14px] font-normal w-full outline-none bg-pureWhite ${disabled
+            ? "text-slatyGrey cursor-default border-lightSilver"
+            : isOpen
+              ? "text-primary cursor-pointer placeholder-primary border-primary"
+              : selectedOption
+                ? "text-darkCharcoal placeholder-darkCharcoal border-primary"
+                : error
+                  ? "placeholder:text-defaultRed text-defaultRed border-defaultRed"
+                  : defaultValue
+                    ? "text-darkCharcoal placeholder-darkCharcoal cursor-pointer border-lightSilver"
+                    : "text-slatyGrey opacity-70 cursor-pointer border-lightSilver"
+            }`}
+          style={{ background: "transparent" }}
+          onKeyDown={(e) => handleKeyDown(e)}
+        />
+
+        {!hideIcon && (
+          <span
+            onClick={handleToggleOpen}
+            className={`text-[1.5rem]  absolute bottom-1.5 right-0 h-fit transition-transform ${disabled
+              ? "text-slatyGrey cursor-default"
+              : "text-darkCharcoal cursor-pointer"
+              } ${error && " text-defaultRed"} ${isOpen ? "rotate-180 !text-primary duration-400" : "duration-200"
+              }`}
+          >
+            <ChevronDown currentColor={isOpen ? "#02B89D" : error ? "#DC3545" : "#333333"} />
+          </span>
+        )}
         <ul
-          className={`bottomAnimation absolute z-10 w-full bg-pureWhite mt-[${noborder ? 13 : 1
+          className={`bottomAnimation  absolute z-10 w-full bg-pureWhite mt-[${noborder ? 13 : 1
             }px] overflow-y-auto shadow-md transition-transform ${isOpen
               ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
               : "max-h-0 translate-y-10 transition-opacity opacity-0 duration-500"
