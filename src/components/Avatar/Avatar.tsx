@@ -43,12 +43,12 @@ const Avatar: FC<AvatarProps> = ({
       {imageUrl ? (
         <img
           className={`${variant === "large"
-              ? "w-[64px] h-[64px]"
-              : variant === "small"
-                ? "w-[32px] h-[32px]"
-                : variant === "x-small"
-                  ? "w-[24px] h-[24px]"
-                  : "w-[40px] h-[40px]"
+            ? "w-[64px] h-[64px]"
+            : variant === "small"
+              ? "w-[32px] h-[32px]"
+              : variant === "x-small"
+                ? "w-[24px] h-[24px]"
+                : "w-[40px] h-[40px]"
             } display-block object-fit-cover border-2 border-pureWhite ${avatarTypeClass} ${className}`}
           src={imageUrl}
           alt={Name}
@@ -57,12 +57,12 @@ const Avatar: FC<AvatarProps> = ({
       ) : Name ? (
         <span
           className={`${variant === "large"
-              ? "w-[64px] h-[64px] text-2xl"
-              : variant === "small"
-                ? "w-[32px] h-[32px] text-sm"
-                : variant === "x-small"
-                  ? "w-[24px] h-[24px] text-xs"
-                  : "w-[40px] h-[40px] text-base"
+            ? `${!!isCountAvatar ? "w-full px-3" : "w-[64px]"} h-[64px] text-2xl`
+            : variant === "small"
+              ? `${!!isCountAvatar ? "w-full px-2" : "w-[32px]"} h-[32px] text-sm`
+              : variant === "x-small"
+                ? `${!!isCountAvatar ? "w-full px-1" : "w-[24px]"} h-[24px] text-xs`
+                : `${!!isCountAvatar ? "w-full px-1" : "w-[40px]"} h-[40px] text-base`
             } text-pureWhite border-2 border-pureWhite flex justify-center items-center ${avatarTypeClass} ${Red.includes(Name.charAt(0))
               ? "bg-defaultRed"
               : Blue.includes(Name.charAt(0))
@@ -84,30 +84,30 @@ const Avatar: FC<AvatarProps> = ({
       ) : (
         <span
           className={`${variant === "large"
-              ? "w-[64px] h-[64px]"
-              : variant === "small"
-                ? "w-[32px] h-[32px]"
-                : variant === "x-small"
-                  ? "w-[24px] h-[24px]"
-                  : "w-[40px] h-[40px]"
+            ? "w-[64px] h-[64px]"
+            : variant === "small"
+              ? "w-[32px] h-[32px]"
+              : variant === "x-small"
+                ? "w-[24px] h-[24px]"
+                : "w-[40px] h-[40px]"
             } border-2 bg-pureWhite border-pureWhite rounded-full flex justify-center items-center`}
         >
           <svg
             width={`${variant === "large"
+              ? "35"
+              : variant === "small"
                 ? "35"
-                : variant === "small"
+                : variant === "x-small"
                   ? "35"
-                  : variant === "x-small"
-                    ? "35"
-                    : "35"
+                  : "35"
               }`}
             height={`${variant === "large"
+              ? "35"
+              : variant === "small"
                 ? "35"
-                : variant === "small"
+                : variant === "x-small"
                   ? "35"
-                  : variant === "x-small"
-                    ? "35"
-                    : "35"
+                  : "35"
               }`}
             viewBox="0 0 107 112"
             fill="none"
