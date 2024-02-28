@@ -1,13 +1,21 @@
-import React from 'react'
+import React from "react";
 
-const ChevronDown = ({ currentColor }) => {
+function ChevronDown() {
   return (
     <div>
-      <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6.40078 7.5L0.800781 1.69149L1.9495 0.5L6.40078 5.11702L10.8521 0.5L12.0008 1.69149L6.40078 7.5Z" fill={currentColor} />
+      <svg
+        stroke="currentColor"
+        fill="currentColor"
+        strokeWidth="0"
+        viewBox="0 0 24 24"
+        height="1em"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M16.293 9.293 12 13.586 7.707 9.293l-1.414 1.414L12 16.414l5.707-5.707z"></path>
       </svg>
     </div>
-  )
+  );
 }
 
-export default ChevronDown
+export default ChevronDown;
