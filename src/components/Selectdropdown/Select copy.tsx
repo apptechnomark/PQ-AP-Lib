@@ -5,7 +5,6 @@ import { EditIconDropdown } from "./icons/EditIconDropdown";
 import { DeleteIconDropdown } from "./icons/DeleteIconDropdown";
 import ChevronDown from "./icons/ChevronDown";
 import { Avatar } from "../Avatar/Avatar";
-import styles from "./selectdropdown.module.scss";
 
 interface Option {
   value: any;
@@ -288,8 +287,7 @@ const Select: React.FC<SelectProps> = ({
   return (
     <>
       <div
-        className={`${styles.customScrollbar} relative font-medium w-full flex-row outline-none
-        ${noborder ? "" : "border-b"}
+        className={`relative font-medium w-full flex-row outline-none  ${noborder ? "" : "border-b"}
            ${disabled
             ? "border-lightSilver"
             : isOpen
@@ -298,7 +296,7 @@ const Select: React.FC<SelectProps> = ({
                 ? "border-primary"
                 : error
                   ? "border-defaultRed"
-                  : `border-lightSilver ${noborder ? "" : "after:block"} absolute bottom-50 after:border-b after:mb-[-1px] after:border-primary after:scale-x-0 after:origin-left after:transition after:ease-in-out after:duration-1000 hover:after:scale-x-100`
+                  : "border-lightSilver hover:border-primary outline-none transition-width duration-1000 ease-out"
           }
           ${className}`}
         ref={selectRef}
@@ -334,7 +332,6 @@ const Select: React.FC<SelectProps> = ({
           onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleToggleOpen()}
         >
           <input
-
             id={id}
             onBlur={handleBlur}
             onClick={handleToggleOpen}

@@ -10,6 +10,7 @@ interface AvatarProps {
   badge?: boolean;
   badgeText?: string;
   variant?: string;
+  isCountAvatar?: boolean
 }
 
 const Avatar: FC<AvatarProps> = ({
@@ -20,6 +21,7 @@ const Avatar: FC<AvatarProps> = ({
   badge,
   badgeText,
   variant,
+  isCountAvatar
 }) => {
   const avatarTypeClass = type === "square" ? "rounded-none" : "rounded-full";
 
@@ -41,12 +43,12 @@ const Avatar: FC<AvatarProps> = ({
       {imageUrl ? (
         <img
           className={`${variant === "large"
-            ? "w-[64px] h-[64px]"
-            : variant === "small"
-              ? "w-[32px] h-[32px]"
-              : variant === "x-small"
-                ? "w-[24px] h-[24px]"
-                : "w-[40px] h-[40px]"
+              ? "w-[64px] h-[64px]"
+              : variant === "small"
+                ? "w-[32px] h-[32px]"
+                : variant === "x-small"
+                  ? "w-[24px] h-[24px]"
+                  : "w-[40px] h-[40px]"
             } display-block object-fit-cover border-2 border-pureWhite ${avatarTypeClass} ${className}`}
           src={imageUrl}
           alt={Name}
@@ -55,12 +57,12 @@ const Avatar: FC<AvatarProps> = ({
       ) : Name ? (
         <span
           className={`${variant === "large"
-            ? "w-[64px] h-[64px] text-2xl"
-            : variant === "small"
-              ? "w-[32px] h-[32px] text-sm"
-              : variant === "x-small"
-                ? "w-[24px] h-[24px] text-xs"
-                : "w-[40px] h-[40px] text-base"
+              ? "w-[64px] h-[64px] text-2xl"
+              : variant === "small"
+                ? "w-[32px] h-[32px] text-sm"
+                : variant === "x-small"
+                  ? "w-[24px] h-[24px] text-xs"
+                  : "w-[40px] h-[40px] text-base"
             } text-pureWhite border-2 border-pureWhite flex justify-center items-center ${avatarTypeClass} ${Red.includes(Name.charAt(0))
               ? "bg-defaultRed"
               : Blue.includes(Name.charAt(0))
@@ -72,7 +74,7 @@ const Avatar: FC<AvatarProps> = ({
                     : "bg-defaultOrange"
             } ${className}`}
         >
-          {Name.split(" ").length === 1
+          {!!isCountAvatar ? Name.split(" ").join("") : Name.split(" ").length === 1
             ? Name.charAt(0).toUpperCase()
             : Name.split(" ")
               .slice(0, 2)
@@ -82,30 +84,30 @@ const Avatar: FC<AvatarProps> = ({
       ) : (
         <span
           className={`${variant === "large"
-            ? "w-[64px] h-[64px]"
-            : variant === "small"
-              ? "w-[32px] h-[32px]"
-              : variant === "x-small"
-                ? "w-[24px] h-[24px]"
-                : "w-[40px] h-[40px]"
+              ? "w-[64px] h-[64px]"
+              : variant === "small"
+                ? "w-[32px] h-[32px]"
+                : variant === "x-small"
+                  ? "w-[24px] h-[24px]"
+                  : "w-[40px] h-[40px]"
             } border-2 bg-pureWhite border-pureWhite rounded-full flex justify-center items-center`}
         >
           <svg
             width={`${variant === "large"
-              ? "35"
-              : variant === "small"
                 ? "35"
-                : variant === "x-small"
+                : variant === "small"
                   ? "35"
-                  : "35"
+                  : variant === "x-small"
+                    ? "35"
+                    : "35"
               }`}
             height={`${variant === "large"
-              ? "35"
-              : variant === "small"
                 ? "35"
-                : variant === "x-small"
+                : variant === "small"
                   ? "35"
-                  : "35"
+                  : variant === "x-small"
+                    ? "35"
+                    : "35"
               }`}
             viewBox="0 0 107 112"
             fill="none"
@@ -180,7 +182,7 @@ const AvatarGroup: FC<AvatarGroupProps> = ({
       .replace(/,/g, " ");
 
     return (
-      <div className={`${styles.avatarGroup} flex items-center justify-center`}>
+      <div className={`${variant == "x-small" ? styles.xsAvatarGroup : styles.avatarGroup} flex items-center justify-center `}>
         {visibleChildren.map((child, index) => (
           <Avatar
             key={index}
@@ -196,6 +198,7 @@ const AvatarGroup: FC<AvatarGroupProps> = ({
           name={`+ ${finalCount}`}
           type={type}
           variant={variant}
+          isCountAvatar={true}
         />
       </div>
     );
@@ -203,7 +206,7 @@ const AvatarGroup: FC<AvatarGroupProps> = ({
 
   return (
     <div
-      className={`${styles.avatarGroup} avatar-group flex items-center justify-center`}
+      className={`${variant == "x-small" ? styles.xsAvatarGroup : styles.avatarGroup} avatar-group flex items-center justify-center`}
     >
       {children}
     </div>
