@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import style from "./Tab.module.scss";
 import Typography from "../Typography/Typography";
 
@@ -7,10 +7,17 @@ interface TabBarProps {
   className?: string;
   getValue: (arg1: string) => void;
   alignIcon?: "left" | "right";
+  activeValue: string | number;
 }
 
-const TabBar = ({ tabs, getValue, className, alignIcon }: TabBarProps) => {
-  const [tabId, setTabId] = useState(tabs[0].id);
+const TabBar = ({
+  tabs,
+  getValue,
+  className,
+  alignIcon,
+  activeValue,
+}: TabBarProps) => {
+  const [tabId, setTabId] = useState(activeValue);
   const [isClicked, setIsClicked] = useState(false);
 
   const handleClick = (e: any) => {
@@ -21,6 +28,10 @@ const TabBar = ({ tabs, getValue, className, alignIcon }: TabBarProps) => {
     setTimeout(() => setIsClicked(false), 700);
     // }
   };
+
+  useEffect(() => {
+    setTabId(activeValue);
+  }, [activeValue]);
 
   return (
     <div className={`h-12  flex ${style.customScrollbar}  ${className} overflow-visible`}>

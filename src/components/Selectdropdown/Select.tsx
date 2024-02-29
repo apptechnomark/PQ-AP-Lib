@@ -47,6 +47,10 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   disabled?: boolean;
   noborder?: boolean;
   hideIcon?: boolean;
+  secondaryOptions?: any;
+  isSecondaryDropdown?: boolean;
+  primaryLabel?: string;
+  secondaryLabel?: string;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -81,6 +85,10 @@ const Select: React.FC<SelectProps> = ({
   disabled,
   hideIcon,
   noborder,
+  secondaryOptions,
+  isSecondaryDropdown,
+  primaryLabel,
+  secondaryLabel
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [inputLabel, setInputLabel] = useState("");
@@ -102,6 +110,10 @@ const Select: React.FC<SelectProps> = ({
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
 
   const filteredOptions = options.filter((option) =>
+    option.label.toLowerCase().includes(searchValue)
+  );
+
+  const secondaryFilteredOptions = !!secondaryOptions && secondaryOptions.filter((option) =>
     option.label.toLowerCase().includes(searchValue)
   );
 
@@ -181,7 +193,21 @@ const Select: React.FC<SelectProps> = ({
   };
 
   const handleSelect = (value: any) => {
-    setSelectedOption(options.find((option) => option.value === value));
+    let newOptions = []
+    if (!!options && options.length > 0) {
+      newOptions = [
+        ...newOptions,
+        ...options
+      ]
+    }
+    if (!!secondaryOptions && secondaryOptions.length > 0) {
+      newOptions = [
+        ...newOptions,
+        ...secondaryOptions
+      ]
+    }
+
+    setSelectedOption(newOptions.find((option) => option.value === value));
     setInputValue("");
     setSearchValue("");
     setIsOpen(false);
@@ -285,6 +311,20 @@ const Select: React.FC<SelectProps> = ({
     }
   };
 
+  let newOptions = []
+  if (!!options && options.length > 0) {
+    newOptions = [
+      ...newOptions,
+      ...options
+    ]
+  }
+  if (!!secondaryOptions && secondaryOptions.length > 0) {
+    newOptions = [
+      ...newOptions,
+      ...secondaryOptions
+    ]
+  }
+
   return (
     <>
       <div
@@ -347,12 +387,12 @@ const Select: React.FC<SelectProps> = ({
               search && isOpen
                 ? searchValue // If in search mode and input is open, use searchValue
                 : defaultValue !== null && defaultValue !== undefined
-                  ? options.find((option) => option.value === defaultValue)
+                  ? newOptions.find((option) => option.value === defaultValue)
                     ?.label ?? placeholder
                   : selectedOption
                     ? selectedOption.label
                     : defaultValue
-                      ? options.find((option) => option.value === defaultValue)
+                      ? newOptions.find((option) => option.value === defaultValue)
                         ?.label ?? ""
                       : inputValue.length > 25
                         ? inputValue.substring(0, 20) + "..."
@@ -397,89 +437,141 @@ const Select: React.FC<SelectProps> = ({
               : "max-h-0 translate-y-10 transition-opacity opacity-0 duration-500"
             } ${isOpen ? "ease-out" : ""}`}
         >
-          {filteredOptions.length == 0 ? (
+          {!!isSecondaryDropdown && <label className="flex text-[15px] font-bold px-[10px] pt-[10px]">
+            {primaryLabel}
+          </label>}
+          {filteredOptions.length === 0 && secondaryFilteredOptions.length === 0 ? (
             <span className="p-[10px] outline-none focus:bg-whiteSmoke text-[15px] hover:bg-whiteSmoke font-medium cursor-pointer flex flex-row items-center space-x-2 ">
               No matching data found.
             </span>
           ) : (
-            filteredOptions.map((option, index) => (
-              <li
-                key={index}
-                className={`p-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
-                  addDynamicForm_Icons_Edit ||
-                  addDynamicForm_Icons_Delete
-                  ? "justify-between"
-                  : ""
-                  } ${option && option.liClass
-                    ? option.value === selectedOption?.value &&
-                    `${option.liClass}`
+            <>
+              {!!filteredOptions && filteredOptions.map((option, index) => (
+                <li
+                  key={index}
+                  className={`${isSecondaryDropdown ? 'px-[20px]' : 'px-[10px]'} py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
+                    addDynamicForm_Icons_Edit ||
+                    addDynamicForm_Icons_Delete
+                    ? "justify-between"
                     : ""
-                  }
+                    } ${option && option.liClass
+                      ? option.value === selectedOption?.value &&
+                      `${option.liClass}`
+                      : ""
+                    }
                  ${option && option.isEnable !== false
-                    ? ""
-                    : "pointer-events-none opacity-60"
-                  }
+                      ? ""
+                      : "pointer-events-none opacity-60"
+                    }
                  `}
-                onClick={() => {
-                  if (option.value !== inputValue) {
-                    handleSelect(option.value);
-                  }
-                }}
-                onKeyDown={(e) => handleListItemKeyDown(e, option.value, index)}
-                tabIndex={isOpen ? index : -1}
-                ref={(el) => {
-                  if (index === focusedIndex) {
-                    el?.focus();
-                  }
-                }}
-              >
-                {avatar && (
-                  <div className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
-                    <Avatar
-                      variant="x-small"
-                      name={avatarName}
-                      imageUrl={avatarImgUrl}
-                    />
-                  </div>
-                )}
-                {option.label}&nbsp;{option.JsxElement}
-                {(addDynamicForm ||
-                  addDynamicForm_Icons_Edit ||
-                  addDynamicForm_Icons_Delete) && (
-                    <a className="group/edit invisible hover:bg-slate-100 group-hover/item:visible">
-                      <div className="flex flex-row right-0 mr-2 justify-end items-end">
-                        {addDynamicForm_Icons_Edit && (
-                          <div
-                            className="p-[2px]"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              setTextValue(option.value);
-                              setInputLabel(option.label);
-                              onChangeText(option.value, option.label);
-                              setEditing(true);
-                            }}
-                          >
-                            <EditIconDropdown />
-                          </div>
-                        )}
-
-                        {addDynamicForm_Icons_Delete && (
-                          <div
-                            className="p-[2px]"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              onChangeText(option.value, option.label);
-                              handleDeleteValue(option.value);
-                            }}
-                          >
-                            <DeleteIconDropdown />
-                          </div>
-                        )}
-                      </div>
-                    </a>
+                  onClick={() => {
+                    if (option.value !== inputValue) {
+                      handleSelect(option.value);
+                    }
+                  }}
+                  onKeyDown={(e) => handleListItemKeyDown(e, option.value, index)}
+                  tabIndex={isOpen ? index : -1}
+                  ref={(el) => {
+                    if (index === focusedIndex) {
+                      el?.focus();
+                    }
+                  }}
+                >
+                  {avatar && (
+                    <div className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
+                      <Avatar
+                        variant="x-small"
+                        name={avatarName}
+                        imageUrl={avatarImgUrl}
+                      />
+                    </div>
                   )}
-              </li>
-            ))
+                  {option.label}&nbsp;{option.JsxElement}
+                  {(addDynamicForm ||
+                    addDynamicForm_Icons_Edit ||
+                    addDynamicForm_Icons_Delete) && (
+                      <a className="group/edit invisible hover:bg-slate-100 group-hover/item:visible">
+                        <div className="flex flex-row right-0 mr-2 justify-end items-end">
+                          {addDynamicForm_Icons_Edit && (
+                            <div
+                              className="p-[2px]"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                setTextValue(option.value);
+                                setInputLabel(option.label);
+                                onChangeText(option.value, option.label);
+                                setEditing(true);
+                              }}
+                            >
+                              <EditIconDropdown />
+                            </div>
+                          )}
+
+                          {addDynamicForm_Icons_Delete && (
+                            <div
+                              className="p-[2px]"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                onChangeText(option.value, option.label);
+                                handleDeleteValue(option.value);
+                              }}
+                            >
+                              <DeleteIconDropdown />
+                            </div>
+                          )}
+                        </div>
+                      </a>
+                    )}
+                </li>
+              ))}
+              <div className="border-b border-lightSilver border-dashed" />
+              {!!isSecondaryDropdown && <label className="flex text-[15px] font-bold px-[10px] pt-[10px]">
+                {secondaryLabel}
+              </label>}
+              {!!secondaryFilteredOptions && secondaryFilteredOptions.map((secondaryOption, index) => (
+                <li
+                  key={index + filteredOptions.length}
+                  className={`${isSecondaryDropdown ? 'px-[20px]' : 'px-[10px]'} py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
+                    addDynamicForm_Icons_Edit ||
+                    addDynamicForm_Icons_Delete
+                    ? "justify-between"
+                    : ""
+                    } ${secondaryOption && secondaryOption.liClass
+                      ? secondaryOption.value === selectedOption?.value &&
+                      `${secondaryOption.liClass}`
+                      : ""
+                    }
+                 ${secondaryOption && secondaryOption.isEnable !== false
+                      ? ""
+                      : "pointer-events-none opacity-60"
+                    }
+                 `}
+                  onClick={() => {
+                    if (secondaryOption.value !== inputValue) {
+                      handleSelect(secondaryOption.value);
+                    }
+                  }}
+                  onKeyDown={(e) => handleListItemKeyDown(e, secondaryOption.value, (index + filteredOptions.length))}
+                  tabIndex={isOpen ? (index + filteredOptions.length) : -1}
+                  ref={(el) => {
+                    if ((index + filteredOptions.length) === focusedIndex) {
+                      el?.focus();
+                    }
+                  }}
+                >
+                  {avatar && (
+                    <div className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
+                      <Avatar
+                        variant="x-small"
+                        name={avatarName}
+                        imageUrl={avatarImgUrl}
+                      />
+                    </div>
+                  )}
+                  {secondaryOption.label}&nbsp;{secondaryOption.JsxElement}
+                </li>
+              ))}
+            </>
           )}
           {(addDynamicForm || editing) && (
             <li className="w-full z-50 bg-pureWhite">
