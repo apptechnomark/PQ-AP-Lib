@@ -440,7 +440,7 @@ const Select: React.FC<SelectProps> = ({
           {!!isSecondaryDropdown && <label className="flex text-[15px] font-bold px-[10px] pt-[10px]">
             {primaryLabel}
           </label>}
-          {filteredOptions.length === 0 && secondaryFilteredOptions.length === 0 ? (
+          {filteredOptions.length === 0 || secondaryFilteredOptions.length === 0 ? (
             <span className="p-[10px] outline-none focus:bg-whiteSmoke text-[15px] hover:bg-whiteSmoke font-medium cursor-pointer flex flex-row items-center space-x-2 ">
               No matching data found.
             </span>
@@ -524,7 +524,9 @@ const Select: React.FC<SelectProps> = ({
                     )}
                 </li>
               ))}
-              <div className="border-b border-lightSilver border-dashed" />
+
+              {!!secondaryFilteredOptions && secondaryFilteredOptions.length > 0 && <div className="border-b border-lightSilver border-dashed" /> }
+              
               {!!isSecondaryDropdown && <label className="flex text-[15px] font-bold px-[10px] pt-[10px]">
                 {secondaryLabel}
               </label>}
