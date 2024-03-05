@@ -1,9 +1,9 @@
-import { generateDate, months } from "./utils/datepickerUtility";
-import React, { useEffect, useState, useRef } from "react";
-import style from "./Datepicker.module.scss";
-import ChevronLeftIcon from "./icons/ChevronLeft.js";
-import CalendarIcon from "./icons/CalendarIcon.js";
+import React, { useEffect, useRef, useState } from "react";
 import Typography from "../Typography/Typography";
+import style from "./Datepicker.module.scss";
+import CalendarIcon from "./icons/CalendarIcon.js";
+import ChevronLeftIcon from "./icons/ChevronLeft.js";
+import { generateDate, months } from "./utils/datepickerUtility";
 
 interface DatepickerDate {
     date: Date;
@@ -37,7 +37,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
     disabled,
     hasError,
     errorMessage = "This is required field!",
-    format = "dd/mm/yyyy",
+    format = "mm/dd/yyyy",
     hideIcon,
     getValue,
     getError,
@@ -80,11 +80,11 @@ const Datepicker: React.FC<DatepickerProps> = ({
 
     useEffect(() => {
         const newValueDate = new Date(value ? value : "");
-        setToday(value ? newValueDate : currentDate)
         setSelectedDate(value ? newValueDate : currentDate)
-        setSelectedMonth(value ? newValueDate.getMonth() : currentMonth)
-        setSelectedYear(value ? newValueDate.getFullYear() : currentYear)
         setFullDate(value)
+        let month = value ? newValueDate.getMonth() : currentMonth
+        selectMonth(month)
+        setSelectedYear(value ? newValueDate.getFullYear() : currentYear)
     }, [value])
 
     const toggleMonthList = () => {
@@ -163,19 +163,26 @@ const Datepicker: React.FC<DatepickerProps> = ({
 
     const calendarShow = () => {
         setToggleOpen(true);
+        setToday(selectedDate)
     };
 
     const handleIconClick = (isNextMonth: boolean) => {
         const newDate = new Date(today);
-        const year = newDate.getFullYear();
+        let year = newDate.getFullYear();
         if (isNextMonth) {
-            const month = newDate.getMonth() + 1;
+            const month = (selectedDate.getMonth() + 1) % 12;
             newDate.setMonth(newDate.getMonth() + 1);
             setSelectedMonth(month);
+            if (month === 0) {
+                year++;
+            }
         } else {
-            const month = newDate.getMonth() - 1;
+            const month = (selectedDate.getMonth() - 1 + 12) % 12;
             newDate.setMonth(newDate.getMonth() - 1);
             setSelectedMonth(month);
+            if (month === 11) {
+                year--;
+            }
         }
         setSelectedYear(year);
         setToday(newDate);
@@ -282,7 +289,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
                 <input
                     type="text"
                     placeholder={format}
-                    className={`text-[14px] py-[1px] w-full tracking-wider placeholder:tracking-wider font-proxima border-b placeholder:text-[14px] bg-transparent 
+                    className={`text-[14px] py-[1px] w-full tracking-wider placeholder:tracking-wider font-proxima border-b placeholder:text-[14px] bg-transparent
                     ${disabled
                             ? "border-lightSilver pointer-events-none"
                             : (toggleOpen && !err)
@@ -346,14 +353,24 @@ const Datepicker: React.FC<DatepickerProps> = ({
                                         {showYearList === false ? (
                                             <>
                                                 <div
-                                                    className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray ${showMonthList ? "hidden" : ""
+                                                    className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray
+                                                    ${(currentYear > startYear || (currentMonth > 0))
+                                                            ? ""
+                                                            : "opacity-40 pointer-events-none"
+                                                        }
+                                                        ${showMonthList ? "hidden" : ""
                                                         } text-[20px]`}
                                                     onClick={() => handleIconClick(false)}
                                                 >
                                                     <ChevronLeftIcon />
                                                 </div>
                                                 <div
-                                                    className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray ${showMonthList ? "hidden" : ""
+                                                    className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray
+                                                    ${(currentYear + 1) <= endYear || (currentMonth < 11)
+                                                            ? ""
+                                                            : "opacity-40 pointer-events-none"
+                                                        }
+                                                    ${showMonthList ? "hidden" : ""
                                                         } rotate-180 text-[20px]`}
                                                     onClick={() => handleIconClick(true)}
                                                 >
@@ -379,9 +396,10 @@ const Datepicker: React.FC<DatepickerProps> = ({
                                                             <ChevronLeftIcon />
                                                         </div>
                                                         <div
-                                                            className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray ${currentPage === totalPages
-                                                                ? "opacity-40 pointer-events-none"
-                                                                : ""
+                                                            className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray
+                                                             ${currentPage === totalPages
+                                                                    ? "opacity-40 pointer-events-none"
+                                                                    : ""
                                                                 } rotate-180 text-[20px]`}
                                                             onClick={() => {
                                                                 if (currentPage === totalPages) {
@@ -480,15 +498,15 @@ const Datepicker: React.FC<DatepickerProps> = ({
                                                             onClick={() => handleDateClick(currentDate)}
                                                         >
                                                             <h1
-                                                                className={`h-[40px] w-[40px] grid place-content-center rounded-full cursor-pointer z-10 
-                                                                ${currentMonth ? "" : "text-[#cbd5e0]"
-                                                                    } ${isSameDay
+                                                                className={`h-[40px] w-[40px] grid place-content-center rounded-full cursor-pointer z-10
+                                                                ${currentMonth ? "" : "text-[#cbd5e0] "}
+                                                                     ${isSameDay&&currentMonth
                                                                         ? " bg-primary text-white"
                                                                         : "hover:bg-whiteSmoke"
                                                                     }`}>
                                                                 {currentDate.getDate()}
                                                             </h1>
-                                                            {isSameDay && (
+                                                            {(isSameDay&&currentMonth) && (
                                                                 <>
                                                                     <span className="absolute flex inset-0 rounded-full overflow-visible">
                                                                         <span

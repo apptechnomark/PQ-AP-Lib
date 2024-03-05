@@ -276,6 +276,12 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
 
     const calendarShow = () => {
         setToggleOpen(true);
+        let splitDate = value && value.split(" to ");
+        let startDateString = splitDate && splitDate[0];
+        let updatedStartDate = new Date(startDateString);
+        updatedStartDate.setHours(0, 0, 0, 0);
+        let newDate = value?updatedStartDate:currentDate
+        setToday(newDate)
     };
 
     const handleIconClick = (isNextMonth: boolean) => {

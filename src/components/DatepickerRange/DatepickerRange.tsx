@@ -1,11 +1,10 @@
-import { generateDate, months } from "./utils/datepickerUtility";
-import React, { useEffect, useState, useRef } from "react";
-import style from "./scss/Datepicker.module.scss";
-import ChevronLeftIcon from "./icons/ChevronLeft.js";
-import CalendarIcon from "./icons/CalendarIcon.js";
+import React, { useEffect, useRef, useState } from "react";
 import Typography from "../Typography/Typography";
 import "../Typography/Typography.module.scss";
-import classNames from "classnames";
+import CalendarIcon from "./icons/CalendarIcon.js";
+import ChevronLeftIcon from "./icons/ChevronLeft.js";
+import style from "./scss/Datepicker.module.scss";
+import { generateDate, months } from "./utils/datepickerUtility";
 
 interface DatepickerDate {
     date: Date;
@@ -58,8 +57,6 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
     const [err, setErr] = useState<boolean>(false);
     const [focus, setFocus] = useState<boolean>(false);
     const [errorMsg, setErrorMsg] = useState<string>("");
-
-
 
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(new Date(null));
@@ -287,6 +284,12 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
 
     const calendarShow = () => {
         setToggleOpen(true);
+        let splitDate = value && value.split(" to ");
+        let startDateString = splitDate && splitDate[0];
+        let updatedStartDate = new Date(startDateString);
+        updatedStartDate.setHours(0, 0, 0, 0);
+        let newDate = value?updatedStartDate:currentDate
+        setToday(newDate)
     };
 
     const handleIconClick = (isNextMonth: boolean) => {
@@ -457,14 +460,24 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                                         {showYearList === false ? (
                                             <>
                                                 <div
-                                                    className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray ${showMonthList ? "hidden" : ""
+                                                    className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray
+                                                    ${(currentYear > startYear || (currentMonth > 0))
+                                                            ? ""
+                                                            : "opacity-40 pointer-events-none"
+                                                        }
+                                                     ${showMonthList ? "hidden" : ""
                                                         } text-[20px]`}
                                                     onClick={() => handleIconClick(false)}
                                                 >
                                                     <ChevronLeftIcon />
                                                 </div>
                                                 <div
-                                                    className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray ${showMonthList ? "hidden" : ""
+                                                    className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray
+                                                    ${(currentYear + 1) <= endYear || (currentMonth < 11)
+                                                            ? ""
+                                                            : "opacity-40 pointer-events-none"
+                                                        }
+                                                     ${showMonthList ? "hidden" : ""
                                                         } rotate-180 text-[20px]`}
                                                     onClick={() => handleIconClick(true)}
                                                 >
