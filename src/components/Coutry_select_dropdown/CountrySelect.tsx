@@ -51,6 +51,14 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
     const [focusedIndex, setFocusedIndex] = useState<number>(-1);
 
     useEffect(() => {
+        if (value !== '') {
+            setTelValue(value)
+        } else {
+            setTelValue('')
+        }
+    }, [value])
+
+    useEffect(() => {
         if (validate) {
             setFocus(hasError);
             setErrorMsg(errorMessage);
@@ -231,7 +239,7 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
                 <div
                     className={`flex border-b outline-none transition duration-600 w-full h-full ${err
                         ? "border-b-defaultRed"
-                        : focus&& value != undefined || value != ""
+                        : focus && value != undefined || value != ""
                             ? "border-b-primary"
                             : "border-b-lightSilver"
                         }`}>
