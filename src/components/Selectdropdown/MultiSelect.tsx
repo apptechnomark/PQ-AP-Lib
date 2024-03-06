@@ -246,7 +246,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             ? "border-primary"
             : error
             ? "border-defaultRed"
-            : "border-lightSilver hover:border-primary transition-colors duration-300"
+            : `border-lightSilver ${noborder ? "" : "after:block"} absolute after:border-b after:mb-[-1px] after:border-primary after:scale-x-0 after:origin-left after:transition after:ease-in-out after:duration-1000 hover:after:scale-x-100`
         } ${className}`}
         ref={selectRef}
       >

@@ -266,7 +266,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
                   : `${selectedValues.length > 0
                     ? "border-primary"
                     : "border-lightSilver "
-                  } hover:border-primary transition-colors duration-300`
+                  } ${noborder ? "" : "after:block"} absolute after:border-b after:mb-[-1px] after:border-primary after:scale-x-0 after:origin-left after:transition after:ease-in-out after:duration-1000 hover:after:scale-x-100`
           }`}
         ref={selectRef}
       >
