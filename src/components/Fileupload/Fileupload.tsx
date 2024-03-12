@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Toast } from "../Toast/Toast";
 // ProgressBar Library
 import { ProgressBar } from "../Progressbar/Progressbar";
 // Icon Components
@@ -26,7 +27,8 @@ interface UploaderProps {
   multiSelect?: boolean;
   variant?: string;
   type?: string;
-  getValue?: (uploadedFiles: any) => void
+  getValue?: (uploadedFiles: any) => void;
+  maxFileCount?: number;
 }
 
 interface UploadedFile {
@@ -34,7 +36,13 @@ interface UploadedFile {
   uploadedAt: string;
 }
 
-function Uploader({ multiSelect, variant, type, getValue }: UploaderProps) {
+function Uploader({
+  multiSelect,
+  variant,
+  type,
+  getValue,
+  maxFileCount,
+}: UploaderProps) {
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [files, setFiles] = useState<any>([]);
   const [uploaded, setUploaded] = useState(false);
@@ -58,7 +66,18 @@ function Uploader({ multiSelect, variant, type, getValue }: UploaderProps) {
   };
 
   const handleFileChange = (newFiles: FileList) => {
-    const updatedFiles = [...files, ...Array.from(newFiles)];
+    const remainingSpace = maxFileCount
+      ? maxFileCount - files.length
+      : Infinity;
+    const filesToAdd = Array.from(newFiles).slice(0, remainingSpace);
+    const updatedFiles = [...files, ...filesToAdd];
+
+    if (maxFileCount && updatedFiles.length > maxFileCount) {
+      Toast.error(
+        `You are only allowed to upload a maximum of ${maxFileCount} files at a time`
+      );
+    }
+
     setFiles(updatedFiles);
 
     const updatedFileNames = updatedFiles.map((file) => file.name);
@@ -82,6 +101,11 @@ function Uploader({ multiSelect, variant, type, getValue }: UploaderProps) {
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
+      if (maxFileCount && files.length >= maxFileCount) {
+        Toast.error(
+          `You are only allowed to upload a maximum of ${maxFileCount} files at a time`
+        );
+      }
       handleFileChange(files);
     }
 
@@ -93,9 +117,9 @@ function Uploader({ multiSelect, variant, type, getValue }: UploaderProps) {
     const updatedFileNames = [...fileNames];
     updatedFileNames.splice(index, 1);
     setFileNames(updatedFileNames);
-    setFiles(Array.from(files).filter((i, inx) => inx !== index))
+    setFiles(Array.from(files).filter((i, inx) => inx !== index));
 
-    getValue(Array.from(files).filter((i, inx) => inx !== index))
+    getValue(Array.from(files).filter((i, inx) => inx !== index));
 
     if (updatedFileNames.length === 0) {
       setUploaded(false);
@@ -185,185 +209,202 @@ function Uploader({ multiSelect, variant, type, getValue }: UploaderProps) {
       </span>
     </div>
   ) : (
-    <div>
-      {(multiSelect || !variant) && (
-        <div
-          className={`upload-container w-full flex items-center justify-center ${variant === "small" ? "h-[36px]" : "flex-col h-[230px]"
+    <>
+      <div>
+        {(multiSelect || !variant) && (
+          <div
+            className={`upload-container w-full flex items-center justify-center ${
+              variant === "small" ? "h-[36px]" : "flex-col h-[230px]"
             } justify-center items-centerborder transition-all duration-200 ease-in 
         border border-dashed border-lightSilver hover:border-primary hover:bg-[#EDFFFC] cursor-pointer rounded-[4px]`}
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-          onClick={handleBrowseClick}
-        >
-          <input
-            type="file"
-            multiple={multiSelect}
-            ref={fileInputRef}
-            className="input-field hidden"
-            onChange={handleFileInputChange}
-          />
-          <div
-            className={`text-[15px] text-slatyGrey ${variant === "small"
-              ? ""
-              : "border-2 border-lightSilver rounded-[4px] p-2"
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            onClick={handleBrowseClick}
+          >
+            <input
+              type="file"
+              multiple={multiSelect}
+              ref={fileInputRef}
+              className="input-field hidden"
+              onChange={handleFileInputChange}
+            />
+            <div
+              className={`text-[15px] text-slatyGrey ${
+                variant === "small"
+                  ? ""
+                  : "border-2 border-lightSilver rounded-[4px] p-2"
               }`}
-          >
-            <UploadIcon />
-          </div>
+            >
+              <UploadIcon />
+            </div>
 
-          <p
-            className={`${variant === "small" ? "ml-[10px]" : "mt-4"
+            <p
+              className={`${
+                variant === "small" ? "ml-[10px]" : "mt-4"
               } text-[14px] text-darkCharcoal `}
-          >
-            Drag and Drop or <span className="text-primary">Browse</span> to
-            Upload
-          </p>
-        </div>
-      )}
-
-      {multiSelect ? (
-        <section className="mt-2 flex flex-col justify-between p-2 border border-lightSilver w-full h-[105px] rounded-[4px] overflow-y-auto">
-          <div>
-            <div className="flex flex-row ml-2 flex-wrap overflow-x-auto">
-              {fileNames.length > 0 && uploaded
-                ? fileNames.map((name, index) => (
-                  <span
-                    className="text-[14px] text-darkCharcoal  flex items-center gap-2 bg-whiteSmoke px-[2px] py-[2.5px] rounded-[2px] mr-2 mb-2"
-                    key={name}
-                  >
-                    <span className="text-[14px]">
-                      {renderFileIcon(name)}
-                    </span>
-                    {name.length > 8 ? (
-                      <>{name.slice(0, 8)}..</>
-                    ) : (
-                      <>{name}</>
-                    )}
-                    <span
-                      onClick={() => handleRemoveFile(index)}
-                      className="text-[14px] text-slatyGrey cursor-pointer"
-                    >
-                      <ClearIcon />
-                    </span>
-                  </span>
-                ))
-                : !uploaded && (
-                  <span className="flex flex-row items-center gap-2 text-[14px] text-darkCharcoal ">
-                    {fileNames.length === 0 ? (
-                      <>
-                        <FileIcon /> No selected files
-                      </>
-                    ) : (
-                      <>
-                        {fileNames.length} file
-                        {fileNames.length > 1 ? "s" : ""} selected
-                      </>
-                    )}
-                  </span>
-                )}
-            </div>
+            >
+              Drag and Drop or <span className="text-primary">Browse</span> to
+              Upload
+            </p>
           </div>
-          {fileNames.length > 0 && !uploaded && (
-            <div className="flex items-center text-[12px]  italic text-slatyGrey flex-row">
-              <span className="mr-[10px]">
-                {uploaded ? "Uploaded" : "Uploading..."}
-              </span>
+        )}
 
-              <ProgressBar variant="primary" progressDigit={false} label={""} />
-
-              <span className=" ml-2 text-primary text-[20px]">
-                {isChecked && <CheckIcon />}
-              </span>
+        {multiSelect ? (
+          <section className="mt-2 flex flex-col justify-between p-2 border border-lightSilver w-full h-[105px] rounded-[4px] overflow-y-auto">
+            <div>
+              <div className="flex flex-row ml-2 flex-wrap overflow-x-auto">
+                {fileNames.length > 0 && uploaded
+                  ? fileNames.map((name, index) => (
+                      <span
+                        className="text-[14px] text-darkCharcoal  flex items-center gap-2 bg-whiteSmoke px-[2px] py-[2.5px] rounded-[2px] mr-2 mb-2"
+                        key={name}
+                      >
+                        <span className="text-[14px]">
+                          {renderFileIcon(name)}
+                        </span>
+                        {name.length > 8 ? (
+                          <>{name.slice(0, 8)}..</>
+                        ) : (
+                          <>{name}</>
+                        )}
+                        <span
+                          onClick={() => handleRemoveFile(index)}
+                          className="text-[14px] text-slatyGrey cursor-pointer"
+                        >
+                          <ClearIcon />
+                        </span>
+                      </span>
+                    ))
+                  : !uploaded && (
+                      <span className="flex flex-row items-center gap-2 text-[14px] text-darkCharcoal ">
+                        {fileNames.length === 0 ? (
+                          <>
+                            <FileIcon /> No selected files
+                          </>
+                        ) : (
+                          <>
+                            {fileNames.length} file
+                            {fileNames.length > 1 ? "s" : ""} selected
+                          </>
+                        )}
+                      </span>
+                    )}
+              </div>
             </div>
-          )}
-        </section>
-      ) : (
-        <section
-          className={`${variant === "small"
-            ? fileNames.length > 0 &&
-            "flex justify-between items-center border border-lightSilver h-[36px] px-[20px] rounded-[4px]"
-            : "mt-2 flex justify-between items-center border border-lightSilver h-[36px] px-[20px] rounded-[4px]"
-            }`}
-        >
-          {fileNames.length > 0 && !uploaded ? (
-            <>
-              <label className="text-[12px] italic mr-[10px] text-slatyGrey ">
-                {!uploaded ? "Uploading..." : "Uploaded"}
-              </label>
+            {fileNames.length > 0 && !uploaded && (
+              <div className="flex items-center text-[12px]  italic text-slatyGrey flex-row">
+                <span className="mr-[10px]">
+                  {uploaded ? "Uploaded" : "Uploading..."}
+                </span>
 
-              <ProgressBar variant="primary" progressDigit={false} label={""} />
+                <ProgressBar
+                  variant="primary"
+                  progressDigit={false}
+                  label={""}
+                />
 
-              <span className=" ml-2 text-primary text-[20px]">
-                {isChecked && <CheckIcon />}
-              </span>
-            </>
-          ) : uploaded ? (
-            <>
-              <div className="flex flex-row items-center">
-                {renderFileIcon(fileNames[0])}
-                <span className="ml-2 text-[14px] text-darkCharcoal ">
-                  {fileNames[0].length > 30 ? (
-                    <>
-                      {fileNames[0].slice(0, 26)}..
-                      {fileNames[0].substring(fileNames[0].lastIndexOf("."))}
-                    </>
-                  ) : (
-                    <>{fileNames[0]}</>
-                  )}
+                <span className=" ml-2 text-primary text-[20px]">
+                  {isChecked && <CheckIcon />}
                 </span>
               </div>
-              <span
-                onClick={() => handleRemoveFile(0)}
-                className="text-[18px] text-slatyGrey cursor-pointer"
-              >
-                <ClearIcon />
-              </span>
-            </>
-          ) : variant === "small" ? (
-            <div
-              className="upload-container w-full flex justify-center h-[36px]
+            )}
+          </section>
+        ) : (
+          <section
+            className={`${
+              variant === "small"
+                ? fileNames.length > 0 &&
+                  "flex justify-between items-center border border-lightSilver h-[36px] px-[20px] rounded-[4px]"
+                : "mt-2 flex justify-between items-center border border-lightSilver h-[36px] px-[20px] rounded-[4px]"
+            }`}
+          >
+            {fileNames.length > 0 && !uploaded ? (
+              <>
+                <label className="text-[12px] italic mr-[10px] text-slatyGrey ">
+                  {!uploaded ? "Uploading..." : "Uploaded"}
+                </label>
+
+                <ProgressBar
+                  variant="primary"
+                  progressDigit={false}
+                  label={""}
+                />
+
+                <span className=" ml-2 text-primary text-[20px]">
+                  {isChecked && <CheckIcon />}
+                </span>
+              </>
+            ) : uploaded ? (
+              <>
+                <div className="flex flex-row items-center">
+                  {renderFileIcon(fileNames[0])}
+                  <span className="ml-2 text-[14px] text-darkCharcoal ">
+                    {fileNames[0].length > 30 ? (
+                      <>
+                        {fileNames[0].slice(0, 26)}..
+                        {fileNames[0].substring(fileNames[0].lastIndexOf("."))}
+                      </>
+                    ) : (
+                      <>{fileNames[0]}</>
+                    )}
+                  </span>
+                </div>
+                <span
+                  onClick={() => handleRemoveFile(0)}
+                  className="text-[18px] text-slatyGrey cursor-pointer"
+                >
+                  <ClearIcon />
+                </span>
+              </>
+            ) : variant === "small" ? (
+              <div
+                className="upload-container w-full flex justify-center h-[36px]
                   items-center transition-all duration-200 ease-in 
                 border border-dashed border-lightSilver hover:border-primary hover:bg-[#EDFFFC] 
                 cursor-pointer rounded-[4px]"
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
-              onClick={handleBrowseClick}
-            >
-              <input
-                type="file"
-                multiple={multiSelect}
-                ref={fileInputRef}
-                className="input-field hidden"
-                onChange={handleFileInputChange}
-              />
-              <div
-                className={`text-[15px] text-slatyGrey ${variant === "small"
-                  ? ""
-                  : "border-2 border-lightSilver rounded-[4px] p-2"
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onClick={handleBrowseClick}
+              >
+                <input
+                  type="file"
+                  multiple={multiSelect}
+                  ref={fileInputRef}
+                  className="input-field hidden"
+                  onChange={handleFileInputChange}
+                />
+                <div
+                  className={`text-[15px] text-slatyGrey ${
+                    variant === "small"
+                      ? ""
+                      : "border-2 border-lightSilver rounded-[4px] p-2"
                   }`}
-              >
-                <UploadIcon />
-              </div>
+                >
+                  <UploadIcon />
+                </div>
 
-              <p
-                className={`${variant === "small" ? "ml-[10px]" : "mt-4"
+                <p
+                  className={`${
+                    variant === "small" ? "ml-[10px]" : "mt-4"
                   } text-[14px] text-darkCharcoal `}
-              >
-                Drag and Drop or <span className="text-primary">Browse</span>{" "}
-                to Upload
-              </p>
-            </div>
-          ) : (
-            <div className="flex flex-row items-center">
-              <FileIcon />
-              <span className="ml-2 text-[14px] text-darkCharcoal ">
-                No Files Selected
-              </span>
-            </div>
-          )}
-        </section>
-      )}
-    </div>
+                >
+                  Drag and Drop or <span className="text-primary">Browse</span>{" "}
+                  to Upload
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-row items-center">
+                <FileIcon />
+                <span className="ml-2 text-[14px] text-darkCharcoal ">
+                  No Files Selected
+                </span>
+              </div>
+            )}
+          </section>
+        )}
+      </div>
+      <Toast position="top_center" />
+    </>
   );
 }
 
