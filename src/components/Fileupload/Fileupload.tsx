@@ -29,6 +29,7 @@ interface UploaderProps {
   type?: string;
   getValue?: (uploadedFiles: any) => void;
   maxFileCount?: number;
+  accept?: string
 }
 
 interface UploadedFile {
@@ -40,6 +41,7 @@ function Uploader({
   multiSelect,
   variant,
   type,
+  accept,
   getValue,
   maxFileCount,
 }: UploaderProps) {
@@ -223,6 +225,7 @@ function Uploader({
           >
             <input
               type="file"
+              accept={accept}
               multiple={multiSelect}
               ref={fileInputRef}
               className="input-field hidden"

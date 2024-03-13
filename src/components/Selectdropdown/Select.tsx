@@ -47,6 +47,7 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   disabled?: boolean;
   noborder?: boolean;
   hideIcon?: boolean;
+  openUpside?: boolean;
   secondaryOptions?: any;
   isSecondaryDropdown?: boolean;
   primaryLabel?: string;
@@ -88,6 +89,7 @@ const Select: React.FC<SelectProps> = ({
   secondaryOptions,
   isSecondaryDropdown,
   primaryLabel,
+  openUpside, 
   secondaryLabel
 }) => {
   const [inputValue, setInputValue] = useState("");
@@ -444,13 +446,14 @@ const Select: React.FC<SelectProps> = ({
           )}
         </div>
 
-        <ul
-          className={`bottomAnimation absolute z-10 w-full bg-pureWhite mt-[${noborder ? 13 : 1
-            }px] overflow-y-auto shadow-md transition-transform ${isOpen
-              ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
-              : "max-h-0 translate-y-10 transition-opacity opacity-0 duration-500"
-            } ${isOpen ? "ease-out" : ""}`}
-        >
+       <ul
+            className={`absolute z-10 w-full bg-pureWhite mt-[1px] overflow-y-auto shadow-lg transition-transform  ${isOpen
+              ? `${openUpside ? "max-h-[335px]" : "max-h-60"} ${openUpside ? "-translate-y-[19.5rem]" : "translate-y-0"
+              } transition-opacity z-[1] opacity-100 duration-500`
+              : `max-h-0 ${openUpside ? "-translate-y-[21.6rem]" : "translate-y-10"
+              } transition-opacity opacity-0 duration-500`
+              } ${isOpen ? "ease-out" : ""}`}
+          >
           {!!isSecondaryDropdown && <label className="flex text-[15px] font-bold px-[10px] pt-[10px]">
             {primaryLabel}
           </label>}
