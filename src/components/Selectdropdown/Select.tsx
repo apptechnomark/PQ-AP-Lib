@@ -47,7 +47,6 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   disabled?: boolean;
   noborder?: boolean;
   hideIcon?: boolean;
-  openUpside?: boolean;
   secondaryOptions?: any;
   isSecondaryDropdown?: boolean;
   primaryLabel?: string;
@@ -89,8 +88,7 @@ const Select: React.FC<SelectProps> = ({
   secondaryOptions,
   isSecondaryDropdown,
   primaryLabel,
-  openUpside, 
-  secondaryLabel
+  secondaryLabel,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [inputLabel, setInputLabel] = useState("");
@@ -115,9 +113,11 @@ const Select: React.FC<SelectProps> = ({
     option.label.toLowerCase().includes(searchValue)
   );
 
-  const secondaryFilteredOptions = !!secondaryOptions && secondaryOptions.filter((option) =>
-    option.label.toLowerCase().includes(searchValue)
-  );
+  const secondaryFilteredOptions =
+    !!secondaryOptions &&
+    secondaryOptions.filter((option) =>
+      option.label.toLowerCase().includes(searchValue)
+    );
 
   useEffect(() => {
     if (validate) {
@@ -195,18 +195,12 @@ const Select: React.FC<SelectProps> = ({
   };
 
   const handleSelect = (value: any) => {
-    let newOptions = []
+    let newOptions = [];
     if (!!options && options.length > 0) {
-      newOptions = [
-        ...newOptions,
-        ...options
-      ]
+      newOptions = [...newOptions, ...options];
     }
     if (!!secondaryOptions && secondaryOptions.length > 0) {
-      newOptions = [
-        ...newOptions,
-        ...secondaryOptions
-      ]
+      newOptions = [...newOptions, ...secondaryOptions];
     }
 
     setSelectedOption(newOptions.find((option) => option.value === value));
@@ -313,62 +307,56 @@ const Select: React.FC<SelectProps> = ({
     }
   };
 
-  let newOptions = []
+  let newOptions = [];
   if (!!options && options.length > 0) {
-    newOptions = [
-      ...newOptions,
-      ...options
-    ]
+    newOptions = [...newOptions, ...options];
   }
   if (!!secondaryOptions && secondaryOptions.length > 0) {
-    newOptions = [
-      ...newOptions,
-      ...secondaryOptions
-    ]
+    newOptions = [...newOptions, ...secondaryOptions];
   }
 
-  let newFilteredOptions = []
+  let newFilteredOptions = [];
   if (!!filteredOptions && filteredOptions.length > 0) {
-    newFilteredOptions = [
-      ...newFilteredOptions,
-      ...filteredOptions
-    ]
+    newFilteredOptions = [...newFilteredOptions, ...filteredOptions];
   }
   if (!!secondaryFilteredOptions && secondaryFilteredOptions.length > 0) {
-    newFilteredOptions = [
-      ...newFilteredOptions,
-      ...secondaryFilteredOptions
-    ]
+    newFilteredOptions = [...newFilteredOptions, ...secondaryFilteredOptions];
   }
 
   return (
     <>
       <div
-        className={`${styles.customScrollbar} relative font-medium w-full flex-row outline-none
+        className={`${
+          styles.customScrollbar
+        } relative font-medium w-full flex-row outline-none
         ${noborder ? "" : "border-b"}
-           ${disabled
-            ? "border-lightSilver"
-            : isOpen
-              ? "border-primary"
-              : inputValue
-                ? "border-primary"
-                : error
-                  ? "border-defaultRed"
-                  : `border-lightSilver ${noborder ? "" : "after:block"} absolute after:border-b after:mb-[-1px] after:border-primary after:scale-x-0 after:origin-left after:transition after:ease-in-out after:duration-1000 hover:after:scale-x-100`
-          }
+           ${
+             disabled
+               ? "border-lightSilver"
+               : isOpen
+               ? "border-primary"
+               : inputValue
+               ? "border-primary"
+               : error
+               ? "border-defaultRed"
+               : `border-lightSilver ${
+                   noborder ? "" : "after:block"
+                 } absolute after:border-b after:mb-[-1px] after:border-primary after:scale-x-0 after:origin-left after:transition after:ease-in-out after:duration-1000 hover:after:scale-x-100`
+           }
           ${className}`}
         ref={selectRef}
       >
         {label && (
           <label
-            className={`text-[14px] font-normal w-full ${isOpen
-              ? "text-primary"
-              : inputValue
+            className={`text-[14px] font-normal w-full ${
+              isOpen
+                ? "text-primary"
+                : inputValue
                 ? "text-primary"
                 : error
-                  ? "text-defaultRed"
-                  : "text-slatyGrey"
-              } ${disabled && "text-slatyGrey"}`}
+                ? "text-defaultRed"
+                : "text-slatyGrey"
+            } ${disabled && "text-slatyGrey"}`}
             htmlFor={id}
             tabIndex={-1}
           >
@@ -376,7 +364,9 @@ const Select: React.FC<SelectProps> = ({
 
             {validate && (
               <span
-                className={`${disabled ? "text-lightSilver" : "text-defaultRed"}`}
+                className={`${
+                  disabled ? "text-lightSilver" : "text-defaultRed"
+                }`}
               >
                 &nbsp;*
               </span>
@@ -387,10 +377,11 @@ const Select: React.FC<SelectProps> = ({
         <div
           className="flex flex-row items-center relative mb-0 w-full"
           tabIndex={0}
-          onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleToggleOpen()}
+          onKeyDown={(e) =>
+            (e.key === "Enter" || e.key === " ") && handleToggleOpen()
+          }
         >
           <input
-
             id={id}
             onBlur={handleBlur}
             onClick={handleToggleOpen}
@@ -403,110 +394,123 @@ const Select: React.FC<SelectProps> = ({
               search && isOpen
                 ? searchValue // If in search mode and input is open, use searchValue
                 : defaultValue !== null && defaultValue !== undefined
-                  ? newOptions.find((option) => option.value === defaultValue)
+                ? newOptions.find((option) => option.value === defaultValue)
                     ?.label ?? placeholder
-                  : selectedOption
-                    ? selectedOption.label
-                    : defaultValue
-                      ? newOptions.find((option) => option.value === defaultValue)
-                        ?.label ?? ""
-                      : inputValue.length > 25
-                        ? inputValue.substring(0, 20) + "..."
-                        : inputValue
+                : selectedOption
+                ? selectedOption.label
+                : defaultValue
+                ? newOptions.find((option) => option.value === defaultValue)
+                    ?.label ?? ""
+                : inputValue.length > 25
+                ? inputValue.substring(0, 20) + "..."
+                : inputValue
             }
             autoComplete="off"
-
             className={`flex-grow text-[14px] font-normal w-full outline-none bg-white
-             ${disabled
-                ? "text-slatyGrey cursor-default"
-                : isOpen
-                  ? "text-primary cursor-pointer placeholder-primary"
-                  : selectedOption
-                    ? "text-darkCharcoal placeholder-darkCharcoal"
-                    : error
-                      ? "placeholder:text-defaultRed text-defaultRed"
-                      : defaultValue
-                        ? "text-darkCharcoal placeholder-darkCharcoal cursor-pointer"
-                        : "text-slatyGrey opacity-70 cursor-pointer"
-              }`}
+             ${
+               disabled
+                 ? "text-slatyGrey cursor-default"
+                 : isOpen
+                 ? "text-primary cursor-pointer placeholder-primary"
+                 : selectedOption
+                 ? "text-darkCharcoal placeholder-darkCharcoal"
+                 : error
+                 ? "placeholder:text-defaultRed text-defaultRed"
+                 : defaultValue
+                 ? "text-darkCharcoal placeholder-darkCharcoal cursor-pointer"
+                 : "text-slatyGrey opacity-70 cursor-pointer"
+             }`}
             style={{ background: "transparent" }}
             onKeyDown={(e) => handleKeyDown(e)}
           />
           {!hideIcon && (
             <div
               onClick={handleToggleOpen}
-              className={`text-[1.5rem] transition-transform ${disabled
-                ? "text-slatyGrey cursor-default"
-                : "text-darkCharcoal cursor-pointer"
-                } ${error && " text-defaultRed"} ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
-                }`}
+              className={`text-[1.5rem] transition-transform ${
+                disabled
+                  ? "text-slatyGrey cursor-default"
+                  : "text-darkCharcoal cursor-pointer"
+              } ${error && " text-defaultRed"} ${
+                isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
+              }`}
             >
               <ChevronDown />
             </div>
           )}
         </div>
 
-       <ul
-            className={`absolute z-10 w-full bg-pureWhite mt-[1px] overflow-y-auto shadow-lg transition-transform  ${isOpen
-              ? `${openUpside ? "max-h-[335px]" : "max-h-60"} ${openUpside ? "-translate-y-[19.5rem]" : "translate-y-0"
-              } transition-opacity z-[1] opacity-100 duration-500`
-              : `max-h-0 ${openUpside ? "-translate-y-[21.6rem]" : "translate-y-10"
-              } transition-opacity opacity-0 duration-500`
-              } ${isOpen ? "ease-out" : ""}`}
-          >
-          {!!isSecondaryDropdown && <label className="flex text-[15px] font-bold px-[10px] pt-[10px]">
-            {primaryLabel}
-          </label>}
+        <ul
+          className={`bottomAnimation absolute z-10 w-full bg-pureWhite mt-[${
+            noborder ? 13 : 1
+          }px] overflow-y-auto shadow-md transition-transform ${
+            isOpen
+              ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
+              : "max-h-0 translate-y-10 transition-opacity opacity-0 duration-500"
+          } ${isOpen ? "ease-out" : ""}`}
+        >
+          {!!isSecondaryDropdown && (
+            <label className="flex text-[15px] font-bold px-[10px] pt-[10px]">
+              {primaryLabel}
+            </label>
+          )}
           {newFilteredOptions.length === 0 ? (
             <span className="p-[10px] outline-none focus:bg-whiteSmoke text-[15px] hover:bg-whiteSmoke font-medium cursor-pointer flex flex-row items-center space-x-2 ">
               No matching data found.
             </span>
           ) : (
             <>
-              {!!filteredOptions && filteredOptions.map((option, index) => (
-                <li
-                  key={index}
-                  className={`${isSecondaryDropdown ? 'px-[20px]' : 'px-[10px]'} py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
-                    addDynamicForm_Icons_Edit ||
-                    addDynamicForm_Icons_Delete
-                    ? "justify-between"
-                    : ""
-                    } ${option && option.liClass
-                      ? option.value === selectedOption?.value &&
-                      `${option.liClass}`
-                      : ""
+              {!!filteredOptions &&
+                filteredOptions.map((option, index) => (
+                  <li
+                    key={index}
+                    className={`${
+                      isSecondaryDropdown ? "px-[20px]" : "px-[10px]"
+                    } py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${
+                      addDynamicForm ||
+                      addDynamicForm_Icons_Edit ||
+                      addDynamicForm_Icons_Delete
+                        ? "justify-between"
+                        : ""
+                    } ${
+                      option && option.liClass
+                        ? option.value === selectedOption?.value &&
+                          `${option.liClass}`
+                        : ""
                     }
-                 ${option && option.isEnable !== false
-                      ? ""
-                      : "pointer-events-none opacity-60"
-                    }
+                 ${
+                   option && option.isEnable !== false
+                     ? ""
+                     : "pointer-events-none opacity-60"
+                 }
                  `}
-                  onClick={() => {
-                    if (option.value !== inputValue) {
-                      handleSelect(option.value);
+                    onClick={() => {
+                      if (option.value !== inputValue) {
+                        handleSelect(option.value);
+                      }
+                    }}
+                    onKeyDown={(e) =>
+                      handleListItemKeyDown(e, option.value, index)
                     }
-                  }}
-                  onKeyDown={(e) => handleListItemKeyDown(e, option.value, index)}
-                  tabIndex={isOpen ? index : -1}
-                  ref={(el) => {
-                    if (index === focusedIndex) {
-                      el?.focus();
-                    }
-                  }}
-                >
-                  {avatar && (
-                    <div className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
-                      <Avatar
-                        variant="x-small"
-                        name={avatarName}
-                        imageUrl={avatarImgUrl}
-                      />
-                    </div>
-                  )}
-                  {option.label}&nbsp;{option.JsxElement}
-                  {(addDynamicForm ||
-                    addDynamicForm_Icons_Edit ||
-                    addDynamicForm_Icons_Delete) && (
+                    tabIndex={isOpen ? index : -1}
+                    ref={(el) => {
+                      if (index === focusedIndex) {
+                        el?.focus();
+                      }
+                    }}
+                  >
+                    {avatar && (
+                      <div className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
+                        <Avatar
+                          variant="x-small"
+                          name={avatarName}
+                          imageUrl={avatarImgUrl}
+                        />
+                      </div>
+                    )}
+                    {option.label}&nbsp;{option.JsxElement}
+                    {(addDynamicForm ||
+                      addDynamicForm_Icons_Edit ||
+                      addDynamicForm_Icons_Delete) && (
                       <a className="group/edit invisible hover:bg-slate-100 group-hover/item:visible">
                         <div className="flex flex-row right-0 mr-2 justify-end items-end">
                           {addDynamicForm_Icons_Edit && (
@@ -539,57 +543,74 @@ const Select: React.FC<SelectProps> = ({
                         </div>
                       </a>
                     )}
-                </li>
-              ))}
+                  </li>
+                ))}
 
-              {!!secondaryFilteredOptions && secondaryFilteredOptions.length > 0 && <div className="border-b border-lightSilver border-dashed" /> }
-              
-              {!!isSecondaryDropdown && <label className="flex text-[15px] font-bold px-[10px] pt-[10px]">
-                {secondaryLabel}
-              </label>}
-              {!!secondaryFilteredOptions && secondaryFilteredOptions.map((secondaryOption, index) => (
-                <li
-                  key={index + filteredOptions.length}
-                  className={`${isSecondaryDropdown ? 'px-[20px]' : 'px-[10px]'} py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
-                    addDynamicForm_Icons_Edit ||
-                    addDynamicForm_Icons_Delete
-                    ? "justify-between"
-                    : ""
-                    } ${secondaryOption && secondaryOption.liClass
-                      ? secondaryOption.value === selectedOption?.value &&
-                      `${secondaryOption.liClass}`
-                      : ""
+              {!!secondaryFilteredOptions &&
+                secondaryFilteredOptions.length > 0 && (
+                  <div className="border-b border-lightSilver border-dashed" />
+                )}
+
+              {!!isSecondaryDropdown && (
+                <label className="flex text-[15px] font-bold px-[10px] pt-[10px]">
+                  {secondaryLabel}
+                </label>
+              )}
+              {!!secondaryFilteredOptions &&
+                secondaryFilteredOptions.map((secondaryOption, index) => (
+                  <li
+                    key={index + filteredOptions.length}
+                    className={`${
+                      isSecondaryDropdown ? "px-[20px]" : "px-[10px]"
+                    } py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${
+                      addDynamicForm ||
+                      addDynamicForm_Icons_Edit ||
+                      addDynamicForm_Icons_Delete
+                        ? "justify-between"
+                        : ""
+                    } ${
+                      secondaryOption && secondaryOption.liClass
+                        ? secondaryOption.value === selectedOption?.value &&
+                          `${secondaryOption.liClass}`
+                        : ""
                     }
-                 ${secondaryOption && secondaryOption.isEnable !== false
-                      ? ""
-                      : "pointer-events-none opacity-60"
-                    }
+                 ${
+                   secondaryOption && secondaryOption.isEnable !== false
+                     ? ""
+                     : "pointer-events-none opacity-60"
+                 }
                  `}
-                  onClick={() => {
-                    if (secondaryOption.value !== inputValue) {
-                      handleSelect(secondaryOption.value);
+                    onClick={() => {
+                      if (secondaryOption.value !== inputValue) {
+                        handleSelect(secondaryOption.value);
+                      }
+                    }}
+                    onKeyDown={(e) =>
+                      handleListItemKeyDown(
+                        e,
+                        secondaryOption.value,
+                        index + filteredOptions.length
+                      )
                     }
-                  }}
-                  onKeyDown={(e) => handleListItemKeyDown(e, secondaryOption.value, (index + filteredOptions.length))}
-                  tabIndex={isOpen ? (index + filteredOptions.length) : -1}
-                  ref={(el) => {
-                    if ((index + filteredOptions.length) === focusedIndex) {
-                      el?.focus();
-                    }
-                  }}
-                >
-                  {avatar && (
-                    <div className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
-                      <Avatar
-                        variant="x-small"
-                        name={avatarName}
-                        imageUrl={avatarImgUrl}
-                      />
-                    </div>
-                  )}
-                  {secondaryOption.label}&nbsp;{secondaryOption.JsxElement}
-                </li>
-              ))}
+                    tabIndex={isOpen ? index + filteredOptions.length : -1}
+                    ref={(el) => {
+                      if (index + filteredOptions.length === focusedIndex) {
+                        el?.focus();
+                      }
+                    }}
+                  >
+                    {avatar && (
+                      <div className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
+                        <Avatar
+                          variant="x-small"
+                          name={avatarName}
+                          imageUrl={avatarImgUrl}
+                        />
+                      </div>
+                    )}
+                    {secondaryOption.label}&nbsp;{secondaryOption.JsxElement}
+                  </li>
+                ))}
             </>
           )}
           {(addDynamicForm || editing) && (
