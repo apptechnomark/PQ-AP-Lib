@@ -11,12 +11,13 @@
     input[type="range"] {
       position: absolute;
       top: -2px;
-      left: -3px;
-      width: 101%;
+      // left: -3px;
+      // width: 101%;
       -webkit-appearance: none;
       pointer-events: none;
       background: none;
       outline: none;
+      z-index: 9;
     }
 
     input[type="range"]::-webkit-slider-thumb {

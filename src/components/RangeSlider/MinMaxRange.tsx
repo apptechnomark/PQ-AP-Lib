@@ -118,7 +118,7 @@ const MinMaxRange: React.FC<MinMaxRangeProps> = ({
     >
       <div className={`${styles.range_slider}`} onClick={handleLineClick}>
         <div
-          className={`flex items-center px-[7.5px] justify-between w-full absolute ${
+          className={`flex items-center justify-between px-[9px] w-full absolute ${
             variant === "dot" && "top-[1.5px]"
           }`}
         >
