@@ -51,6 +51,7 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   isSecondaryDropdown?: boolean;
   primaryLabel?: string;
   secondaryLabel?: string;
+  openTop?: boolean;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -89,6 +90,7 @@ const Select: React.FC<SelectProps> = ({
   isSecondaryDropdown,
   primaryLabel,
   secondaryLabel,
+  openTop = false,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [inputLabel, setInputLabel] = useState("");
@@ -438,16 +440,17 @@ const Select: React.FC<SelectProps> = ({
             </div>
           )}
         </div>
-
-        <ul
-          className={`bottomAnimation absolute z-10 w-full bg-pureWhite mt-[${
-            noborder ? 13 : 1
-          }px] overflow-y-auto shadow-md transition-transform ${
-            isOpen
+          <ul
+            className={`bottomAnimation absolute z-10 w-full bg-pureWhite mt-[${
+              noborder ? 13 : 1
+            }px] overflow-y-auto shadow-md transition-transform ${
+              isOpen
               ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
               : "max-h-0 translate-y-10 transition-opacity opacity-0 duration-500"
-          } ${isOpen ? "ease-out" : ""}`}
-        >
+            } ${isOpen ? "ease-out" : ""} ${
+              openTop ? "bottom-full" : "top-full"
+            }`}
+          >
           {!!isSecondaryDropdown && (
             <label className="flex text-[15px] font-bold px-[10px] pt-[10px]">
               {primaryLabel}
