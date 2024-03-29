@@ -5,6 +5,8 @@ import ChevronDown from "./icons/ChevronDown.js";
 // Library Components
 import { Avatar } from "../Avatar/Avatar.js";
 import CheckBox from "../Checkbox/Checkbox.js";
+import Typography from "../Typography/Typography.js";
+import styles from "./selectdropdown.module.scss";
 
 interface MultiSelectProps {
   id: string;
@@ -238,29 +240,37 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     }
   };
 
+  const handleCheckboxChange = (value: string) => {
+    setSelectedValues((prevSelected) => {
+      if (prevSelected.includes(value)) {
+        return prevSelected.filter((item) => item !== value);
+      } else {
+        return [...prevSelected, value];
+      }
+    });
+  };
+
   return (
     <>
       <div
-        className={`relative font-medium w-full ${noborder ? "" : "border-b"} ${
-          selectedValues.length > 0
-            ? "border-primary"
-            : error
+        className={`${styles.customScrollbar} relative font-medium w-full ${noborder ? "" : "border-b"} ${selectedValues.length > 0
+          ? "border-primary"
+          : error
             ? "border-defaultRed"
             : `border-lightSilver ${noborder ? "" : "after:block"} absolute after:border-b after:mb-[-1px] after:border-primary after:scale-x-0 after:origin-left after:transition after:ease-in-out after:duration-1000 hover:after:scale-x-100`
-        } ${className}`}
+          } ${className}`}
         ref={selectRef}
       >
         {label && (
           <label
-            className={`text-[14px] font-normal ${
-              isOpen
-                ? "text-primary"
-                : selectedValues.length > 0
+            className={`text-[14px] font-normal ${isOpen
+              ? "text-primary"
+              : selectedValues.length > 0
                 ? "text-primary"
                 : error
-                ? "text-defaultRed"
-                : "text-slatyGrey"
-            }`}
+                  ? "text-defaultRed"
+                  : "text-slatyGrey"
+              }`}
             htmlFor={id}
           >
             {label}
@@ -279,34 +289,29 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
               selectedValues.length > 0
                 ? `${selectedValues.length} selected`
                 : isOpen
-                ? placeholder || "Search"
-                : defaultValue || "Please select"
+                  ? placeholder || "Search"
+                  : defaultValue || "Please select"
             }
             value={
               inputValue.length > 25
                 ? `${inputValue.substring(0, 20)}...`
                 : inputValue
             }
-            className={`${
-              error && "placeholder:text-defaultRed text-defaultRed"
-            } w-full  flex-grow bg-white outline-none text-darkCharcoal text-[14px] font-normal ${
-              isOpen ? "text-primary" : ""
-            } ${
-              !isOpen
+            className={`${error && "placeholder:text-defaultRed text-defaultRed"
+              } w-full  flex-grow bg-white outline-none text-darkCharcoal text-[14px] font-normal ${isOpen ? "text-primary" : ""
+              } ${!isOpen
                 ? "placeholder-darkCharcoal cursor-pointer"
                 : "placeholder-primary cursor-default"
-            }`}
+              }`}
             style={{ background: "transparent" }}
             onKeyDown={(e) => handleKeyDown(e)}
           />
           {!hideIcon && (
             <div
               onClick={handleToggleOpen}
-              className={`${
-                error && " text-defaultRed"
-              } text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer  ${
-                isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
-              }
+              className={`${error && " text-defaultRed"
+                } text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer  ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
+                }
               }`}
             >
               <ChevronDown />
@@ -315,43 +320,35 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
         </div>
 
         <ul
-          className={`absolute z-10 w-full bg-pureWhite ${
-            noborder ? "mt-[13px]" : "mt-[1px]"
-          } overflow-y-auto shadow-md transition-transform ${
-            isOpen
+          className={`absolute z-10 w-full bg-pureWhite ${noborder ? "mt-[13px]" : "mt-[1px]"
+            } overflow-y-auto shadow-md transition-transform ${isOpen
               ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
               : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
-          } ${isOpen ? "ease-out" : ""}`}
+            } ${isOpen ? "ease-out" : ""}`}
         >
           <label
-            className={`pt-3 pb-1 pl-3 text-[14px] font-normal text-primary cursor-pointer flex`}
+            className={`pt-3 pb-1 pl-3 sticky top-0 z-[5] bg-pureWhite  text-[14px] font-normal text-primary cursor-pointer flex`}
             onClick={handleToggleAll}
           >
             {allOptionsSelected ? "Clear All" : "Select All"}
           </label>
           {options.length > 0 &&
-          options.some((option) =>
-            option.label.toLowerCase().startsWith(inputValue)
-          ) ? (
+            options.some((option) =>
+              option.label.toLowerCase().startsWith(inputValue)
+            ) ? (
             options.map((option, index) => (
               <li
                 key={index}
-                className={`outline-none focus:bg-whiteSmoke p-[10px] text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${
-                  selectedValues.includes(option.value) ? "bg-whiteSmoke" : ""
-                } ${
-                  !option.label.toLowerCase().startsWith(inputValue)
+                className={`outline-none focus:bg-whiteSmoke p-[10px] text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selectedValues.includes(option.value) ? "bg-whiteSmoke" : ""
+                  } ${!option.label.toLowerCase().startsWith(inputValue)
                     ? "hidden"
                     : ""
-                }`}
-                onClick={
-                  type !== "checkbox"
-                    ? () => {
-                        if (option.value !== inputValue) {
-                          handleSelect(option.value);
-                        }
-                      }
-                    : undefined
-                }
+                  }`}
+                onClick={() => {
+                  if (option.value !== inputValue) {
+                    handleSelect(option.value);
+                  }
+                }}
                 onKeyDown={(e) => handleListItemKeyDown(e, option.value, index)}
                 tabIndex={0}
                 ref={(el) => {
@@ -371,18 +368,26 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                 )}
 
                 {type === "checkbox" && (
+                  // <CheckBox
+                  //   id={option.value}
+                  //   label={option.label}
+                  //   checked={selectedValues.includes(option.value)}
+                  //   onChange={(e: any) => {
+                  //     e.target.checked
+                  //       ? handleSelect(option.value)
+                  //       : handleSelect(option.value);
+                  //   }}
+                  // />
                   <CheckBox
-                    id={option.value}
-                    label={option.label}
+                    id={option.value + Math.random()}
                     checked={selectedValues.includes(option.value)}
-                    onChange={(e: any) => {
-                      e.target.checked
-                        ? handleSelect(option.value)
-                        : handleSelect(option.value);
+                    onChange={() => {
+                      handleCheckboxChange(option.value);
                     }}
                   />
                 )}
                 {/* {option.label} */}
+                <Typography type="h6">{option.label}</Typography>
               </li>
             ))
           ) : (

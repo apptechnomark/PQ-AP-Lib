@@ -6,6 +6,8 @@ import ChevronDown from "./icons/ChevronDown.js";
 import { Text } from "../Textfield/Text.js";
 import { Avatar } from "../Avatar/Avatar.js";
 import CheckBox from "../Checkbox/Checkbox.js";
+import Typography from "../Typography/Typography.js";
+import styles from "./selectdropdown.module.scss";
 
 interface MultiSelectChipProps {
   options: { value: any; label: any }[];
@@ -179,9 +181,8 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
         return (
           <div
             key={selectedValue}
-            className={`flex items-center  badge bg-[#E9ECEF] text-[#212529] border border-[#CED4DA] rounded-sm mr-[3px] ml-[1px] mt-[1px] mb-2 text-[14px] ${
-              selectedOption?.label.length > 8 ? "max-w-[100px]" : ""
-            }`}
+            className={`flex items-center  badge bg-[#E9ECEF] text-[#212529] border border-[#CED4DA] rounded-sm mr-[3px] ml-[1px] mt-[1px] mb-2 text-[14px] ${selectedOption?.label.length > 8 ? "max-w-[100px]" : ""
+              }`}
           >
             <span title={selectedOption?.label}>
               {selectedOption?.label.length > 8
@@ -245,21 +246,30 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
     }
   };
 
+  const handleCheckboxChange = (value: string) => {
+    setSelected((prevSelected) => {
+      if (prevSelected.includes(value)) {
+        return prevSelected.filter((item) => item !== value);
+      } else {
+        return [...prevSelected, value];
+      }
+    });
+  };
+
   return (
     <>
-      <div className={`relative font-medium`} ref={selectRef}>
+      <div className={`${styles.customScrollbar} relative font-medium`} ref={selectRef}>
         {label && (
           <label
             onClick={handleToggleOpen}
-            className={`text-[14px] font-normal ${
-              isOpen
-                ? "text-primary"
-                : selected.length > 0
+            className={`text-[14px] font-normal ${isOpen
+              ? "text-primary"
+              : selected.length > 0
                 ? "text-primary"
                 : error
-                ? "text-defaultRed"
-                : "text-slatyGrey"
-            }`}
+                  ? "text-defaultRed"
+                  : "text-slatyGrey"
+              }`}
           >
             {label}
             {validate && <span className="text-defaultRed">&nbsp;*</span>}
@@ -270,19 +280,17 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
           <div
             onBlur={handleBlur}
             onClick={handleToggleOpen}
-            className={`shrink-0 w-fit bg-white border-b max-h-[26px] text-[14px] font-normal  ${
-              isOpen
-                ? "text-primary cursor-default"
-                : selected.length === 0
+            className={`shrink-0 w-fit bg-white border-b max-h-[26px] text-[14px] font-normal  ${isOpen
+              ? "text-primary cursor-default"
+              : selected.length === 0
                 ? "text-darkCharcoal cursor-pointer"
                 : ""
-            } ${
-              selected.length > 0
+              } ${selected.length > 0
                 ? "border-primary"
                 : error
-                ? "border-defaultRed hover:border-defaultRed"
-                : "border-lightSilver transition-colors duration-300 hover:border-primary"
-            } ${className} @layer base {
+                  ? "border-defaultRed hover:border-defaultRed"
+                  : "border-lightSilver transition-colors duration-300 hover:border-primary"
+              } ${className} @layer base {
                 @screen firefox {
                   margin-top: 1rem;
                 }
@@ -301,33 +309,29 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                 isOpen
                   ? placeholder
                   : selected.length > 0
-                  ? ""
-                  : "Please select"
+                    ? ""
+                    : "Please select"
               }
               value={searchInput}
-              getError={() => {}}
-              getValue={() => {}}
-              className={` ${
-                error &&
+              getError={() => { }}
+              getValue={() => { }}
+              className={` ${error &&
                 "placeholder:text-defaultRed text-defaultRed !border-defaultRed"
-              } bg-pureWhite outline-none  text-[14px] font-normal ${
-                !isOpen
+                } bg-pureWhite outline-none  text-[14px] font-normal ${!isOpen
                   ? "text-darkCharcoal placeholder-darkCharcoal cursor-pointer"
                   : "placeholder-primary cursor-default text-primary"
-              }`}
+                }`}
               onKeyDown={(e) => handleKeyDown(e)}
             />
           </div>
           {!hideIcon && (
             <div
               onClick={handleToggleOpen}
-              className={`${
-                error && " text-defaultRed"
-              } absolute right-0 text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer ${
-                isOpen
+              className={`${error && " text-defaultRed"
+                } absolute right-0 text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer ${isOpen
                   ? "rotate-180 text-primary duration-400"
                   : " duration-200"
-              }`}
+                }`}
             >
               <ChevronDown />
             </div>
@@ -335,11 +339,10 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
         </div>
 
         <ul
-          className={`absolute z-10 bg-pureWhite mt-[1px] overflow-y-auto shadow-md transition-transform ${
-            isOpen
-              ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500 ease-out"
-              : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500 ease-out"
-          }`}
+          className={`absolute z-10 bg-pureWhite mt-[1px] overflow-y-auto shadow-md transition-transform ${isOpen
+            ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500 ease-out"
+            : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500 ease-out"
+            }`}
           // Setting the width inline style based on the client width of the parent div
           style={{ width: selectRef.current?.clientWidth }}
         >
@@ -347,7 +350,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
             ""
           ) : (
             <label
-              className={`pt-3 pb-1 pl-3 text-[14px] font-normal text-primary cursor-pointer flex`}
+              className={`pt-3 sticky top-0 pb-1 z-[5] bg-pureWhite pl-3 text-[14px] font-normal text-primary cursor-pointer flex`}
               onClick={handleClearAll}
             >
               {allOptionsSelected ? "Clear All" : "Select All"}
@@ -361,14 +364,13 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
             filteredOptions.map((option, index) => (
               <li
                 key={index}
-                className={`p-3 outline-none focus:bg-whiteSmoke text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex ${
-                  selected.includes(option.value) ? "bg-whiteSmoke" : ""
-                }`}
-                onClick={
-                  type !== "checkbox"
-                    ? () => handleSelect(option.value)
-                    : undefined
-                }
+                className={`p-3 outline-none focus:bg-whiteSmoke text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selected.includes(option.value) ? "bg-whiteSmoke" : ""
+                  }`}
+                onClick={() => {
+                  if (option.value !== searchInput) {
+                    handleSelect(option.value);
+                  }
+                }}
                 onKeyDown={(e) => handleListItemKeyDown(e, option.value, index)}
                 tabIndex={0}
                 ref={(el) => {
@@ -387,18 +389,26 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                   </div>
                 )}
                 {type === "checkbox" && (
+                  // <CheckBox
+                  // // className="bg-yellowColor text-ellipsis overflow-hidden"
+                  //   id={option.value + Math.random()}
+                  //   label={option.label}
+                  //   checked={selected.includes(option.value)}
+                  //   onChange={(e: any) => {
+                  //     e.target.checked
+                  //       ? handleSelect(option.value)
+                  //       : handleSelect(option.value);
+                  //   }}
+                  // />
                   <CheckBox
                     id={option.value + Math.random()}
-                    label={option.label}
                     checked={selected.includes(option.value)}
-                    onChange={(e: any) => {
-                      e.target.checked
-                        ? handleSelect(option.value)
-                        : handleSelect(option.value);
+                    onChange={() => {
+                      handleCheckboxChange(option.value);
                     }}
                   />
                 )}
-                {type !== "checkbox" && option.label}
+                <Typography type="h6">{option.label}</Typography>
               </li>
             ))
           )}
