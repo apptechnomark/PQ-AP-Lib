@@ -140,13 +140,17 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
     }
 
     setSelected(updatedSelected);
-    getValue(updatedSelected);
+    // getValue(updatedSelected);
     setFocusedIndex(-1);
   };
 
   const allOptionsSelected = options.every((option) =>
     selected.includes(option.value)
   );
+
+  useEffect(() => {
+    getValue(selected)
+  }, [selected])
 
   const handleClearAll = () => {
     if (allOptionsSelected) {

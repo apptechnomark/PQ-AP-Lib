@@ -165,9 +165,13 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     }
 
     setSelectedValues(updatedSelected);
-    getValue(updatedSelected);
+    // getValue(updatedSelected);
     setFocusedIndex(-1);
   };
+
+  useEffect(() => {
+    getValue(selectedValues)
+  }, [selectedValues])
 
   const allOptionsSelected = options.every((option) =>
     selectedValues.includes(option.value)
