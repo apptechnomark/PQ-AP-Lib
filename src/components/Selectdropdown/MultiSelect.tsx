@@ -139,6 +139,17 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
 
   // };
 
+  const handleCheckboxChange = (value: string) => {
+    setSelectedValues((prevSelected) => {
+      if (prevSelected.includes(value)) {
+        return prevSelected.filter((item) => item !== value);
+      } else {
+        return [...prevSelected, value];
+      }
+    });
+    getValue(selectedValues)
+  };
+
   const handleSelect = (value: string) => {
     const selectedIndex = selectedValues.indexOf(value);
     let updatedSelected: string[];
@@ -165,13 +176,10 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     }
 
     setSelectedValues(updatedSelected);
-    // getValue(updatedSelected);
+    getValue(updatedSelected);
     setFocusedIndex(-1);
   };
 
-  useEffect(() => {
-    getValue(selectedValues)
-  }, [selectedValues])
 
   const allOptionsSelected = options.every((option) =>
     selectedValues.includes(option.value)
@@ -242,16 +250,6 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       value.preventDefault();
       setFocusedIndex(focusedIndex + 1);
     }
-  };
-
-  const handleCheckboxChange = (value: string) => {
-    setSelectedValues((prevSelected) => {
-      if (prevSelected.includes(value)) {
-        return prevSelected.filter((item) => item !== value);
-      } else {
-        return [...prevSelected, value];
-      }
-    });
   };
 
   return (

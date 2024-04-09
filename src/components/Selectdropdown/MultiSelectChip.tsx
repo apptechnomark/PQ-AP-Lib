@@ -56,7 +56,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
   placeholder,
   hideIcon,
 }) => {
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<boolean>(false);
@@ -76,16 +76,13 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
       }, [errorMessage, hasError]);
   }
 
-  {
-    defaultValue &&
-      useEffect(() => {
-        setSelected(defaultValue);
-      }, [defaultValue]);
-  }
+  useEffect(() => {
+    defaultValue && setSelectedValues(defaultValue);
+  }, [defaultValue]);
 
   const handleBlur = () => {
     if (validate) {
-      if (selected.length === 0) {
+      if (selectedValues.length === 0) {
         setError(true);
         setErrMsg("Please select a valid option.");
         getError(false);
@@ -114,22 +111,33 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
     };
   }, []);
 
+  const handleCheckboxChange = (value: string) => {
+    setSelectedValues((prevSelected) => {
+      if (prevSelected.includes(value)) {
+        return prevSelected.filter((item) => item !== value);
+      } else {
+        return [...prevSelected, value];
+      }
+    });
+    getValue(selectedValues)
+  };
+
   const handleSelect = (value: string) => {
-    const selectedIndex = selected.indexOf(value);
+    const selectedIndex = selectedValues.indexOf(value);
     let updatedSelected: string[];
 
     if (selectedIndex === -1) {
       // Value is not selected, add it to the selection
       const selectedOption = options.find((option) => option.value === value);
       updatedSelected = [
-        ...selected,
+        ...selectedValues,
         selectedOption ? selectedOption.value : value,
       ];
     } else {
       // Value is already selected, remove it from the selection
       updatedSelected = [
-        ...selected.slice(0, selectedIndex),
-        ...selected.slice(selectedIndex + 1),
+        ...selectedValues.slice(0, selectedIndex),
+        ...selectedValues.slice(selectedIndex + 1),
       ];
     }
 
@@ -139,28 +147,28 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
       getError(true);
     }
 
-    setSelected(updatedSelected);
-    // getValue(updatedSelected);
+    setSelectedValues(updatedSelected);
+    getValue(updatedSelected);
     setFocusedIndex(-1);
   };
 
   const allOptionsSelected = options.every((option) =>
-    selected.includes(option.value)
+    selectedValues.includes(option.value)
   );
 
-  useEffect(() => {
-    getValue(selected)
-  }, [selected])
+  // useEffect(() => {
+  //   getValue(selected)
+  // }, [selected])
 
   const handleClearAll = () => {
     if (allOptionsSelected) {
-      setSelected([]);
+      setSelectedValues([]);
       getValue([]);
       setFocusedIndex(-1);
     } else {
       setError(hasError);
       const allOptionValues = options.map((option) => option.value);
-      setSelected(allOptionValues);
+      setSelectedValues(allOptionValues);
       getValue(allOptionValues.map((value) => value.toString()));
       setFocusedIndex(-1);
     }
@@ -176,9 +184,9 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
     option.label.toLowerCase().includes(searchInput.toLowerCase())
   );
 
-  const selectedDisplay = selected.length > 0 && (
+  const selectedDisplay = selectedValues.length > 0 && (
     <div className="flex flex-wrap justify-center items-center">
-      {selected.slice(0, 2).map((selectedValue) => {
+      {selectedValues.slice(0, 2).map((selectedValue) => {
         const selectedOption = options.find(
           (option) => option.value === selectedValue
         );
@@ -203,9 +211,9 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
           </div>
         );
       })}
-      {selected.length > 2 && (
+      {selectedValues.length > 2 && (
         <div className="flex items-center badge bg-[#E9ECEF] text-darkCharcoal border border-[#CED4DA] rounded-sm px-1 mb-2 text-[14px]">
-          +{selected.length - 2}
+          +{selectedValues.length - 2}
         </div>
       )}
     </div>
@@ -250,16 +258,6 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
     }
   };
 
-  const handleCheckboxChange = (value: string) => {
-    setSelected((prevSelected) => {
-      if (prevSelected.includes(value)) {
-        return prevSelected.filter((item) => item !== value);
-      } else {
-        return [...prevSelected, value];
-      }
-    });
-  };
-
   return (
     <>
       <div className={`${styles.customScrollbar} relative font-medium`} ref={selectRef}>
@@ -268,7 +266,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
             onClick={handleToggleOpen}
             className={`text-[14px] font-normal ${isOpen
               ? "text-primary"
-              : selected.length > 0
+              : selectedValues.length > 0
                 ? "text-primary"
                 : error
                   ? "text-defaultRed"
@@ -286,10 +284,10 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
             onClick={handleToggleOpen}
             className={`shrink-0 w-fit bg-white border-b max-h-[26px] text-[14px] font-normal  ${isOpen
               ? "text-primary cursor-default"
-              : selected.length === 0
+              : selectedValues.length === 0
                 ? "text-darkCharcoal cursor-pointer"
                 : ""
-              } ${selected.length > 0
+              } ${selectedValues.length > 0
                 ? "border-primary"
                 : error
                   ? "border-defaultRed hover:border-defaultRed"
@@ -312,7 +310,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               placeholder={
                 isOpen
                   ? placeholder
-                  : selected.length > 0
+                  : selectedValues.length > 0
                     ? ""
                     : "Please select"
               }
@@ -368,7 +366,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
             filteredOptions.map((option, index) => (
               <li
                 key={index}
-                className={`p-3 outline-none focus:bg-whiteSmoke text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selected.includes(option.value) ? "bg-whiteSmoke" : ""
+                className={`p-3 outline-none focus:bg-whiteSmoke text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selectedValues.includes(option.value) ? "bg-whiteSmoke" : ""
                   }`}
                 onClick={() => {
                   if (option.value !== searchInput) {
@@ -406,7 +404,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                   // />
                   <CheckBox
                     id={option.value + Math.random()}
-                    checked={selected.includes(option.value)}
+                    checked={selectedValues.includes(option.value)}
                     onChange={() => {
                       handleCheckboxChange(option.value);
                     }}
