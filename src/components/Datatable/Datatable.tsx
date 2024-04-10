@@ -309,7 +309,7 @@ const DataTable = ({
                     className={`${expandableStyle?.rows} text-[14px] font-proxima h-12 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"}  border-[#ccc] cursor-pointer`}
                     onClick={() => handleRowToggle(rowIndex)}
                   >
-                    <div className={`flex justify-center items-center transition-transform p-4 ${expandedRows.has(rowIndex) || isExpanded ? "rotate-90 duration-300" : "duration-200"}`}>
+                    <div className={`flex justify-center items-center transition-transform p-4 ${expandedRows.has(rowIndex) || isExpanded ? "-rotate-90 duration-300" : "duration-200 rotate-90"}`}>
                       <ChevronRight />
                     </div>
                   </td>
