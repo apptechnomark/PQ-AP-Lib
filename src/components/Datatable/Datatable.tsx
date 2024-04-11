@@ -335,7 +335,7 @@ const DataTable = ({
             </tr>
             {(expandedRows.has(rowIndex) || isExpanded) && (
               <tr>
-                <td className="text-[14px] font-semibold font-proxima" colSpan={columns?.length + 1}>
+                <td className="text-[14px] font-proxima" colSpan={columns?.length + 1}>
                   {row?.details ? (
                     row?.details
                   ) : (
