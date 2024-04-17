@@ -308,7 +308,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               onChange={(e) => setSearchInput(e.target.value)}
               readOnly={!isOpen}
               placeholder={
-                isOpen
+                isOpen && selectedValues.length === 0
                   ? placeholder
                   : selectedValues.length > 0
                     ? ""
@@ -322,7 +322,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                 } bg-pureWhite outline-none  text-[14px] font-normal ${!isOpen
                   ? "text-darkCharcoal placeholder-darkCharcoal cursor-pointer"
                   : "placeholder-primary cursor-default text-primary"
-                }`}
+                } !p-[3px]`}
               onKeyDown={(e) => handleKeyDown(e)}
             />
           </div>
