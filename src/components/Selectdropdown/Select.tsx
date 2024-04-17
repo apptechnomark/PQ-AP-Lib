@@ -427,6 +427,7 @@ const Select: React.FC<SelectProps> = ({
           />
           {!hideIcon && (
             <div
+            tabIndex={-1}
               onClick={handleToggleOpen}
               className={`text-[1.5rem] transition-transform ${
                 disabled
@@ -660,13 +661,14 @@ const Select: React.FC<SelectProps> = ({
       </div>
 
       {!error && supportingText && (
-        <span className="text-slatyGrey text-[12px] sm:text-[14px] -mt-[20px]">
+        <span tabIndex={-1} className="text-slatyGrey text-[12px] sm:text-[14px] -mt-[20px]">
           {supportingText}
         </span>
       )}
 
       {error && !inputValue && (
         <span
+        tabIndex={-1}
           className={`text-defaultRed text-[12px] sm:text-[14px] ${errorClass}`}
         >
           {errMsg}
