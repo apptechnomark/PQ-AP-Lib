@@ -51,7 +51,7 @@ const Modal: React.FC<ModalProps> = ({
 
 
   const handleMouseDown = (e) => {
-    
+
     if (!isDragging.current) {
       isDragging.current = true;
     }
@@ -87,6 +87,14 @@ const Modal: React.FC<ModalProps> = ({
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (isOpen) {
+        if (modalRef.current) {
+            modalRef.current.focus();
+        }
+    }
+}, [isOpen]);
+
   return (
     <>
       {isOpen && (
@@ -97,9 +105,10 @@ const Modal: React.FC<ModalProps> = ({
             className={`fixed inset-0 z-50 flex items-center justify-center ${Style.modal}`}
           >
             <div
-              className={`${className} my-6 mx-auto ${getSizeClasses()} `}
+              className={`${className} my-6 outline-none mx-auto ${getSizeClasses()} `}
               style={modalStyles}
               ref={modalRef}
+              tabIndex={0}
               onClick={handleModalClick}
               onMouseDown={handleMouseDown}
               onMouseUp={handleMouseUp}
