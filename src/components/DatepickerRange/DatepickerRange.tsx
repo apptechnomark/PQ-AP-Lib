@@ -283,7 +283,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
     };
 
     const calendarShow = () => {
-        setToggleOpen(true);
+        setToggleOpen(!toggleOpen);
         let splitDate = value && value.split(" to ");
         let startDateString = splitDate && splitDate[0];
         let updatedStartDate = new Date(startDateString);
@@ -362,17 +362,17 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
         <>
             {label && (
                 <span className="flex">
-                    <Typography
-                        type="h6"
-                        className={`${err
+                    <label
+                        className={`text-[14px] font-normal ${err
                             ? "text-defaultRed"
                             : focus
                                 ? "text-primary"
                                 : "text-slatyGrey !text-sm"
                             }`}
+                            tabIndex={-1}
                     >
                         {label}
-                    </Typography>
+                    </label>
                     {validate && (
                         <span
                             className={`${disabled ? "text-slatyGrey" : "text-defaultRed"}`}
@@ -385,6 +385,10 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
             <div
                 className={`flex w-full -mt-1 before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full`}
                 ref={inputRef}
+                tabIndex={0}
+                onKeyDown={(e) =>
+                  (e.key === "Enter" || e.key === " ") && calendarShow()
+                }
             >
                 <div className="flex w-full relative">
                     {/* defaultValue={(inputStartDate && inputEndDate) ? inputStartDate + " to " + inputEndDate : inputStartDate ? inputStartDate + " to " : inputEndDate} */}
@@ -406,11 +410,13 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                         defaultValue={inputStartDate ? inputStartDate + " to " + inputEndDate : inputEndDate}
                         onChange={(e: any) => updateFromInput(e.target.value)}
                         onBlur={handleInputBlur}
+                        tabIndex={-1}
                         {...props}
                     />
                     {!hideIcon &&
                         <span
-                            className="absolute right-2 top-0.5 cursor-pointer"
+                        tabIndex={-1}
+                            className="absolute right-2 top-2 cursor-pointer"
                             onClick={calendarShow}
                         >
                             <CalendarIcon bgColor={err ? "#DC3545" : "#333333"} />
@@ -418,7 +424,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                 </div>
             </div>
             {toggleOpen && (
-                <div className="relative">
+                <div className="relative"   tabIndex={-1}>
                     <div
                         className={`bottomAnimation absolute z-10  bg-white ${toggleOpen ? style.bottomAnimation : ""
                             }`}
@@ -647,7 +653,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                 </div>
             )}
             {err && (
-                <span className="text-defaultRed text-[12px] sm:text-sm">
+                <span   tabIndex={-1} className="text-defaultRed text-[12px] sm:text-sm">
                     {errorMsg}
                 </span>
             )}

@@ -258,6 +258,13 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLLabelElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      handleClearAll()
+    }
+  }
+
   return (
     <>
       <div className={`${styles.customScrollbar} relative font-medium`} ref={selectRef}>
@@ -272,6 +279,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                   ? "text-defaultRed"
                   : "text-slatyGrey"
               }`}
+            tabIndex={-1}
           >
             {label}
             {validate && <span className="text-defaultRed">&nbsp;*</span>}
@@ -300,13 +308,19 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
           >
             {selectedDisplay}
           </div>
-          <div className="flex-1 xsm:w-24 w-full">
+          <div className="flex-1 xsm:w-24 w-full"
+            tabIndex={0}
+            onKeyDown={(e) =>
+              (e.key === "Enter" || e.key === " ") && handleToggleOpen()
+            }
+          >
             <Text
               id={id}
               onBlur={handleBlur}
               onClick={handleToggleOpen}
               onChange={(e) => setSearchInput(e.target.value)}
               readOnly={!isOpen}
+              tabIndex={-1}
               placeholder={
                 isOpen && selectedValues.length === 0
                   ? placeholder
@@ -317,6 +331,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               value={searchInput}
               getError={() => { }}
               getValue={() => { }}
+              style={{ background: 'transparent' }}
               className={` ${error &&
                 "placeholder:text-defaultRed text-defaultRed !border-defaultRed"
                 } bg-pureWhite outline-none  text-[14px] font-normal ${!isOpen
@@ -328,6 +343,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
           </div>
           {!hideIcon && (
             <div
+              tabIndex={-1}
               onClick={handleToggleOpen}
               className={`${error && " text-defaultRed"
                 } absolute right-0 text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer ${isOpen
@@ -352,8 +368,10 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
             ""
           ) : (
             <label
+              tabIndex={isOpen ? 0 : -1}
               className={`pt-3 sticky top-0 pb-1 z-[5] bg-pureWhite pl-3 text-[14px] font-normal text-primary cursor-pointer flex`}
               onClick={handleClearAll}
+              onKeyDown={(e: React.KeyboardEvent<HTMLLabelElement>) => handleKeyPress(e)}
             >
               {allOptionsSelected ? "Clear All" : "Select All"}
             </label>
@@ -374,7 +392,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                   }
                 }}
                 onKeyDown={(e) => handleListItemKeyDown(e, option.value, index)}
-                tabIndex={0}
+                tabIndex={isOpen ? 0 : -1}
                 ref={(el) => {
                   if (index === focusedIndex) {
                     el?.focus();
@@ -382,7 +400,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                 }}
               >
                 {avatar && (
-                  <div className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
+                  <div tabIndex={-1} className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
                     <Avatar
                       variant="x-small"
                       name={avatarName}
@@ -403,6 +421,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                   //   }}
                   // />
                   <CheckBox
+                    tabIndex={-1}
                     id={option.value + Math.random()}
                     checked={selectedValues.includes(option.value)}
                     onChange={() => {
@@ -410,7 +429,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                     }}
                   />
                 )}
-                <Typography type="h6">{option.label}</Typography>
+                <label className="font-proxima text-sm" tabIndex={-1}>{option.label}</label>
               </li>
             ))
           )}
@@ -418,6 +437,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
       </div>
       {error && (
         <span
+          tabIndex={-1}
           className={`text-defaultRed text-[12px] sm:text-[14px] ${errorClass}`}
         >
           {errMsg}
