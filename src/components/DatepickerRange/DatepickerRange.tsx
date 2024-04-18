@@ -416,7 +416,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                     {!hideIcon &&
                         <span
                         tabIndex={-1}
-                            className="absolute right-2 top-2 cursor-pointer"
+                            className="absolute right-2 top-0.5 cursor-pointer"
                             onClick={calendarShow}
                         >
                             <CalendarIcon bgColor={err ? "#DC3545" : "#333333"} />

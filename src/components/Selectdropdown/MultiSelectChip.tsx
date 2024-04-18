@@ -337,7 +337,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                 } bg-pureWhite outline-none  text-[14px] font-normal ${!isOpen
                   ? "text-darkCharcoal placeholder-darkCharcoal cursor-pointer"
                   : "placeholder-primary cursor-default text-primary"
-                } !p-[3px]`}
+                }`}
               onKeyDown={(e) => handleKeyDown(e)}
             />
           </div>
