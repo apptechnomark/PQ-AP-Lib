@@ -37,6 +37,7 @@ interface CompanyListProps {
   values?: string[];
   hideIcon?: boolean;
   avatarSize?: "small" | "large" | "x-small";
+  isSearchEnable?: boolean;
 }
 const AvatarMultiSelect: React.FC<CompanyListProps> = ({
   id,
@@ -62,6 +63,7 @@ const AvatarMultiSelect: React.FC<CompanyListProps> = ({
   checkbox = false,
   hideIcon,
   avatarSize = "small",
+  isSearchEnable = true,
   ...props
 }) => {
   const selectRef = useRef<HTMLDivElement>(null);
@@ -225,10 +227,10 @@ const AvatarMultiSelect: React.FC<CompanyListProps> = ({
             <Typography
               type="h6"
               className={`${err
-                  ? "text-defaultRed"
-                  : focus
-                    ? "text-primary"
-                    : "text-slatyGrey "
+                ? "text-defaultRed"
+                : focus
+                  ? "text-primary"
+                  : "text-slatyGrey "
                 }`}
             >
               {label}
@@ -243,7 +245,7 @@ const AvatarMultiSelect: React.FC<CompanyListProps> = ({
           </span>
         )}
         <div
-        id={id}
+          id={id}
           className={`flex items-center  transition-height duration-200 ease-out cursor-pointer ${disabled && "pointer-events-none"
             } ${selectedValues.length > 0 &&
               type == "avatar" &&
@@ -310,10 +312,10 @@ const AvatarMultiSelect: React.FC<CompanyListProps> = ({
             <div
               onClick={handleToggleOpen}
               className={`ml-1 text-[1.5rem]  absolute right-0 transition-transform ${err
-                  ? "text-defaultRed"
-                  : disabled
-                    ? "text-slatyGrey pointer-events-none"
-                    : "text-darkCharcoal "
+                ? "text-defaultRed"
+                : disabled
+                  ? "text-slatyGrey pointer-events-none"
+                  : "text-darkCharcoal "
                 }  cursor-pointer   ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
                 }}`}
             >
@@ -324,35 +326,37 @@ const AvatarMultiSelect: React.FC<CompanyListProps> = ({
         <div>
           <ul
             className={`absolute z-10 w-full bg-pureWhite mt-[1px] overflow-y-auto shadow-md transition-transform  ${isOpen
-                ? "max-h-60 translate-y-0 transition-opacity z-[1] opacity-100 duration-500"
-                : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
+              ? "max-h-60 translate-y-0 transition-opacity z-[1] opacity-100 duration-500"
+              : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
               } ${isOpen ? "ease-out" : ""}`}
           >
-            <li
-              className={`sticky top-0 z-[3] bg-pureWhite outline-none focus:bg-whiteSmoke p-[10px] text-sm font-normal cursor-pointer flex items-center`}
-            >
-              <div
-                className={`flex absolute  ${variant === "user" ? "left-3" : "left-2"
-                  }`}
+            {isSearchEnable && (
+              <li
+                className={`sticky top-0 z-[3] bg-pureWhite outline-none focus:bg-whiteSmoke p-[10px] text-sm font-normal cursor-pointer flex items-center`}
               >
-                <Search />
-              </div>
-              <input
-                id={id}
-                onChange={handleInputChange}
-                placeholder="Search"
-                value={
-                  inputValue.length > 25
-                    ? `${inputValue.substring(0, 20)}...`
-                    : inputValue
-                }
-                className={` text-sm placeholder:text-sm  w-full pl-6 py-1 ${variant === "user" ? "border rounded" : "border-b"
-                  } border-lightSilver flex-grow outline-none font-normal ${isOpen ? "text-primary" : ""
-                  } ${!isOpen ? "cursor-pointer" : "cursor-default"} ${!isOpen ? "placeholder-darkCharcoal" : "placeholder-primary"
-                  }`}
-                style={{ background: "transparent" }}
-              />
-            </li>
+                <div
+                  className={`flex absolute  ${variant === "user" ? "left-3" : "left-2"
+                    }`}
+                >
+                  <Search />
+                </div>
+                <input
+                  id={id}
+                  onChange={handleInputChange}
+                  placeholder="Search"
+                  value={
+                    inputValue.length > 25
+                      ? `${inputValue.substring(0, 20)}...`
+                      : inputValue
+                  }
+                  className={` text-sm placeholder:text-sm  w-full pl-6 py-1 ${variant === "user" ? "border rounded" : "border-b"
+                    } border-lightSilver flex-grow outline-none font-normal ${isOpen ? "text-primary" : ""
+                    } ${!isOpen ? "cursor-pointer" : "cursor-default"} ${!isOpen ? "placeholder-darkCharcoal" : "placeholder-primary"
+                    }`}
+                  style={{ background: "transparent" }}
+                />
+              </li>
+            )}
             {options &&
               options.length > 0 &&
               options.some((option) =>

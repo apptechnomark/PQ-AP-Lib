@@ -41,6 +41,7 @@ interface CompanyListProps {
   listAvatarSize?: "small" | "large" | "x-small";
   avatarSize?: "small" | "large" | "x-small";
   onSaveClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  isSearchEnable?: boolean;
 }
 const CompanyList: React.FC<CompanyListProps> = ({
   id,
@@ -70,6 +71,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
   avatarSize = "small",
   listAvatarSize = "small",
   openUpside,
+  isSearchEnable = true,
   ...props
 }) => {
   const selectRef = useRef<HTMLDivElement>(null);
@@ -351,35 +353,37 @@ const CompanyList: React.FC<CompanyListProps> = ({
               } transition-opacity opacity-0 duration-500`
               } ${isOpen ? "ease-out" : ""}`}
           >
-            <li
-              className={`sticky top-0 z-[3] bg-pureWhite outline-none focus:bg-whiteSmoke p-[10px] text-sm font-normal cursor-pointer flex items-center`}
-            >
-              <div
-                className={`flex absolute  ${variant === "user" ? "left-3" : "left-2"
-                  }`}
+            {isSearchEnable && (
+              <li
+                className={`sticky top-0 z-[3] bg-pureWhite outline-none focus:bg-whiteSmoke p-[10px] text-sm font-normal cursor-pointer flex items-center`}
               >
-                <Search />
-              </div>
+                <div
+                  className={`flex absolute  ${variant === "user" ? "left-3" : "left-2"
+                    }`}
+                >
+                  <Search />
+                </div>
 
-              <input
-                id={id}
-                onChange={handleInputChange}
-                placeholder="Search"
-                value={
-                  inputValue.length > 25
-                    ? `${inputValue.substring(0, 20)}...`
-                    : inputValue
-                }
-                className={` text-sm placeholder:text-sm  w-full pl-6 py-1 ${variant === "user" ? "border rounded" : "border-b"
-                  } border-lightSilver flex-grow outline-none font-normal ${isOpen ? "text-primary" : ""
-                  } ${!isOpen ? "cursor-pointer" : "cursor-default"} ${!isOpen ? "placeholder-darkCharcoal" : "placeholder-primary"
-                  }`}
-                style={{ background: "transparent" }}
-              />
-            </li>
+                <input
+                  id={id}
+                  onChange={handleInputChange}
+                  placeholder="Search"
+                  value={
+                    inputValue.length > 25
+                      ? `${inputValue.substring(0, 20)}...`
+                      : inputValue
+                  }
+                  className={` text-sm placeholder:text-sm  w-full pl-6 py-1 ${variant === "user" ? "border rounded" : "border-b"
+                    } border-lightSilver flex-grow outline-none font-normal ${isOpen ? "text-primary" : ""
+                    } ${!isOpen ? "cursor-pointer" : "cursor-default"} ${!isOpen ? "placeholder-darkCharcoal" : "placeholder-primary"
+                    }`}
+                  style={{ background: "transparent" }}
+                />
+              </li>
+            )}
             {options.length > 0 && (
               <li
-                className={`sticky top-[49px] z-[3]  bg-pureWhite outline-none focus:bg-whiteSmoke text-sm font-normal cursor-pointer flex items-center`}
+                className={`sticky ${isSearchEnable ? 'top-[49px]' : 'top-[5px]'} z-[3]  bg-pureWhite outline-none focus:bg-whiteSmoke text-sm font-normal cursor-pointer flex items-center`}
               >
                 <label
                   className={`pl-3 w-full pb-1 text-primary cursor-pointer`}
@@ -397,7 +401,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
               options.map((option, index) => (
                 <li
                   key={option.value + index}
-                  className={`outline-none focus:bg-whiteSmoke p-[10px] text-sm hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selectedValues.includes(option.value) && ""
+                  className={`outline-none p-[10px] text-sm hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selectedValues.includes(option.value) && ""
                     }
                     ${!option.label.toLowerCase().startsWith(inputValue)
                       ? "hidden"
@@ -407,6 +411,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
                       ? ""
                       : "pointer-events-none opacity-60"
                     }
+                    ${selectedValues.includes(option.value) ? 'bg-whiteSmoke' : ''}
                     `}
                   onClick={() => {
                     if (option.value !== inputValue) {
