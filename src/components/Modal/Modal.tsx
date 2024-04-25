@@ -102,7 +102,7 @@ const Modal: React.FC<ModalProps> = ({
           className={`fixed inset-0 bg-black bg-opacity-40 backdrop-blur-[1px] z-50`}
         >
           <div
-            className={`fixed inset-0 z-50 flex items-center justify-center ${Style.modal}`}
+            className={`fixed inset-0 z-50 flex items-center justify-center overflow-y-auto ${Style.modal}`}
           >
             <div
               className={`${className} my-6 outline-none mx-auto ${getSizeClasses()} `}
