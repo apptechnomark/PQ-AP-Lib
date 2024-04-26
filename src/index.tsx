@@ -53,6 +53,7 @@ import { Password } from "./components/Password/Password";
 import { ProgressBar } from "./components/Progressbar/Progressbar";
 import { PropertyBar } from "./components/PropertyBar/PropertyBar";
 import ProgressStep from "./components/Progressstep/Progressstep";
+import ProgressStepper from "./components/Progressstep/ProgressStepper";
 import { PropertyDrawer } from "./components/PropertyBar/PropertyDrawer";
 
 import Radio from "./components/Radio/Radio";
@@ -129,6 +130,7 @@ export {
   ProgressBar,
   PropertyBar,
   ProgressStep,
+  ProgressStepper,
   Radio,
   Range,
   MinMaxRange,
