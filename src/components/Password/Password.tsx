@@ -211,9 +211,9 @@ const Password: React.FC<PasswordProps> = ({
         {!novalidate && open && (
           <>
             <div
-              className={`absolute 
+              className={`absolute
               z-10 left-0 bg-pureWhite shadow-2xl py-4 pl-2 pr-4 text-[16px] sm-text-[14px] w-fit
-              ${direction === "top" && "bottom-[30px]"} 
+              ${direction === "top" && "bottom-[30px]"}
               ${direction === "bottom" && "top-[70px]"}
               ${direction === "right" && "left-[150px] top-[70px]"}
               ${direction === "left" && "right-[0px] top-[70px]"
@@ -233,7 +233,7 @@ const Password: React.FC<PasswordProps> = ({
         {label && (
           <span className="flex">
             <label
-              className={`${err
+              className={`text-[12px] py-1 ${err
                 ? "text-defaultRed"
                 : focus
                   ? "text-primary"
@@ -254,7 +254,7 @@ const Password: React.FC<PasswordProps> = ({
       </div>
 
       <div
-        className={`${!err &&
+        className={`mt-[1px] ${!err &&
           "relative inline-block before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:bg-primary before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full"
           }`}
       >

@@ -265,7 +265,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       >
         {label && (
           <label
-            className={`text-[14px] font-normal ${isOpen
+            className={`text-[12px] font-normal ${isOpen
               ? "text-primary"
               : selectedValues.length > 0
                 ? "text-primary"
@@ -280,7 +280,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
           </label>
         )}
 
-        <div className="flex flex-row items-center justify-center relative">
+        <div className="flex flex-row mt-[7px] items-center justify-center relative">
           <input
             id={id}
             onBlur={handleBlur}

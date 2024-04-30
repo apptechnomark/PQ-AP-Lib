@@ -133,9 +133,9 @@ const Text: React.FC<InputProps> = ({
   return (
     <div className="flex flex-col w-full text-[14px]">
       {label && (
-        <span className="flex">
+        <span className="flex py-[4.5px]">
           <label
-            className={`${err
+            className={`text-[12px] ${err
               ? "text-defaultRed"
               : focus && value != undefined || value != ""
                 ? "text-primary"
@@ -155,7 +155,7 @@ const Text: React.FC<InputProps> = ({
       )}
 
       <div
-        className={`${!err
+        className={`mt-[0.5px] ${!err
           ? `flex w-full relative before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px ${noborder ? '' : 'before:bg-primary'}  before:transition-width before:duration-[800ms] before:ease-in ${!disabled && "hover:before:w-full"
           }`
           : "w-full"

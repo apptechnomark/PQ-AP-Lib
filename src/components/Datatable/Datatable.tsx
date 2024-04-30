@@ -292,7 +292,7 @@ const DataTable = ({
       <tbody>
         {sortedData?.slice(0, totalItems)?.map((row, rowIndex) => (
           <React.Fragment key={rowIndex}>
-            <tr key={row} className={`${hoverEffect ? "hover:bg-[#f2f2f2]" : ""} ${isRowDisabled && sortedData?.length !== (rowIndex + 1) ? `row-disabled` : ''}`}
+            <tr key={row} className={`${hoverEffect ? "hover:bg-whiteSmoke" : ""} ${isRowDisabled && sortedData?.length !== (rowIndex + 1) ? `row-disabled` : ''}`}
               onMouseEnter={() => {
                 setSortedRowIndices({ ...sortedRowIndices, [rowIndex]: rowIndex });
                 handleGetIdHover(rowIndex);

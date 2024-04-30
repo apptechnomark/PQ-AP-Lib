@@ -350,7 +350,7 @@ const Select: React.FC<SelectProps> = ({
       >
         {label && (
           <label
-            className={`text-[14px] font-normal w-full ${
+            className={`text-[12px] font-normal w-full ${
               isOpen
                 ? "text-primary"
                 : inputValue
@@ -377,7 +377,7 @@ const Select: React.FC<SelectProps> = ({
         )}
 
         <div
-          className="flex flex-row items-center relative mb-0 w-full"
+          className="flex flex-row items-center relative mt-[8px] mb-0 w-full"
           tabIndex={0}
           onKeyDown={(e) =>
             (e.key === "Enter" || e.key === " ") && handleToggleOpen()

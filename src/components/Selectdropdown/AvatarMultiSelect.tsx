@@ -205,7 +205,7 @@ const AvatarMultiSelect: React.FC<CompanyListProps> = ({
   return (
     <>
       <div id={id}
-        className={`relative font-medium w-full ${noborder ? "" : "border-b"
+        className={`relative text-[14px] font-medium w-full ${noborder ? "" : "border-b"
           } ${className}
             ${disabled
             ? "border-lightSilver"
@@ -224,9 +224,8 @@ const AvatarMultiSelect: React.FC<CompanyListProps> = ({
       >
         {label && (
           <span className="flex">
-            <Typography
-              type="h6"
-              className={`${err
+            <label
+              className={` text-[12px] font-normal ${err
                 ? "text-defaultRed"
                 : focus
                   ? "text-primary"
@@ -234,7 +233,7 @@ const AvatarMultiSelect: React.FC<CompanyListProps> = ({
                 }`}
             >
               {label}
-            </Typography>
+            </label>
             {validate && (
               <span
                 className={`${disabled ? "text-slatyGrey" : "text-defaultRed"}`}

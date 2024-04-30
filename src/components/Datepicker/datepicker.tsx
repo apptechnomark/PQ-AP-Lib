@@ -260,9 +260,8 @@ const Datepicker: React.FC<DatepickerProps> = ({
         <>
             {label && (
                 <span className="flex">
-                    <Typography
-                        type="h6"
-                        className={` ${err
+                    <label
+                        className={`text-[12px] py-1 ${err
                             ? "text-defaultRed"
                             : focus
                                 ? "text-primary !font-normal"
@@ -270,7 +269,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
                             }`}
                     >
                         {label}
-                    </Typography>
+                    </label>
                     {validate && (
                         <span
                             className={` w-3 h-4 ${disabled ? "text-slatyGrey" : "text-defaultRed"}`}
@@ -281,7 +280,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
                 </span>
             )}
             <div
-                className={`relative`}
+                className={`relative mt-1`}
                 ref={inputRef}
                 tabIndex={0}
                 onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && calendarShow()}
@@ -289,7 +288,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
                 <input
                     type="text"
                     placeholder={format}
-                    className={`text-[14px] py-[1px] w-full tracking-wider placeholder:tracking-wider font-proxima border-b placeholder:text-[14px] bg-transparent
+                    className={`text-[14px] py-[1px] w-full tracking-wider placeholder:tracking-wider border-b placeholder:text-[14px] bg-transparent
                     ${disabled
                             ? "border-lightSilver pointer-events-none"
                             : (toggleOpen && !err)
@@ -500,13 +499,13 @@ const Datepicker: React.FC<DatepickerProps> = ({
                                                             <h1
                                                                 className={`h-[40px] w-[40px] grid place-content-center rounded-full cursor-pointer z-10
                                                                 ${currentMonth ? "" : "text-[#cbd5e0] "}
-                                                                     ${isSameDay&&currentMonth
+                                                                     ${isSameDay && currentMonth
                                                                         ? " bg-primary text-white"
                                                                         : "hover:bg-whiteSmoke"
                                                                     }`}>
                                                                 {currentDate.getDate()}
                                                             </h1>
-                                                            {(isSameDay&&currentMonth) && (
+                                                            {(isSameDay && currentMonth) && (
                                                                 <>
                                                                     <span className="absolute flex inset-0 rounded-full overflow-visible">
                                                                         <span

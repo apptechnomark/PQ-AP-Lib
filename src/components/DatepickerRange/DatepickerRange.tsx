@@ -363,11 +363,11 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
             {label && (
                 <span className="flex">
                     <label
-                        className={`text-[14px] font-normal ${err
+                        className={`text-[12px] py-1 font-normal ${err
                             ? "text-defaultRed"
                             : focus
                                 ? "text-primary"
-                                : "text-slatyGrey !text-sm"
+                                : "text-slatyGrey"
                             }`}
                             tabIndex={-1}
                     >
@@ -383,20 +383,20 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                 </span>
             )}
             <div
-                className={`flex w-full -mt-1 before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full`}
+                className={`flex w-full mt-[2px]  before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full`}
                 ref={inputRef}
                 tabIndex={0}
                 onKeyDown={(e) =>
                   (e.key === "Enter" || e.key === " ") && calendarShow()
                 }
             >
-                <div className="flex w-full relative">
+                <div className="flex w-full h-fit relative">
                     {/* defaultValue={(inputStartDate && inputEndDate) ? inputStartDate + " to " + inputEndDate : inputStartDate ? inputStartDate + " to " : inputEndDate} */}
 
                     <input
                         type="text"
                         placeholder="dd/mm/yyyy"
-                        className={`${className} w-full border-b placeholder:text-sm text-sm bg-transparent ${disabled
+                        className={`${className} w-full border-b py-1 placeholder:text-sm text-sm bg-transparent ${disabled
                             ? "border-lightSilver pointer-events-none"
                             : toggleOpen
                                 ? "border-primary"
@@ -416,7 +416,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                     {!hideIcon &&
                         <span
                         tabIndex={-1}
-                            className="absolute right-2 top-0.5 cursor-pointer"
+                            className="absolute right-2 bottom-1.5 cursor-pointer"
                             onClick={calendarShow}
                         >
                             <CalendarIcon bgColor={err ? "#DC3545" : "#333333"} />

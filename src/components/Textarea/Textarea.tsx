@@ -86,7 +86,7 @@ const Textarea: React.FC<TextareaProps> = ({
   const parsedRows = rows as unknown as number;
 
   return (
-    <div className="flex flex-col w-full text-[14px]">
+    <div className="flex flex-col w-full text-[12px]">
       {label && (
         <span className="flex">
           <label
@@ -111,7 +111,7 @@ const Textarea: React.FC<TextareaProps> = ({
       )}
 
       <div
-        className={`${
+        className={`mt-[7px] ${
           !err
             ? "flex w-full relative before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:bg-primary before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full"
             : "w-full"

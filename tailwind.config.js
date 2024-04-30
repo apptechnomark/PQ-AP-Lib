@@ -13,6 +13,7 @@ module.exports = {
       warningColor: "#FFF3CD",
       infoColor: "#E7F1FF",
       darkCharcoal: "#333333",
+      lightCharcoal: "#212529",
       slatyGrey: "#6E6D7A",
       lightSilver: "#D8D8D8",
       whiteSmoke: "#F6F6F6",

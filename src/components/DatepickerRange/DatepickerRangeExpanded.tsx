@@ -280,7 +280,7 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
         let startDateString = splitDate && splitDate[0];
         let updatedStartDate = new Date(startDateString);
         updatedStartDate.setHours(0, 0, 0, 0);
-        let newDate = value?updatedStartDate:currentDate
+        let newDate = value ? updatedStartDate : currentDate
         setToday(newDate)
     };
 
@@ -355,13 +355,13 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
             {label && (
                 <span className="flex">
                     <label
-                        className={`text-[14px] font-normal ${err
+                        className={`text-[12px] py-[5px] font-normal ${err
                             ? "text-defaultRed"
                             : focus
                                 ? "text-primary"
                                 : "text-slatyGrey"
                             }`}
-                            tabIndex={-1}
+                        tabIndex={-1}
                     >
                         {label}
                     </label>
@@ -375,11 +375,11 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
                 </span>
             )}
             <div
-                className={`flex w-full -mt-1 before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full`}
+                className={`flex w-full mt-[8px] before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full`}
                 ref={inputRef}
                 tabIndex={0}
                 onKeyDown={(e) =>
-                  (e.key === "Enter" || e.key === " ") && calendarShow()
+                    (e.key === "Enter" || e.key === " ") && calendarShow()
                 }
             >
                 <div className="flex w-full relative">
@@ -405,8 +405,8 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
                     />
                     {!hideIcon &&
                         <span
-                        tabIndex={-1}
-                            className="absolute right-2 top-0.5 cursor-pointer"
+                            tabIndex={-1}
+                            className="absolute right-2 bottom-1.5 cursor-pointer"
                             onClick={calendarShow}
                         >
                             <CalendarIcon bgColor={err ? "#DC3545" : "#333333"} />

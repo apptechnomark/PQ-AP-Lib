@@ -210,9 +210,9 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
     return (
         <div className={`flex flex-col w-full text-[14px] relative ${className}`}>
             {label && (
-                <span className="flex">
-                    <Typography type="h6"
-                        className={`${err
+                <span className="flex py-[4.5px]">
+                    <label
+                        className={` text-[12px] ${err
                             ? "text-defaultRed"
                             : focus && value != undefined || value != ""
                                 ? "text-primary"
@@ -220,7 +220,7 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
                             }`}
                     >
                         {label}
-                    </Typography>
+                    </label>
                     {validate && (
                         <span
                             className={`${disabled ? "text-slatyGrey" : "text-defaultRed"}`}
@@ -231,7 +231,7 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
                 </span>
             )}
             <div
-                className={`flex mt-1 ${!err
+                className={`flex ${!err
                     ? "w-full relative before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:bg-primary before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full"
                     : "w-full"
                     }`}
@@ -300,7 +300,7 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
                             <span className="border-l-[1.5px] border-l-lightSilver pl-1 py-1 mb-1"></span>
                             <input
                                 className={`${className}
-                                 ${err && "text-defaultRed opacity-90 placeholder:text-defaultRed"} placeholder-[#ADB5BD] pt-0.5 pb-1 outline-none w-full h-full text-darkCharcoal`}
+                                 ${err && "text-defaultRed opacity-90 placeholder:text-defaultRed"} placeholder-[#ADB5BD] py-1 outline-none w-full h-full text-darkCharcoal`}
                                 type="tel"
                                 id={id}
                                 name={name}

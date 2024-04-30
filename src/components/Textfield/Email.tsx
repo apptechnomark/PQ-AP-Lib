@@ -123,9 +123,9 @@ const Email: React.FC<EmailProps> = ({
   return (
     <div className="flex flex-col w-full text-[14px] relative">
       {label && (
-        <span className="flex">
+        <span className="flex py-[5px]">
           <label
-            className={`${err
+            className={`text-[12px] ${err
               ? "text-defaultRed"
               : focus&& value != undefined || value !=""
                 ? "text-primary"

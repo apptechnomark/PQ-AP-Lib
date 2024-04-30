@@ -81,7 +81,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
         .filter((option) => !option.isEnable && values.includes(option.value))
         .map((option) => option.value)
     : [];
-    
+
   const [selectedValues, setSelectedValues] = useState<string[]>(
     values && values.length > 0 ? values : []
   );
@@ -274,9 +274,8 @@ const CompanyList: React.FC<CompanyListProps> = ({
       >
         {label && (
           <span className="flex">
-            <Typography
-              type="h6"
-              className={`${err
+            <label
+              className={` text-[12px] font-normal ${err
                 ? "text-defaultRed"
                 : focus || selectedValues.length > 0
                   ? "text-primary"
@@ -284,7 +283,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
                 }`}
             >
               {label}
-            </Typography>
+            </label>
             {validate && (
               <span
                 className={`${disabled ? "text-slatyGrey" : "text-defaultRed"}`}
@@ -295,7 +294,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
           </span>
         )}
         <div
-          className={`flex items-center transition-height duration-200 ease-out cursor-pointer ${disabled && "pointer-events-none"
+          className={`flex mt-[7px] items-center transition-height duration-200 ease-out cursor-pointer ${disabled && "pointer-events-none"
             } ${selectedValues.length > 0 &&
               type == "avatar" &&
               avatarSize !== "x-small"
@@ -320,13 +319,12 @@ const CompanyList: React.FC<CompanyListProps> = ({
               )}
             </>
           ) : (
-            <Typography
-              type="h6"
-              className={`!font-normal ${err ? "!text-defaultRed" : !isOpen ? "!text-slatyGrey opacity-70" : defaultValue ? "text-darkCharcoal" : disabled ? "text-slatyGrey" : ""
+            <label
+              className={`text-[14px] font-normal ${err ? "!text-defaultRed" : !isOpen ? "!text-slatyGrey opacity-70" : defaultValue ? "text-darkCharcoal" : disabled ? "text-slatyGrey" : ""
                 } select-none`}
             >
               {isOpen ? "" : defaultValue ? defaultValue : "Please select"}
-            </Typography>
+            </label>
 
           )}
           {!hideIcon && (

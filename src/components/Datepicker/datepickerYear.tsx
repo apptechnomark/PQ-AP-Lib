@@ -131,7 +131,7 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
     useEffect(() => {
         setFullDate(value)
     }, [value])
-    
+
     useEffect(() => {
         getValue(fullDate);
     }, [fullDate]);
@@ -202,20 +202,19 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
         <>
             {label && (
                 <span className="flex">
-                    <Typography
-                        type="h6"
-                        className={`${err
+                    <label
+                        className={`text-[12px] py-1 ${err
                             ? "text-defaultRed"
                             : focus
-                                ? "text-primary"
-                                : "text-slatyGrey"
+                                ? "text-primary !font-normal"
+                                : "text-slatyGrey !font-normal"
                             }`}
                     >
                         {label}
-                    </Typography>
+                    </label>
                     {validate && (
                         <span
-                            className={`${disabled ? "text-slatyGrey" : "text-defaultRed"}`}
+                            className={` w-3 h-4 ${disabled ? "text-slatyGrey" : "text-defaultRed"}`}
                         >
                             &nbsp;*
                         </span>

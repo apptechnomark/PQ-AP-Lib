@@ -193,10 +193,10 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
         return (
           <div
             key={selectedValue}
-            className={`flex items-center  badge bg-[#E9ECEF] text-[#212529] border border-[#CED4DA] rounded-sm mr-[3px] ml-[1px] mt-[1px] mb-2 text-[14px] ${selectedOption?.label.length > 8 ? "max-w-[100px]" : ""
+            className={`flex items-center  bg-[#E6E6E6] text-[#212529] border border-[#CED4DA] rounded-sm mr-[3px] ml-[1px] mt-[1px] mb-2 text-[14px] ${selectedOption?.label.length > 8 ? "max-w-[100px]" : ""
               }`}
           >
-            <span title={selectedOption?.label}>
+            <span className="px-0.5" title={selectedOption?.label}>
               {selectedOption?.label.length > 8
                 ? selectedOption?.label.substring(0, 5) + "..."
                 : selectedOption?.label}
@@ -204,7 +204,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
 
             <div
               onClick={() => handleSelect(selectedValue)}
-              className="ml-1 cursor-pointer"
+              className="ml-1 text-[17px] cursor-pointer"
             >
               <CrossIcon />
             </div>
@@ -212,8 +212,8 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
         );
       })}
       {selectedValues.length > 2 && (
-        <div className="flex items-center badge bg-[#E9ECEF] text-darkCharcoal border border-[#CED4DA] rounded-sm px-1 mb-2 text-[14px]">
-          +{selectedValues.length - 2}
+        <div className="flex items-center bg-[#E6E6E6] text-darkCharcoal border border-[#CED4DA] rounded-sm px-1 mb-1.5 text-[14px]">
+          <label className="text-[17px] h-[15px] flex items-center">+</label>{selectedValues.length - 2}
         </div>
       )}
     </div>
@@ -268,32 +268,34 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
   return (
     <>
       <div className={`${styles.customScrollbar} relative font-medium`} ref={selectRef}>
-        {label && (
+      {label && (
+        <span className="flex py-[3.5px]">
           <label
-            onClick={handleToggleOpen}
-            className={`text-[14px] font-normal ${isOpen
-              ? "text-primary"
-              : selectedValues.length > 0
-                ? "text-primary"
-                : error
-                  ? "text-defaultRed"
-                  : "text-slatyGrey"
-              }`}
-            tabIndex={-1}
+             onClick={handleToggleOpen}
+             className={`text-[12px] font-normal ${isOpen
+               ? "text-primary"
+               : selectedValues.length > 0
+                 ? "text-primary"
+                 : error
+                   ? "text-defaultRed"
+                   : "text-slatyGrey"
+               }`}
+             tabIndex={-1}
           >
             {label}
-            {validate && <span className="text-defaultRed">&nbsp;*</span>}
           </label>
-        )}
+          {validate && <span className="text-defaultRed">&nbsp;*</span>}
+        </span>
+      )}
 
-        <div className="flex relative">
+        <div className="flex relative mt-[5px]">
           <div
             onBlur={handleBlur}
             onClick={handleToggleOpen}
-            className={`shrink-0 w-fit bg-white border-b max-h-[26px] text-[14px] font-normal  ${isOpen
+            className={`shrink-0 w-fit bg-pureWhite border-b max-h-[26px] text-[14px] font-normal  ${isOpen
               ? "text-primary cursor-default"
               : selectedValues.length === 0
-                ? "text-darkCharcoal cursor-pointer"
+                ? "text-lightCharcoal cursor-pointer"
                 : ""
               } ${selectedValues.length > 0
                 ? "border-primary"
@@ -304,7 +306,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                 @screen firefox {
                   margin-top: 1rem;
                 }
-              }  ${isFirefox ? "mt-1" : ""}`}
+              }  ${isFirefox ? "mt-[5px]" : "mt-[0.5px]"}`}
           >
             {selectedDisplay}
           </div>
@@ -335,7 +337,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               className={` ${error &&
                 "placeholder:text-defaultRed text-defaultRed !border-defaultRed"
                 } bg-pureWhite outline-none  text-[14px] font-normal ${!isOpen
-                  ? "text-darkCharcoal placeholder-darkCharcoal cursor-pointer"
+                  ? "text-lightCharcoal placeholder-lightCharcoal cursor-pointer"
                   : "placeholder-primary cursor-default text-primary"
                 }`}
               onKeyDown={(e) => handleKeyDown(e)}
@@ -346,7 +348,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               tabIndex={-1}
               onClick={handleToggleOpen}
               className={`${error && " text-defaultRed"
-                } absolute right-0 text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer ${isOpen
+                } absolute right-0 bottom-0 text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer ${isOpen
                   ? "rotate-180 text-primary duration-400"
                   : " duration-200"
                 }`}
@@ -429,7 +431,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                     }}
                   />
                 )}
-                <label className="font-proxima text-sm" tabIndex={-1}>{option.label}</label>
+                <label className="font-proxima text-sm cursor-pointer" tabIndex={-1}>{option.label}</label>
               </li>
             ))
           )}

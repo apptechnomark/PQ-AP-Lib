@@ -263,7 +263,7 @@ const AvatarSelect: React.FC<SelectProps> = ({
       >
         {label && (
           <label
-            className={`text-[14px] font-normal w-full ${isOpen
+            className={`text-[12px] font-normal w-full ${isOpen
               ? "text-primary"
               : inputValue
                 ? "text-primary"
@@ -285,7 +285,7 @@ const AvatarSelect: React.FC<SelectProps> = ({
           </label>
         )}
 
-        <div className="flex flex-row items-center relative mb-0 w-full">
+        <div className="flex flex-row mt-[7px] items-center relative mb-0 w-full">
           <div className="flex items-center">
             <Avatar
               variant={avatarSize}
