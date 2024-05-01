@@ -42,6 +42,7 @@ interface CompanyListProps {
   avatarSize?: "small" | "large" | "x-small";
   onSaveClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   isSearchEnable?: boolean;
+  isSelectAllEnable?: boolean;
 }
 const CompanyList: React.FC<CompanyListProps> = ({
   id,
@@ -72,6 +73,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
   listAvatarSize = "small",
   openUpside,
   isSearchEnable = true,
+  isSelectAllEnable = true,
   ...props
 }) => {
   const selectRef = useRef<HTMLDivElement>(null);
@@ -379,9 +381,9 @@ const CompanyList: React.FC<CompanyListProps> = ({
                 />
               </li>
             )}
-            {options.length > 0 && (
+            {options.length > 0 && !!isSelectAllEnable && (
               <li
-                className={`sticky ${isSearchEnable ? 'top-[49px]' : 'top-[5px]'} z-[3]  bg-pureWhite outline-none focus:bg-whiteSmoke text-sm font-normal cursor-pointer flex items-center`}
+                className={`sticky ${isSearchEnable ? 'top-[50px]' : 'top-0 pt-1.5'} z-[3]  bg-pureWhite outline-none focus:bg-whiteSmoke text-sm font-normal cursor-pointer flex items-center`}
               >
                 <label
                   className={`pl-3 w-full pb-1 text-primary cursor-pointer`}
