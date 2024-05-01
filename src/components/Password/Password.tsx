@@ -254,7 +254,7 @@ const Password: React.FC<PasswordProps> = ({
       </div>
 
       <div
-        className={`mt-[1px] ${!err &&
+        className={`${label ? "mt-[1px]" : ""} ${!err &&
           "relative inline-block before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:bg-primary before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full"
           }`}
       >

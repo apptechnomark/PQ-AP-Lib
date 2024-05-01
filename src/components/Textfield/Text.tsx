@@ -155,7 +155,7 @@ const Text: React.FC<InputProps> = ({
       )}
 
       <div
-        className={`mt-[0.5px] ${!err
+        className={`${label ? "mt-[0.5px]" : ""} ${!err
           ? `flex w-full relative before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px ${noborder ? '' : 'before:bg-primary'}  before:transition-width before:duration-[800ms] before:ease-in ${!disabled && "hover:before:w-full"
           }`
           : "w-full"

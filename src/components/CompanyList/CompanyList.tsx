@@ -296,7 +296,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
           </span>
         )}
         <div
-          className={`flex mt-[7px] items-center transition-height duration-200 ease-out cursor-pointer ${disabled && "pointer-events-none"
+          className={`flex ${label ? "mt-[7px]" : ""} items-center transition-height duration-200 ease-out cursor-pointer ${disabled && "pointer-events-none"
             } ${selectedValues.length > 0 &&
               type == "avatar" &&
               avatarSize !== "x-small"
@@ -383,10 +383,10 @@ const CompanyList: React.FC<CompanyListProps> = ({
             )}
             {options.length > 0 && !!isSelectAllEnable && (
               <li
-                className={`sticky ${isSearchEnable ? 'top-[50px]' : 'top-0 pt-1.5'} z-[3]  bg-pureWhite outline-none focus:bg-whiteSmoke text-sm font-normal cursor-pointer flex items-center`}
+                className={`sticky ${isSearchEnable ? 'top-[49px]' : 'top-0 pt-1.5'} z-[3]  bg-pureWhite outline-none focus:bg-whiteSmoke text-sm font-normal cursor-pointer flex items-center`}
               >
                 <label
-                  className={`pl-3 w-full pb-1 text-primary cursor-pointer`}
+                  className={`pl-3 w-full py-1 text-primary cursor-pointer`}
                   onClick={handleToggleAll}
                 >
                   {allOptionsSelected ? "Clear All" : "Select All"}

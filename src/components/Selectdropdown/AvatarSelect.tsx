@@ -285,7 +285,7 @@ const AvatarSelect: React.FC<SelectProps> = ({
           </label>
         )}
 
-        <div className="flex flex-row mt-[7px] items-center relative mb-0 w-full">
+        <div className={`flex flex-row ${label ? "mt-[7px]" : ""} items-center relative mb-0 w-full`}>
           <div className="flex items-center">
             <Avatar
               variant={avatarSize}

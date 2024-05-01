@@ -40,7 +40,7 @@ export const generateDate = (
 		});
 	}
 
-	const remaining = 49 - arrayOfDate.length;
+	const remaining = 42 - arrayOfDate.length;
 	for (let i = 1; i <= remaining; i++) {
 		const date = new Date(year, month + 1, i);
 		arrayOfDate.push({

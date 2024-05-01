@@ -288,7 +288,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
         </span>
       )}
 
-        <div className="flex relative mt-[5px]">
+        <div className={`flex relative ${label ? "mt-[5px]" : ""}`}>
           <div
             onBlur={handleBlur}
             onClick={handleToggleOpen}
