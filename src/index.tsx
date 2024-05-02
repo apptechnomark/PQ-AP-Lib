@@ -1,7 +1,7 @@
 import { Accordion } from "./components/Accordian/Accordian";
 import { Alert } from "./components/Alert/Alert";
 import { Avatar, AvatarGroup } from "./components/Avatar/Avatar";
-import {AvatarSelect} from "./components/Selectdropdown/AvatarSelect";
+import { AvatarSelect } from "./components/Selectdropdown/AvatarSelect";
 import { AvatarMultiSelect } from "./components/Selectdropdown/AvatarMultiSelect";
 
 import Badge from "./components/Badge/Badge";
@@ -68,6 +68,7 @@ import { SearchBar } from "./components/Search/Search";
 import { SpeedDial } from "./components/Speeddial/Speeddial";
 import { Spinner } from "./components/Spinner/Spinner";
 import { Switch } from "./components/Switch/Switch";
+import { StaticDatepickerRange } from "./components/StaticDatepickerRange/StaticDatepickerRange"
 
 import Table from "./components/Table/Table";
 import { TabBar } from "./components/Tab/Tab";
@@ -113,6 +114,7 @@ export {
   CommentSentBox,
   Datepicker,
   DatepickerYear,
+  StaticDatepickerRange,
   DataTable,
   DropdownList,
   Uploader,
