@@ -268,25 +268,25 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
   return (
     <>
       <div className={`${styles.customScrollbar} relative font-medium`} ref={selectRef}>
-      {label && (
-        <span className="flex py-[3.5px]">
-          <label
-             onClick={handleToggleOpen}
-             className={`text-[12px] font-normal ${isOpen
-               ? "text-primary"
-               : selectedValues.length > 0
-                 ? "text-primary"
-                 : error
-                   ? "text-defaultRed"
-                   : "text-slatyGrey"
-               }`}
-             tabIndex={-1}
-          >
-            {label}
-          </label>
-          {validate && <span className="text-defaultRed">&nbsp;*</span>}
-        </span>
-      )}
+        {label && (
+          <span className="flex py-[3.5px]">
+            <label
+              onClick={handleToggleOpen}
+              className={`text-[12px] font-normal ${isOpen
+                ? "text-primary"
+                : selectedValues.length > 0
+                  ? "text-primary"
+                  : error
+                    ? "text-defaultRed"
+                    : "text-slatyGrey"
+                }`}
+              tabIndex={-1}
+            >
+              {label}
+            </label>
+            {validate && <span className="text-defaultRed">&nbsp;*</span>}
+          </span>
+        )}
 
         <div className={`flex relative ${label ? "mt-[5px]" : ""}`}>
           <div
@@ -337,7 +337,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               className={` ${error &&
                 "placeholder:text-defaultRed text-defaultRed !border-defaultRed"
                 } bg-pureWhite outline-none  text-[14px] font-normal ${!isOpen
-                  ? "text-lightCharcoal placeholder-lightCharcoal cursor-pointer"
+                  ? "text-slatyGrey cursor-pointer"
                   : "placeholder-primary cursor-default text-primary"
                 }`}
               onKeyDown={(e) => handleKeyDown(e)}
