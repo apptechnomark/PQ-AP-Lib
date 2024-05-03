@@ -13,6 +13,7 @@ interface Option {
   JsxElement?: any;
   isEnable?: any;
   liClass?: any;
+  active?: boolean;
 }
 
 interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -348,12 +349,12 @@ const Select: React.FC<SelectProps> = ({
         {label && (
           <label
             className={`text-[12px] font-normal w-full ${isOpen
+              ? "text-primary"
+              : inputValue
                 ? "text-primary"
-                : inputValue
-                  ? "text-primary"
-                  : error
-                    ? "text-defaultRed"
-                    : "text-slatyGrey"
+                : error
+                  ? "text-defaultRed"
+                  : "text-slatyGrey"
               } ${disabled && "text-slatyGrey"}`}
             htmlFor={id}
             tabIndex={-1}
@@ -424,8 +425,8 @@ const Select: React.FC<SelectProps> = ({
               tabIndex={-1}
               onClick={handleToggleOpen}
               className={`text-[1.5rem] transition-transform ${disabled
-                  ? "text-slatyGrey cursor-default"
-                  : "text-darkCharcoal cursor-pointer"
+                ? "text-slatyGrey cursor-default"
+                : "text-darkCharcoal cursor-pointer"
                 } ${error && " text-defaultRed"} ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
                 }`}
             >
@@ -457,7 +458,7 @@ const Select: React.FC<SelectProps> = ({
                   <li
                     key={index}
                     className={`${isSecondaryDropdown ? "px-[20px]" : "px-[10px]"
-                      } py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
+                      } ${option.active ? 'active' : ''} py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
                         addDynamicForm_Icons_Edit ||
                         addDynamicForm_Icons_Delete
                         ? "justify-between"

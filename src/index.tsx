@@ -1,4 +1,5 @@
 import { Accordion } from "./components/Accordian/Accordian";
+import { AccordionGroup } from "./components/AccordionGroup/AccordionGroup";
 import { Alert } from "./components/Alert/Alert";
 import { Avatar, AvatarGroup } from "./components/Avatar/Avatar";
 import { AvatarSelect } from "./components/Selectdropdown/AvatarSelect";
@@ -87,6 +88,7 @@ import "./style.css";
 
 export {
   Accordion,
+  AccordionGroup,
   AvatarSelect,
   AvatarMultiSelect,
   Alert,
