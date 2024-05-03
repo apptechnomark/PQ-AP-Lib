@@ -393,7 +393,7 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
                                 : err
                                     ? "border-defaultRed "
                                     : "border-lightSilver hover:border-primary  transition-colors duration-300 ease-in-out"
-                            } ${err ? "text-defaultRed placeholder:text-defaultRed" : "text-darkCharcoal placeholder:text-darkCharcoal placeholder:opacity-80"
+                            } ${err ? "text-defaultRed placeholder:text-defaultRed" : "text-darkCharcoal placeholder:text-slatyGrey placeholder:opacity-80"
                             } outline-none`}
                         onClick={calendarShow}
                         readOnly
