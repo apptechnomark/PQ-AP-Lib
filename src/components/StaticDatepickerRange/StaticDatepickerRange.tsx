@@ -348,7 +348,7 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
                     </span>}
             </div>
 
-            <div className={`${calendarClass}absolute ${selectedListOption == "Custom" ? "min-w-fit" : "w-auto"} bg-pureWhite flex top-10 z-[5] ${isCalendarOpen ? "visible" : "hidden"}`} style={{ boxShadow: '4px 4px 8px rgba(0, 0, 0, 0.2)' }}>
+            <div className={`${calendarClass} absolute ${selectedListOption == "Custom" ? "min-w-fit" : "w-auto"} bg-pureWhite flex top-10 z-[5] ${isCalendarOpen ? "visible" : "hidden"}`} style={{ boxShadow: '4px 4px 8px rgba(0, 0, 0, 0.2)' }}>
                 <div className='w-[181px] py-3'>
                     {visibleOption.map((option: string, index) => (
                         <label key={option + index} className={`py-[12px] block cursor-pointer tracking-wide ${option == selectedListOption ? "bg-whiteSmoke" : "bg-pureWhite"} hover:bg-whiteSmoke px-5 text-[14px] font-proxima`} onClick={() => handleOptionChange(option)}>{option}</label>
