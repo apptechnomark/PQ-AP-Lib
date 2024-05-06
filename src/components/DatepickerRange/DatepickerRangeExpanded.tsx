@@ -1,4 +1,4 @@
-import { generateDate, months } from "./utils/datepickerUtility";
+import { generateDateExpanded, months } from "./utils/datepickerUtility";
 import React, { useEffect, useState, useRef } from "react";
 import style from "./scss/Datepicker.module.scss";
 import ChevronLeftIcon from "./icons/ChevronLeft.js";
@@ -606,7 +606,7 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
                                                 ))}
                                             </div>
                                             <div className={`w-full h-full grid grid-cols-7 ${animate}`}>
-                                                {generateDate(today.getMonth(), today.getFullYear()).map(
+                                                {generateDateExpanded(today.getMonth(), today.getFullYear()).map(
                                                     (
                                                         { date, currentMonth }: DatepickerDate,
                                                         index: number
@@ -674,7 +674,7 @@ const DatepickerRangeExpanded: React.FC<DatepickerProps> = ({
                                                 ))}
                                             </div>
                                             <div className={`w-full h-full grid grid-cols-7 ${animate}`}>
-                                                {generateDate(today.getMonth() + 1, today.getFullYear()).map(
+                                                {generateDateExpanded(today.getMonth() + 1, today.getFullYear()).map(
                                                     (
                                                         { date, currentMonth }: DatepickerDate,
                                                         index: number
