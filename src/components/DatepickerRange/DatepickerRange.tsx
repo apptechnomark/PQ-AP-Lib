@@ -23,6 +23,7 @@ interface DatepickerProps {
     errorMessage?: string;
     getValue: (value: any) => void;
     getError: (arg1: boolean) => void;
+    format?: "dd/mm/yyyy" | "mm/dd/yyyy";
     validate?: boolean;
     disabled?: boolean;
     hideIcon?: boolean;
@@ -38,6 +39,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
     hasError,
     errorMessage = "This is required field!",
     hideIcon,
+    format = "mm/dd/yyyy",
     getValue,
     className,
     getError,
@@ -187,14 +189,13 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
             setEndDate(null);
             newDate.setDate(date.getDate() + 1);
             const formattedDate = newDate.toISOString().slice(0, 10).split("-");
-            const updatedDate = `${formattedDate[0]}-${formattedDate[1]}-${formattedDate[2]}`;
+            const updatedDate = `${formattedDate[format == 'dd/mm/yyyy' ? 2 : 1]}/${formattedDate[format == 'dd/mm/yyyy' ? 1 : 2]}/${formattedDate[0]}`;
             setInputStartDate(updatedDate);
         }
         else if (endDate == null) {
             newDate.setDate(date.getDate() + 1);
             const formattedDate = newDate.toISOString().slice(0, 10).split("-");
-            const updatedDate = `${formattedDate[0]}-${formattedDate[1]}-${formattedDate[2]}`;
-
+            const updatedDate = `${formattedDate[format == 'dd/mm/yyyy' ? 2 : 1]}/${formattedDate[format == 'dd/mm/yyyy' ? 1 : 2]}/${formattedDate[0]}`;
             if (date > startDate) {
                 setInputEndDate(updatedDate);
                 setEndDate(date);
@@ -209,7 +210,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
             setEndDate(null);
             newDate.setDate(date.getDate() + 1);
             const formattedDate = newDate.toISOString().slice(0, 10).split("-");
-            const updatedDate = `${formattedDate[0]}-${formattedDate[1]}-${formattedDate[2]}`;
+            const updatedDate = `${formattedDate[format == 'dd/mm/yyyy' ? 2 : 1]}/${formattedDate[format == 'dd/mm/yyyy' ? 1 : 2]}/${formattedDate[0]}`;
             setInputStartDate(updatedDate);
             setInputEndDate("");
         }
@@ -288,7 +289,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
         let startDateString = splitDate && splitDate[0];
         let updatedStartDate = new Date(startDateString);
         updatedStartDate.setHours(0, 0, 0, 0);
-        let newDate = value?updatedStartDate:currentDate
+        let newDate = value ? updatedStartDate : currentDate
         setToday(newDate)
     };
 
@@ -369,7 +370,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                                 ? "text-primary"
                                 : "text-slatyGrey"
                             }`}
-                            tabIndex={-1}
+                        tabIndex={-1}
                     >
                         {label}
                     </label>
@@ -387,7 +388,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                 ref={inputRef}
                 tabIndex={0}
                 onKeyDown={(e) =>
-                  (e.key === "Enter" || e.key === " ") && calendarShow()
+                    (e.key === "Enter" || e.key === " ") && calendarShow()
                 }
             >
                 <div className="flex w-full h-fit relative">
@@ -395,8 +396,8 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
 
                     <input
                         type="text"
-                        placeholder="dd/mm/yyyy"
-                        className={`${className} w-full border-b py-1 placeholder:text-sm text-sm bg-transparent ${disabled
+                        placeholder={`${format} to ${format}`}
+                        className={`${className} w-full border-b py-1 tracking-wider placeholder:text-[14px] text-[14px] ${disabled
                             ? "border-lightSilver pointer-events-none"
                             : toggleOpen
                                 ? "border-primary"
@@ -406,6 +407,9 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                             } ${err ? "text-defaultRed placeholder:text-defaultRed" : "text-darkCharcoal placeholder:text-darkCharcoal placeholder:opacity-80"
                             } outline-none`}
                         onClick={calendarShow}
+                        style={{
+                            background: "transparent"
+                        }}
                         readOnly
                         defaultValue={inputStartDate ? inputStartDate + " to " + inputEndDate : inputEndDate}
                         onChange={(e: any) => updateFromInput(e.target.value)}
@@ -415,16 +419,16 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                     />
                     {!hideIcon &&
                         <span
-                        tabIndex={-1}
-                            className="absolute right-2 bottom-1.5 cursor-pointer"
+                            tabIndex={-1}
+                            className="absolute right-0 bottom-0.5 cursor-pointer"
                             onClick={calendarShow}
                         >
-                            <CalendarIcon bgColor={err ? "#DC3545" : "#333333"} />
+                            <CalendarIcon bgColor={(toggleOpen && !err) ? "#02B89D" : err ? "#DC3545" : "#333333"} />
                         </span>}
                 </div>
             </div>
             {toggleOpen && (
-                <div className="relative"   tabIndex={-1}>
+                <div className="relative" tabIndex={-1}>
                     <div
                         className={`bottomAnimation absolute z-10  bg-white ${toggleOpen ? style.bottomAnimation : ""
                             }`}
@@ -535,11 +539,11 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                                                 {months.map((month, index) => (
                                                     <div
                                                         key={index}
-                                                        className={`py-[20px] w-[73.5px]  grid place-content-center text-sm text-textColor font-proxima relative cursor-pointer `}
+                                                        className={`py-[20px] w-[73.5px]  grid place-content-center text-[14px] text-textColor font-proxima relative cursor-pointer `}
                                                         onClick={() => selectMonth(index)}
                                                     >
                                                         <div
-                                                            className={`py-[20px]  px-5 text-sm hover:bg-lightGreen hover:text-primary transition-all duration-200 flex items-center justify-center rounded-md ${index === selectedMonth
+                                                            className={`py-[20px]  px-5 text-[14px] hover:bg-lightGreen hover:text-primary transition-all duration-200 flex items-center justify-center rounded-md ${index === selectedMonth
                                                                 ? "bg-lightGreen text-primary"
                                                                 : ""
                                                                 }`}
@@ -558,11 +562,11 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                                                 {displayedYears.map((year) => (
                                                     <div
                                                         key={year}
-                                                        className={`py-[9.5px] w-[73.5px] grid place-content-center text-sm text-textColor font-proxima relative cursor-pointer`}
+                                                        className={`py-[9.5px] w-[73.5px] grid place-content-center text-[14px] text-textColor font-proxima relative cursor-pointer`}
                                                         onClick={() => selectYear(year)}
                                                     >
                                                         <div
-                                                            className={`py-[18px] px-5 text-sm hover:bg-lightGreen hover:text-primary transition-all duration-200 flex items-center justify-center rounded-md ${year === selectedYear
+                                                            className={`py-[18px] px-5 text-[14px] hover:bg-lightGreen hover:text-primary transition-all duration-200 flex items-center justify-center rounded-md ${year === selectedYear
                                                                 ? "bg-lightGreen text-primary"
                                                                 : ""
                                                                 }`}
@@ -617,29 +621,23 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                                                     return (
                                                         <div
                                                             key={index}
-                                                            className="w-full grid place-content-center text-sm text-textColor font-proxima relative "
+                                                            className="w-full grid place-content-center text-[14px] text-textColor font-proxima relative "
                                                             onClick={() => handleDateClick(currentDate)}
                                                             onMouseEnter={() => handleDateHover(currentDate)}
                                                             onMouseLeave={handleMouseOut}
-                                                        ><Typography
-                                                            type="h6"
-                                                            className={`h-[38px] w-[38px] m-0.5 grid place-content-center rounded-full cursor-pointer z-10
-                                                                ${currentMonth ? "" : "text-[#cbd5e0]"}
-                                                                ${(isSelected && !isStartDate && !isEndDate) && "bg-[#caf1ff] transition-color duration-[700ms] font-semibold"}
-                                                                ${isInRange && "border-dashed border border-primary"}
-                                                                ${(value && value !== "" ? (isStartDate || isEndDate) : (isSameDay || isStartDate || isEndDate))
+                                                        ><label
+                                                            className={`h-[38px] relative w-[38px] m-0.5 grid text-[14px] font-proxima place-content-center rounded-full cursor-pointer z-10
+                                                            ${currentMonth ? "" : "text-[#cbd5e0]"}
+                                                            ${(isSelected && !isStartDate && !isEndDate) && "bg-[#B6EEE5] transition-color duration-[700ms] font-semibold"}
+                                                            ${isInRange && "border-dashed border border-primary"}
+                                                            ${(value && value !== "" ? (isStartDate || isEndDate) : (isSameDay || isStartDate || isEndDate))
                                                                     ? " bg-primary font-semibold text-white border-none"
                                                                     : (isSelected && !isStartDate && !isEndDate) ? "" : "hover:bg-whiteSmoke"}
-                                                                `}
+                                                            `}
                                                         >
                                                                 {currentDate.getDate()}
-                                                            </Typography>
-                                                            {(value && value !== "" ? (isStartDate || isEndDate) : (isSameDay || isStartDate || isEndDate)) && (
-                                                                <>
-                                                                    <span className={`${style.rippleAnimation} absolute rounded-full w-6 h-6 top-[10px] left-[9px] bg-primary opacity-50`}
-                                                                    ></span>
-                                                                </>
-                                                            )}
+                                                                {(value && value !== "" ? (isStartDate || isEndDate) : (isSameDay || isStartDate || isEndDate)) && <span className={`${style.rippleAnimation} absolute rounded-full w-5 h-5 top-[9px] left-[9px] bg-primary opacity-50`} />}
+                                                            </label>
                                                         </div>
                                                     );
                                                 }
@@ -653,7 +651,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                 </div>
             )}
             {err && (
-                <span   tabIndex={-1} className="text-defaultRed text-[12px] sm:text-sm">
+                <span tabIndex={-1} className="text-defaultRed text-[12px] sm:text-[14px]">
                     {errorMsg}
                 </span>
             )}

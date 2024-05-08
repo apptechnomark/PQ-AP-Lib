@@ -308,6 +308,10 @@ const Select: React.FC<SelectProps> = ({
       value.preventDefault();
       setFocusedIndex(focusedIndex + 1);
     }
+    else if (value.key === "Escape") {
+      setFocusedIndex(-1);
+      setIsOpen(!isOpen);
+    }
   };
 
   let newOptions = [];
@@ -457,7 +461,7 @@ const Select: React.FC<SelectProps> = ({
                 filteredOptions.map((option, index) => (
                   <li
                     key={index}
-                    className={`${isSecondaryDropdown ? "px-[20px]" : "px-[10px]"
+                    className={`${option.value == selectedOption?.value ? "bg-whiteSmoke" : ""}  ${isSecondaryDropdown ? "px-[20px]" : "px-[10px]"
                       } ${option.active ? 'active' : ''} py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
                         addDynamicForm_Icons_Edit ||
                         addDynamicForm_Icons_Delete

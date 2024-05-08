@@ -16,6 +16,7 @@ interface DatePickerProps {
     validate?: boolean;
     disabled?: boolean;
     hideIcon?: boolean;
+    format?: "dd/mm/yyyy" | "mm/dd/yyyy";
     getValue?: (date: string) => void;
     getError?: (arg1: boolean) => void;
 }
@@ -29,6 +30,7 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
     hasError,
     errorMessage = "This is required field!",
     hideIcon,
+    format = "mm/dd/yyyy",
     inputClass,
     calendarClass,
     getValue,
@@ -77,19 +79,18 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
     const parseDateRange = (dateRangeString) => {
         const [startDateString, endDateString] = dateRangeString.split(" to ");
 
-        const [startDay, startMonth, startYear] = startDateString.split("/");
-        const [endDay, endMonth, endYear] = endDateString.split("/");
+        const parseDateString = (dateString: string) => {
+            if (format === "dd/mm/yyyy") {
+                const [startDay, startMonth, startYear] = dateString.split("/");
+                return new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay));
+            } else {
+                const [startMonth, startDay, startYear] = dateString.split("/");
+                return new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay));
+            }
+        };
 
-        const startDate = new Date(
-            parseInt(startYear),
-            parseInt(startMonth) - 1,
-            parseInt(startDay)
-        );
-        const endDate = new Date(
-            parseInt(endYear),
-            parseInt(endMonth) - 1,
-            parseInt(endDay)
-        );
+        const startDate = parseDateString(startDateString);
+        const endDate = parseDateString(endDateString);
 
         return { startDate, endDate };
     };
@@ -100,12 +101,21 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
         }
     };
 
+    const formattedDisplayDates = (startDate: Date | null, endDate: Date | null, format: "dd/mm/yyyy" | "mm/dd/yyyy" = "dd/mm/yyyy") => {
+        if (startDate && endDate) {
+            setDisplayDates(`${formatDate(startDate, format)} to ${formatDate(endDate, format)}`);
+        } else {
+            setDisplayDates("");
+        }
+    };
+
     useEffect(() => {
         if (value) {
             const { startDate, endDate } = parseDateRange(value);
             setStartDate(startDate);
             setEndDate(endDate);
-            setDisplayDates(`${startDate.toLocaleDateString('en-GB')} to ${endDate.toLocaleDateString('en-GB')}`)
+            formattedDisplayDates(startDate, endDate, format);
+            // setDisplayDates(`${startDate.toLocaleDateString('en-GB')} to ${endDate.toLocaleDateString('en-GB')}`)
             setCurrentDateFromStartDate();
         }
     }, [value]);
@@ -118,7 +128,7 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
     };
 
     const handlePrevMonth = () => {
-        setAnimate(style.slideRightAnimation);
+        setAnimate(style.slideLeftAnimation);
         setTimeout(() => {
             setAnimate("");
         }, 100);
@@ -127,7 +137,7 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
     };
 
     const handleNextMonth = () => {
-        setAnimate(style.slideLeftAnimation);
+        setAnimate(style.slideRightAnimation);
         setTimeout(() => {
             setAnimate("");
         }, 100);
@@ -219,15 +229,16 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
             setIsCalendarOpen(false);
         }
         if (startDate || endDate) {
-            setDisplayDates(`${startDate.toLocaleDateString('en-GB')} to ${endDate.toLocaleDateString('en-GB')}`)
+            formattedDisplayDates(startDate, endDate, format);
+            // setDisplayDates(`${startDate.toLocaleDateString('en-GB')} to ${endDate.toLocaleDateString('en-GB')}`)
         }
     };
 
     const getDateRangeForOption = (option: string) => {
         const today = new Date();
         const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
-        const thisWeekStart = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
-        const thisWeekEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() + (6 - today.getDay()));
+        const thisWeekStart = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay() + 1);
+        const thisWeekEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() + (6 - today.getDay() + 1));
         const lastWeekStart = new Date(thisWeekStart.getFullYear(), thisWeekStart.getMonth(), thisWeekStart.getDate() - 7);
         const lastWeekEnd = new Date(thisWeekEnd.getFullYear(), thisWeekEnd.getMonth(), thisWeekEnd.getDate() - 7);
         const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -288,12 +299,26 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
 
     const handleSaveDate = async () => {
         setIsCalendarOpen(false)
-        setDisplayDates(`${startDate?.toLocaleDateString('en-GB')} to ${endDate?.toLocaleDateString('en-GB')}` || '');
+        setError(false)
+        formattedDisplayDates(startDate, endDate, format);
+        // setDisplayDates(`${startDate?.toLocaleDateString('en-GB')} to ${endDate?.toLocaleDateString('en-GB')}` || '');
     }
 
     useEffect(() => {
         getValue?.(displayDates);
     }, [displayDates])
+
+    const formatDate = (date: Date, format: "dd/mm/yyyy" | "mm/dd/yyyy" = "dd/mm/yyyy") => {
+        const day = date.getDate().toString().padStart(2, "0");
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const year = date.getFullYear();
+
+        if (format === "dd/mm/yyyy") {
+            return `${day}/${month}/${year}`;
+        } else {
+            return `${month}/${day}/${year}`;
+        }
+    };
 
     return (<>
         {label && (
@@ -322,7 +347,7 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
         <div id={id} className="w-full relative" ref={inputRef}>
             <div className="flex w-full relative ">
                 <input
-                    className={` ${inputClass} w-full text-[14px] tracking-wider py-1 outline-none cursor-pointer text-darkCharcoal font-proxima border-b ${disabled
+                    className={` ${inputClass} w-full text-[14px] placeholder:text-[14px] tracking-wider py-1 outline-none cursor-pointer text-darkCharcoal border-b ${disabled
                         ? "border-lightSilver pointer-events-none" : error
                             ? "placeholder:text-defaultRed border-defaultRed"
                             : isCalendarOpen
@@ -331,7 +356,7 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
                         }`}
                     type="text"
                     style={{ background: "transparent" }}
-                    placeholder="dd/mm/yyyy to dd/mm/yyyy"
+                    placeholder={`${format} to ${format}`}
                     onClick={calendarShow}
                     onBlur={handleInputBlur}
                     value={displayDates}
@@ -341,7 +366,7 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
                 {!hideIcon &&
                     <span
                         tabIndex={-1}
-                        className="absolute right-2 bottom-1.5 cursor-pointer"
+                        className="absolute right-0 bottom-0.5 cursor-pointer"
                         onClick={calendarShow}
                     >
                         <CalendarIcon bgColor={(isCalendarOpen && !error) ? "#02B89D" : error ? "#DC3545" : "#333333"} />

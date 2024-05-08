@@ -249,7 +249,7 @@ const DataTable = ({
     <table ref={tableRef} className={`w-full ${!!isTableLayoutFixed ? 'table-fixed' : ''}`}>
       <thead className={`${sticky && styles?.customDataTable} `}>
         <tr
-          className={`w-full z-[5] top-0 ${sticky ? `${userClass ? `${userClass}` : `${stickyPostion} sticky`}  bg-pureWhite` : "static border-y border-pureBlack"
+          className={`w-full z-[5] top-0 ${sticky ? `${userClass ? `${userClass}` : `${stickyPostion} sticky`}  bg-pureWhite` : "static border-y border-textColor"
             } ${noHeader ? "hidden " : ""}`}
         >
           {expandable && (

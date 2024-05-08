@@ -309,8 +309,8 @@ const Datepicker: React.FC<DatepickerProps> = ({
                     {...props}
                 />
                 {!hideIcon &&
-                    <span className={`absolute right-1 bottom-1 cursor-pointer`} onClick={calendarShow}>
-                        <CalendarIcon bgColor={err ? "#DC3545" : focus ? "#02B89D" : "#333333"} />
+                    <span  className="absolute right-0 bottom-0.5 cursor-pointer" onClick={calendarShow}>
+                        <CalendarIcon bgColor={(toggleOpen && !err) ? "#02B89D" : err ? "#DC3545" : "#333333"} />
                     </span>}
             </div>
             {toggleOpen && (

@@ -1,5 +1,6 @@
 .rippleAnimation {
   animation: ripple 2s infinite;
+  z-index: -1;
   // width: 50%;
   // height: 50%;
   // top: 25%;
