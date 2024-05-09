@@ -198,7 +198,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
   };
 
   useEffect(() => {
-    if (focusedIndex !== -1) {
+    if (focusedIndex !== -1 && (focusedIndex < options.length)) {
       const optionsElements = Array.from(
         selectRef.current!.querySelectorAll("li")
       );
