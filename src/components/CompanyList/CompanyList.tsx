@@ -236,8 +236,10 @@ const CompanyList: React.FC<CompanyListProps> = ({
 
   const handleToggleAll = () => {
     if (allOptionsSelected) {
-       setSelectedValues(staticSelectedValuesForClearAll);
-      getValue(staticSelectedValuesForClearAll);
+      setSelectedValues([])
+      getValue([])
+      //  setSelectedValues(staticSelectedValuesForClearAll);
+      // getValue(staticSelectedValuesForClearAll);
       setFocusedIndex(-1);
     } else {
       const allOptionValues = options

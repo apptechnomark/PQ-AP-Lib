@@ -217,7 +217,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
   };
 
   const selectedDisplay = selectedValues.length > 0 && (
-    <div className="flex flex-wrap justify-center items-center">
+    <div className="flex flex-row justify-center items-center">
       {selectedValues.slice(0, 2).map((selectedValue) => {
         const selectedOption = options.find(
           (option) => option.value === selectedValue
@@ -287,11 +287,11 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
         )}
 
         <div id={id} className={`flex relative flex-row ${label ? "mt-[7px]" : ""} items-center justify-center`}>
-          <div className="w-full outline-none flex">
-            <div className="max-w-fit ">
+          <div className="w-full outline-none flex justify-evenly">
+            <div className="min-w-fit flex flex-row pb-[1px]">
               {selectedDisplay}
             </div>
-            <div className="grow" tabIndex={0}
+            <div className="w-full" tabIndex={0}
               onKeyDown={(e) =>
                 (e.key === "Enter" || e.key === " ") && handleToggleOpen()
               }>

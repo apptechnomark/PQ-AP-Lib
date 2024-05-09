@@ -24,7 +24,7 @@ interface DatepickerProps {
     getError: (arg1: boolean) => void;
     validate?: boolean;
     disabled?: boolean;
-    format?: "dd/mm/yyyy" | "mm/dd/yyyy";
+    format?: "DD/MM/YYYY" | "MM/DD/YYYY";
     hideIcon?: boolean;
 }
 
@@ -37,7 +37,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
     disabled,
     hasError,
     errorMessage = "This is required field!",
-    format = "mm/dd/yyyy",
+    format = "MM/DD/YYYY",
     hideIcon,
     getValue,
     getError,
@@ -128,7 +128,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
         setSelectedDate(date);
         newDate.setDate(date.getDate() + 1);
         const formattedDate = newDate.toISOString().slice(0, 10).split("-");
-        const updatedDate = format === "mm/dd/yyyy"
+        const updatedDate = format === "MM/DD/YYYY"
             ? `${formattedDate[1]}/${formattedDate[2]}/${formattedDate[0]}`
             : `${formattedDate[2]}/${formattedDate[1]}/${formattedDate[0]}`;
         setFullDate(updatedDate);
@@ -288,7 +288,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
                 <input
                     type="text"
                     placeholder={format}
-                    className={`text-[14px] py-[1px] w-full tracking-wider placeholder:tracking-wider border-b placeholder:text-[14px] bg-transparent
+                    className={`text-[14px] py-[1px] w-full tracking-wider border-b placeholder:font-proxima
                     ${disabled
                             ? "border-lightSilver pointer-events-none"
                             : (toggleOpen && !err)
@@ -299,6 +299,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
                                         ? "border-defaultRed text-defaultRed placeholder:text-defaultRed"
                                         : "text-darkCharcoal border-lightSilver hover:border-primary  transition-colors duration-300 ease-in-out"
                         } outline-none`}
+                        style={{background:"transparent"}}
                     onClick={calendarShow}
                     readOnly
                     defaultValue={fullDate}
@@ -315,7 +316,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
             </div>
             {toggleOpen && (
                 <div className="relative">
-                    <div className={`bottomAnimation absolute z-10  bg-pureWhite ${toggleOpen ? style.bottomAnimation : ""}`}
+                    <div className={`bottomAnimation absolute z-10 bg-pureWhite ${toggleOpen ? style.bottomAnimation : ""}`}
                     >
                         <div className="flex mx-auto  items-center">
                             <div className="shadow-md overflow-hidden">

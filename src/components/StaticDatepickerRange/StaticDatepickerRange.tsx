@@ -16,7 +16,7 @@ interface DatePickerProps {
     validate?: boolean;
     disabled?: boolean;
     hideIcon?: boolean;
-    format?: "dd/mm/yyyy" | "mm/dd/yyyy";
+    format?: "DD/MM/YYYY" | "MM/DD/YYYY";
     getValue?: (date: string) => void;
     getError?: (arg1: boolean) => void;
 }
@@ -30,7 +30,7 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
     hasError,
     errorMessage = "This is required field!",
     hideIcon,
-    format = "mm/dd/yyyy",
+    format = "MM/DD/YYYY",
     inputClass,
     calendarClass,
     getValue,
@@ -80,7 +80,7 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
         const [startDateString, endDateString] = dateRangeString.split(" to ");
 
         const parseDateString = (dateString: string) => {
-            if (format === "dd/mm/yyyy") {
+            if (format === "DD/MM/YYYY") {
                 const [startDay, startMonth, startYear] = dateString.split("/");
                 return new Date(parseInt(startYear), parseInt(startMonth) - 1, parseInt(startDay));
             } else {
@@ -101,7 +101,7 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
         }
     };
 
-    const formattedDisplayDates = (startDate: Date | null, endDate: Date | null, format: "dd/mm/yyyy" | "mm/dd/yyyy" = "dd/mm/yyyy") => {
+    const formattedDisplayDates = (startDate: Date | null, endDate: Date | null, format: "DD/MM/YYYY" | "MM/DD/YYYY" = "DD/MM/YYYY") => {
         if (startDate && endDate) {
             setDisplayDates(`${formatDate(startDate, format)} to ${formatDate(endDate, format)}`);
         } else {
@@ -308,12 +308,12 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
         getValue?.(displayDates);
     }, [displayDates])
 
-    const formatDate = (date: Date, format: "dd/mm/yyyy" | "mm/dd/yyyy" = "dd/mm/yyyy") => {
+    const formatDate = (date: Date, format: "DD/MM/YYYY" | "MM/DD/YYYY" = "DD/MM/YYYY") => {
         const day = date.getDate().toString().padStart(2, "0");
         const month = (date.getMonth() + 1).toString().padStart(2, "0");
         const year = date.getFullYear();
 
-        if (format === "dd/mm/yyyy") {
+        if (format === "DD/MM/YYYY") {
             return `${day}/${month}/${year}`;
         } else {
             return `${month}/${day}/${year}`;
@@ -347,7 +347,7 @@ const StaticDatepickerRange: React.FC<DatePickerProps> = ({
         <div id={id} className="w-full relative" ref={inputRef}>
             <div className="flex w-full relative ">
                 <input
-                    className={` ${inputClass} w-full text-[14px] placeholder:text-[14px] tracking-wider py-1 outline-none cursor-pointer text-darkCharcoal border-b ${disabled
+                    className={` ${inputClass} w-full text-[14px] placeholder:font-proxima tracking-wider py-0.5 outline-none cursor-pointer text-darkCharcoal border-b ${disabled
                         ? "border-lightSilver pointer-events-none" : error
                             ? "placeholder:text-defaultRed border-defaultRed"
                             : isCalendarOpen

@@ -23,7 +23,7 @@ interface DatepickerProps {
     errorMessage?: string;
     getValue: (value: any) => void;
     getError: (arg1: boolean) => void;
-    format?: "dd/mm/yyyy" | "mm/dd/yyyy";
+    format?: "DD/MM/YYYY" | "MM/DD/YYYY";
     validate?: boolean;
     disabled?: boolean;
     hideIcon?: boolean;
@@ -39,7 +39,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
     hasError,
     errorMessage = "This is required field!",
     hideIcon,
-    format = "mm/dd/yyyy",
+    format = "MM/DD/YYYY",
     getValue,
     className,
     getError,
@@ -189,13 +189,13 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
             setEndDate(null);
             newDate.setDate(date.getDate() + 1);
             const formattedDate = newDate.toISOString().slice(0, 10).split("-");
-            const updatedDate = `${formattedDate[format == 'dd/mm/yyyy' ? 2 : 1]}/${formattedDate[format == 'dd/mm/yyyy' ? 1 : 2]}/${formattedDate[0]}`;
+            const updatedDate = `${formattedDate[format == 'DD/MM/YYYY' ? 2 : 1]}/${formattedDate[format == 'DD/MM/YYYY' ? 1 : 2]}/${formattedDate[0]}`;
             setInputStartDate(updatedDate);
         }
         else if (endDate == null) {
             newDate.setDate(date.getDate() + 1);
             const formattedDate = newDate.toISOString().slice(0, 10).split("-");
-            const updatedDate = `${formattedDate[format == 'dd/mm/yyyy' ? 2 : 1]}/${formattedDate[format == 'dd/mm/yyyy' ? 1 : 2]}/${formattedDate[0]}`;
+            const updatedDate = `${formattedDate[format == 'DD/MM/YYYY' ? 2 : 1]}/${formattedDate[format == 'DD/MM/YYYY' ? 1 : 2]}/${formattedDate[0]}`;
             if (date > startDate) {
                 setInputEndDate(updatedDate);
                 setEndDate(date);
@@ -210,7 +210,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
             setEndDate(null);
             newDate.setDate(date.getDate() + 1);
             const formattedDate = newDate.toISOString().slice(0, 10).split("-");
-            const updatedDate = `${formattedDate[format == 'dd/mm/yyyy' ? 2 : 1]}/${formattedDate[format == 'dd/mm/yyyy' ? 1 : 2]}/${formattedDate[0]}`;
+            const updatedDate = `${formattedDate[format == 'DD/MM/YYYY' ? 2 : 1]}/${formattedDate[format == 'DD/MM/YYYY' ? 1 : 2]}/${formattedDate[0]}`;
             setInputStartDate(updatedDate);
             setInputEndDate("");
         }
@@ -364,7 +364,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
             {label && (
                 <span className="flex">
                     <label
-                        className={`text-[12px] py-1 font-normal ${err
+                        className={`text-[12px] pt-[4px] pb-[5px] font-normal ${err
                             ? "text-defaultRed"
                             : focus
                                 ? "text-primary"
@@ -384,7 +384,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                 </span>
             )}
             <div
-                className={`flex w-full mt-[2px]  before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full`}
+                className={`flex w-full mt-[2px] before:absolute before:bottom-0 before:left-0 before:block before:w-0 before:h-px before:transition-width before:duration-[800ms] before:ease-in hover:before:w-full`}
                 ref={inputRef}
                 tabIndex={0}
                 onKeyDown={(e) =>
@@ -397,14 +397,14 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
                     <input
                         type="text"
                         placeholder={`${format} to ${format}`}
-                        className={`${className} w-full border-b py-1 tracking-wider placeholder:text-[14px] text-[14px] ${disabled
+                        className={`${className} w-full border-b py-0.5 tracking-wider placeholder:font-proxima text-[14px] ${disabled
                             ? "border-lightSilver pointer-events-none"
                             : toggleOpen
                                 ? "border-primary"
                                 : err
                                     ? "border-defaultRed "
                                     : "border-lightSilver hover:border-primary  transition-colors duration-300 ease-in-out"
-                            } ${err ? "text-defaultRed placeholder:text-defaultRed" : "text-darkCharcoal placeholder:text-darkCharcoal placeholder:opacity-80"
+                            } ${err ? "text-defaultRed placeholder:text-defaultRed" : "text-textColor placeholder:text-textColor placeholder:opacity-80"
                             } outline-none`}
                         onClick={calendarShow}
                         style={{
@@ -430,7 +430,7 @@ const DatepickerRange: React.FC<DatepickerProps> = ({
             {toggleOpen && (
                 <div className="relative" tabIndex={-1}>
                     <div
-                        className={`bottomAnimation absolute z-10  bg-white ${toggleOpen ? style.bottomAnimation : ""
+                        className={`bottomAnimation absolute z-10 bg-pureWhite ${toggleOpen ? style.bottomAnimation : ""
                             }`}
                     >
                         <div className="flex mx-auto items-center">
