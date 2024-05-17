@@ -117,7 +117,6 @@ const DatepickerRangeExpanded: React.FC<DatePickerProps> = ({
 
     useEffect(() => {
         if (value && typeof value == 'string') {
-            console.log("🚀 ~ useEffect ~ value:", value)
             const { startDate, endDate } = parseDateRange(value);
             setStartDate(startDate);
             setEndDate(endDate);
