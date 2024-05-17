@@ -324,7 +324,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
             </>
           ) : (
             <label
-              className={`text-[14px] font-normal ${err ? "!text-defaultRed" : !isOpen ? "!text-slatyGrey opacity-70" : defaultValue ? "text-darkCharcoal" : disabled ? "text-slatyGrey" : ""
+              className={`text-[14px] font-normal ${err ? "!text-defaultRed" : !isOpen ? "!text-darkCharcoal placeholder-darkCharcoal" : defaultValue ? "text-darkCharcoal" : disabled ? "text-slatyGrey" : ""
                 } select-none`}
             >
               {isOpen ? "" : defaultValue ? defaultValue : "Please select"}

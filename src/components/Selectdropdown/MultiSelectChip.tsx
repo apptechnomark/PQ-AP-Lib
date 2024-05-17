@@ -245,7 +245,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
       })}
       {selectedValues.length > 2 && (
         <div className="flex items-center h-[23px] bg-[#E6E6E6] text-darkCharcoal border border-[#CED4DA] font-normal rounded-sm px-1 text-[14px]">
-          <label className="text-[19px] h-[15px] text-center place-content-center pt-0.5">+</label> <label className="pt-0.5">{selectedValues.length - 2}</label>
+          <label className="text-[19px] text-center place-content-center pt-0.5">+</label> <label className="pt-0.5">{selectedValues.length - 2}</label>
         </div>
       )}
     </div>
@@ -293,8 +293,9 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
             </div>
             <div className="w-full" tabIndex={0}
               onKeyDown={(e) =>
-                (e.key === "Enter" || e.key === " ") && handleToggleOpen()
-              }>
+                (e.key === "Enter") && handleToggleOpen()
+              }
+              >
               <input
                 tabIndex={-1}
                 onBlur={handleBlur}

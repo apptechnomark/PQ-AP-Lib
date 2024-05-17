@@ -78,6 +78,10 @@ const DatepickerRangeExpanded: React.FC<DatePickerProps> = ({
     }, [error])
 
     const parseDateRange = (dateRangeString) => {
+        if (!dateRangeString || !dateRangeString.includes(" to ")) {
+            return { startDate: null, endDate: null };
+        }
+
         const [startDateString, endDateString] = dateRangeString.split(" to ");
 
         const parseDateString = (dateString: string) => {
@@ -105,19 +109,33 @@ const DatepickerRangeExpanded: React.FC<DatePickerProps> = ({
     const formattedDisplayDates = (startDate: Date | null, endDate: Date | null, format: "DD/MM/YYYY" | "MM/DD/YYYY" = "DD/MM/YYYY") => {
         if (startDate && endDate) {
             setDisplayDates(`${formatDate(startDate, format)} to ${formatDate(endDate, format)}`);
+            // setDatesInRange()
         } else {
             setDisplayDates("");
         }
     };
 
     useEffect(() => {
-        if (value) {
+        if (value && typeof value == 'string') {
+            console.log("🚀 ~ useEffect ~ value:", value)
             const { startDate, endDate } = parseDateRange(value);
             setStartDate(startDate);
             setEndDate(endDate);
             formattedDisplayDates(startDate, endDate, format);
             // setDisplayDates(`${startDate.toLocaleDateString('en-GB')} to ${endDate.toLocaleDateString('en-GB')}`)
             setCurrentDateFromStartDate();
+
+            if (startDate && endDate) {
+                const datesInRange = [];
+                let currentDate = new Date(startDate);
+                while (currentDate <= endDate) {
+                    datesInRange.push(new Date(currentDate));
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                setDatesInRange(datesInRange);
+            } else {
+                setDatesInRange([]);
+            }
         }
     }, [value]);
 
