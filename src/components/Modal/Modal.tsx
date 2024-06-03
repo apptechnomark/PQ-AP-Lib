@@ -21,7 +21,7 @@ const Modal: React.FC<ModalProps> = ({
   width,
   Height,
   className,
-  noneOutSideClicked
+  noneOutSideClicked,
 }) => {
   if (!isOpen) return null;
 
@@ -43,15 +43,13 @@ const Modal: React.FC<ModalProps> = ({
 
   const modalStyles = {
     width: width,
-    height: Height
+    height: Height,
   };
 
   const modalRef = useRef(null);
   const isDragging = useRef(false);
 
-
   const handleMouseDown = (e) => {
-
     if (!isDragging.current) {
       isDragging.current = true;
     }
@@ -59,19 +57,25 @@ const Modal: React.FC<ModalProps> = ({
 
   const handleMouseUp = () => {
     isDragging.current = false;
-
   };
 
   const handleModalClick = (event: any) => {
     event.stopPropagation();
-    if (!isDragging.current && !modalRef.current.contains(event.target) && !noneOutSideClicked) {
+    if (
+      !isDragging.current &&
+      !modalRef.current.contains(event.target) &&
+      !noneOutSideClicked
+    ) {
       onClose();
     }
   };
 
-
-  const handleClickOutside = (event:any) => {
-    if (!noneOutSideClicked && modalRef.current && !modalRef.current.contains(event.target)) {
+  const handleClickOutside = (event: any) => {
+    if (
+      !noneOutSideClicked &&
+      modalRef.current &&
+      !modalRef.current.contains(event.target)
+    ) {
       onClose();
     }
   };
@@ -89,17 +93,18 @@ const Modal: React.FC<ModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-        if (modalRef.current) {
-            modalRef.current.focus();
-        }
+      if (modalRef.current) {
+        modalRef.current.focus();
+      }
     }
-}, [isOpen]);
+  }, [isOpen]);
 
   return (
     <>
       {isOpen && (
         <div
-          className={`fixed inset-0 bg-black bg-opacity-40 backdrop-blur-[1px] z-50`}
+          className={`fixed inset-0
+          bg-[rgba(0,0,0,0.4)]  backdrop-blur-[1px] z-50`}
         >
           <div
             className={`fixed inset-0 z-50 flex items-center justify-center overflow-y-auto ${Style.modal}`}
@@ -113,7 +118,9 @@ const Modal: React.FC<ModalProps> = ({
               onMouseDown={handleMouseDown}
               onMouseUp={handleMouseUp}
             >
-              <div className={`${className} border-[1px] border-lightSilver rounded-lg flex flex-col bg-pureWhite outline-none focus:outline-none`}>
+              <div
+                className={`${className} border-[1px] border-lightSilver rounded-lg flex flex-col bg-pureWhite outline-none focus:outline-none`}
+              >
                 {children}
               </div>
             </div>
