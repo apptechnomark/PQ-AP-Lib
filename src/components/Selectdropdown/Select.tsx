@@ -48,10 +48,6 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   disabled?: boolean;
   noborder?: boolean;
   hideIcon?: boolean;
-  secondaryOptions?: any;
-  isSecondaryDropdown?: boolean;
-  primaryLabel?: string;
-  secondaryLabel?: string;
   openTop?: boolean;
 }
 
@@ -87,10 +83,6 @@ const Select: React.FC<SelectProps> = ({
   disabled,
   hideIcon,
   noborder,
-  secondaryOptions,
-  isSecondaryDropdown,
-  primaryLabel,
-  secondaryLabel,
   openTop = false,
 }) => {
   const [inputValue, setInputValue] = useState("");
@@ -115,12 +107,6 @@ const Select: React.FC<SelectProps> = ({
   const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(searchValue)
   );
-
-  const secondaryFilteredOptions =
-    !!secondaryOptions &&
-    secondaryOptions.filter((option) =>
-      option.label.toLowerCase().includes(searchValue)
-    );
 
   useEffect(() => {
     if (validate) {
@@ -201,9 +187,6 @@ const Select: React.FC<SelectProps> = ({
     let newOptions = [];
     if (!!options && options.length > 0) {
       newOptions = [...newOptions, ...options];
-    }
-    if (!!secondaryOptions && secondaryOptions.length > 0) {
-      newOptions = [...newOptions, ...secondaryOptions];
     }
 
     setSelectedOption(newOptions.find((option) => option.value === value));
@@ -307,8 +290,7 @@ const Select: React.FC<SelectProps> = ({
     } else if (value.key === "ArrowDown" && focusedIndex < options.length - 1) {
       value.preventDefault();
       setFocusedIndex(focusedIndex + 1);
-    }
-    else if (value.key === "Escape") {
+    } else if (value.key === "Escape") {
       setFocusedIndex(-1);
       setIsOpen(!isOpen);
     }
@@ -318,16 +300,10 @@ const Select: React.FC<SelectProps> = ({
   if (!!options && options.length > 0) {
     newOptions = [...newOptions, ...options];
   }
-  if (!!secondaryOptions && secondaryOptions.length > 0) {
-    newOptions = [...newOptions, ...secondaryOptions];
-  }
 
   let newFilteredOptions = [];
   if (!!filteredOptions && filteredOptions.length > 0) {
     newFilteredOptions = [...newFilteredOptions, ...filteredOptions];
-  }
-  if (!!secondaryFilteredOptions && secondaryFilteredOptions.length > 0) {
-    newFilteredOptions = [...newFilteredOptions, ...secondaryFilteredOptions];
   }
 
   return (
@@ -353,12 +329,12 @@ const Select: React.FC<SelectProps> = ({
         {label && (
           <label
             className={`text-[12px] font-normal w-full ${isOpen
-              ? "text-primary"
-              : inputValue
                 ? "text-primary"
-                : error
-                  ? "text-defaultRed"
-                  : "text-slatyGrey"
+                : inputValue
+                  ? "text-primary"
+                  : error
+                    ? "text-defaultRed"
+                    : "text-slatyGrey"
               } ${disabled && "text-slatyGrey"}`}
             htmlFor={id}
             tabIndex={-1}
@@ -377,7 +353,8 @@ const Select: React.FC<SelectProps> = ({
         )}
 
         <div
-          className={`flex flex-row items-center relative ${label ? "mt-[8px]" : ""} mb-0 w-full`}
+          className={`flex flex-row items-center relative ${label ? "mt-[8px]" : ""
+            } mb-0 w-full`}
           tabIndex={0}
           onKeyDown={(e) =>
             (e.key === "Enter" || e.key === " ") && handleToggleOpen()
@@ -403,7 +380,7 @@ const Select: React.FC<SelectProps> = ({
                     : defaultValue
                       ? newOptions.find((option) => option.value === defaultValue)
                         ?.label ?? ""
-                      : inputValue.length > 25
+                      : inputValue && inputValue.length > 25
                         ? inputValue.substring(0, 20) + "..."
                         : inputValue
             }
@@ -429,8 +406,8 @@ const Select: React.FC<SelectProps> = ({
               tabIndex={-1}
               onClick={handleToggleOpen}
               className={`text-[1.5rem] transition-transform ${disabled
-                ? "text-slatyGrey cursor-default"
-                : "text-darkCharcoal cursor-pointer"
+                  ? "text-slatyGrey cursor-default"
+                  : "text-darkCharcoal cursor-pointer"
                 } ${error && " text-defaultRed"} ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
                 }`}
             >
@@ -446,11 +423,6 @@ const Select: React.FC<SelectProps> = ({
             } ${isOpen ? "ease-out" : ""} ${openTop ? "bottom-full" : "top-full"
             }`}
         >
-          {!!isSecondaryDropdown && (
-            <label className="flex text-[15px] font-bold px-[10px] pt-[10px]">
-              {primaryLabel}
-            </label>
-          )}
           {newFilteredOptions.length === 0 ? (
             <span className="p-[10px] outline-none focus:bg-whiteSmoke text-[15px] hover:bg-whiteSmoke font-medium cursor-pointer flex flex-row items-center space-x-2 ">
               No matching data found.
@@ -461,8 +433,11 @@ const Select: React.FC<SelectProps> = ({
                 filteredOptions.map((option, index) => (
                   <li
                     key={index}
-                    className={`${option.value == selectedOption?.value ? "bg-whiteSmoke" : ""}  ${isSecondaryDropdown ? "px-[20px]" : "px-[10px]"
-                      } ${option.active ? 'active' : ''} py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
+                    className={`${option.value == selectedOption?.value
+                        ? "bg-whiteSmoke"
+                        : ""
+                      } px-[10px] ${option.active ? "active" : ""
+                      } py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
                         addDynamicForm_Icons_Edit ||
                         addDynamicForm_Icons_Delete
                         ? "justify-between"
@@ -539,68 +514,6 @@ const Select: React.FC<SelectProps> = ({
                       )}
                   </li>
                 ))}
-
-              {!!secondaryFilteredOptions &&
-                secondaryFilteredOptions.length > 0 && (
-                  <div className="border-b border-lightSilver border-dashed" />
-                )}
-
-              {!!isSecondaryDropdown && (
-                <label className="flex text-[15px] font-bold px-[10px] pt-[10px]">
-                  {secondaryLabel}
-                </label>
-              )}
-              {!!secondaryFilteredOptions &&
-                secondaryFilteredOptions.map((secondaryOption, index) => (
-                  <li
-                    key={index + filteredOptions.length}
-                    className={`${isSecondaryDropdown ? "px-[20px]" : "px-[10px]"
-                      } py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
-                        addDynamicForm_Icons_Edit ||
-                        addDynamicForm_Icons_Delete
-                        ? "justify-between"
-                        : ""
-                      } ${secondaryOption && secondaryOption.liClass
-                        ? secondaryOption.value === selectedOption?.value &&
-                        `${secondaryOption.liClass}`
-                        : ""
-                      }
-                 ${secondaryOption && secondaryOption.isEnable !== false
-                        ? ""
-                        : "pointer-events-none opacity-60"
-                      }
-                 `}
-                    onClick={() => {
-                      if (secondaryOption.value !== inputValue) {
-                        handleSelect(secondaryOption.value);
-                      }
-                    }}
-                    onKeyDown={(e) =>
-                      handleListItemKeyDown(
-                        e,
-                        secondaryOption.value,
-                        index + filteredOptions.length
-                      )
-                    }
-                    tabIndex={isOpen ? index + filteredOptions.length : -1}
-                    ref={(el) => {
-                      if (index + filteredOptions.length === focusedIndex) {
-                        el?.focus();
-                      }
-                    }}
-                  >
-                    {avatar && (
-                      <div className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
-                        <Avatar
-                          variant="x-small"
-                          name={avatarName}
-                          imageUrl={avatarImgUrl}
-                        />
-                      </div>
-                    )}
-                    {secondaryOption.label}&nbsp;{secondaryOption.JsxElement}
-                  </li>
-                ))}
             </>
           )}
           {(addDynamicForm || editing) && (
@@ -647,7 +560,10 @@ const Select: React.FC<SelectProps> = ({
       </div>
 
       {!error && supportingText && (
-        <span tabIndex={-1} className="text-slatyGrey text-[12px] sm:text-[14px] -mt-[20px]">
+        <span
+          tabIndex={-1}
+          className="text-slatyGrey text-[12px] sm:text-[14px] -mt-[20px]"
+        >
           {supportingText}
         </span>
       )}
@@ -655,8 +571,7 @@ const Select: React.FC<SelectProps> = ({
       {error && !inputValue && (
         <span
           tabIndex={-1}
-          className={`text-defaultRed text-[12px] sm:text-[14px] ${errorClass}`}
-        >
+          className={`text-defaultRed text-[12px] sm:text-[14px] ${errorClass}`}>
           {errMsg}
         </span>
       )}

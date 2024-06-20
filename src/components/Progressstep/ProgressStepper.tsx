@@ -16,13 +16,13 @@ const ProgressStep = ({
   return (
     <div className="w-full flex gap-2">
       {steps.map((step: number, index: number) => (<React.Fragment key={index + Math.random()}>
-        <div key={index + Math.random()+step} className="w-full flex h-fit flex-col relative justify-center items-center">
+        <div key={index + Math.random() + step} className="w-full flex h-fit flex-col relative justify-center items-center">
           <div className="relative z-[1] rounded-full" style={{ background: "transparent" }}>
             <button id={step + index + ""} className={`w-8 h-8 select-none  rounded-full border-2
-             ${activeStep < index ? 'border-lightSilver' : "border-primary"}
-             ${(activeStep < index) && !isClickEnable ? 'pointer-events-none cursor-default' : "cursor-pointer"}
-             ${activeStep < index ? "bg-whiteSmoke" : activeStep > index ? "bg-primary" : "bg-lightPrimary"}
-             `}
+              ${activeStep < index ? 'border-lightSilver' : "border-primary"}
+              ${(activeStep < index) && !isClickEnable ? 'pointer-events-none cursor-default' : "cursor-pointer"}
+              ${activeStep < index ? "bg-whiteSmoke" : activeStep > index ? `bg-primary ${!isClickEnable ? "pointer-events-none cursor-default" : ""}` : "bg-lightPrimary"}
+              `}
               onClick={() => getCurrentStep(index)}>
               <label className={`text-base font-medium font-proxima cursor-pointer ${activeStep < index ? "text-slatyGrey" : activeStep > index ? "text-pureWhite" : "text-primary"} `}>{index + 1}</label>
 

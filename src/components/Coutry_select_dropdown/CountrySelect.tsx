@@ -11,8 +11,10 @@ interface CountryCodeProps extends React.InputHTMLAttributes<HTMLInputElement> {
     errorMessage?: string;
     supportingText?: string;
     disabled?: boolean;
+    countryCode?: string;
     getValue: (arg1: string) => void;
     getError: (arg1: boolean) => void;
+    getCountryCode?: (arg1: string) => void;
     hasError?: boolean;
     value?: any
 }
@@ -27,7 +29,9 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
     onChange,
     supportingText,
     disabled,
+    countryCode = "+91",
     getValue,
+    getCountryCode,
     getError,
     errorMessage = "This is required field!",
     hasError,
@@ -57,6 +61,14 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
             setTelValue('')
         }
     }, [value])
+
+    useEffect(() => {
+        if (countryCode !== '') {
+            setSelectedCountryCode(countryCode)
+        } else {
+            setSelectedCountryCode('')
+        }
+    }, [countryCode])
 
     useEffect(() => {
         if (validate) {
@@ -161,6 +173,10 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
         setIsOpen(false);
         setFocusedIndex(-1);
     }
+
+    useEffect(() => {
+        getCountryCode?.(selectedCountryCode);
+    }, [selectedCountryCode])
 
     useEffect(() => {
         const handleOutsideClick = (event: MouseEvent) => {
