@@ -1,28 +1,84 @@
-.tooltip:hover .top {
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.top::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #92eadc;
+  border-top: 1px solid #02B89D;
+  border-left: 1px solid #02B89D;
+  bottom: -13px;
+  transform: translateY(-50%) translateX(-7px) rotate(-135deg);
+  left: 50%;
+}
+
+.bottom::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #92eadc;
+  border-bottom: 1px solid #02B89D;
+  border-right: 1px solid #02B89D;
+  top: 0;
+  transform: translateY(-50%) translateX(-7px) rotate(-135deg);
+  left: 50%;
+}
+
+.left::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #92eadc;
+  border-bottom: 1px solid #02B89D;
+  border-left: 1px solid #02B89D;
+  top: 50%;
+  transform: translateY(-50%) translateX(-7px) rotate(-135deg);
+  right: -13px;
+}
+
+.right::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #92eadc;
+  border-top: 1px solid #02B89D;
+  border-right: 1px solid #02B89D;
+  top: 50%;
+  transform: translateY(-50%) translateX(-7px) rotate(-135deg);
+  left: 0;
+}
+
+.tooltipText {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tooltipVisible {
   display: block;
-  bottom: 110%;
   opacity: 1;
+}
+
+.top {
   animation: slideDown 0.6s ease-out both;
 }
 
-.tooltip:hover .bottom {
-  display: block;
-  top: 110%;
-  opacity: 1;
+.bottom {
   animation: slideUp 0.6s ease-out both;
 }
 
-.tooltip:hover .left {
-  display: block;
-  right: 110%;
-  opacity: 1;
+.left {
   animation: slideLeft 0.6s ease-out both;
 }
 
-.tooltip:hover .right {
-  display: block;
-  left: 110%;
-  opacity: 1;
+.right {
   animation: slideRight 0.6s ease-out both;
 }
 

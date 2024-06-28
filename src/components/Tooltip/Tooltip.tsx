@@ -1,6 +1,6 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState, useRef, useEffect } from "react";
+import ReactDOM from "react-dom";
 import styles from "./Tooltip.module.scss";
-
 
 interface TooltipProps {
   content?: ReactNode;
@@ -15,31 +15,78 @@ const Tooltip: React.FC<TooltipProps> = ({
   children,
   className,
 }) => {
+  const [visible, setVisible] = useState(false);
+  const [tooltipStyle, setTooltipStyle] = useState({});
+  const tooltipRef = useRef<HTMLSpanElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseEnter = () => {
+    setVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setVisible(false);
+  };
+
+  useEffect(() => {
+    if (visible && triggerRef.current && tooltipRef.current) {
+      const triggerRect = triggerRef.current.getBoundingClientRect();
+      const tooltipRect = tooltipRef.current.getBoundingClientRect();
+      const scrollX = window.scrollX || window.pageXOffset;
+      const scrollY = window.scrollY || window.pageYOffset;
+
+      let style = {};
+      switch (position) {
+        case "top":
+          style = {
+            left: scrollX + triggerRect.left + (triggerRect.width / 2),
+            top: scrollY + triggerRect.top - tooltipRect.height,
+          };
+          break;
+        case "bottom":
+          style = {
+            left: scrollX + triggerRect.left + (triggerRect.width / 2),
+            top: scrollY + triggerRect.bottom,
+          };
+          break;
+        case "left":
+          style = {
+            left: scrollX + triggerRect.left - tooltipRect.width,
+            top: scrollY + triggerRect.top + (triggerRect.height / 2),
+          };
+          break;
+        case "right":
+          style = {
+            left: scrollX + triggerRect.right,
+            top: scrollY + triggerRect.top + (triggerRect.height / 2),
+          };
+          break;
+        default:
+          break;
+      }
+      setTooltipStyle(style);
+    }
+  }, [visible, position]);
+
   return (
     <div
       className={`${styles.tooltip} relative cursor-pointer p-2 text-sm sm:text-base max-w-fit ${className}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      ref={triggerRef}
     >
-      <span
-        className={`flex justify-center items-center tooltipText absolute bg-[#92EADC] w-max max-w-[300px] text-darkCharcoal whitespace-nowrap p-[10px] border border-primary rounded-md opacity-0 before:absolute before:w-3 before:h-3 before:bg-[#92EADC] before:border-t before:border-primary before:border-r ${position === "top" &&
-          `${styles.top} hidden left-1/2 transform -translate-x-1/2 before:left-1/2 before:-translate-x-1/2 before:bottom-[-7px] before:transform before:rotate-[135deg]`
-          } 
-        ${position === "bottom" &&
-          `${styles.bottom} hidden left-1/2 transform -translate-x-1/2 before:left-1/2 before:-translate-x-1/2 before:top-[-7px] before:transform before:rotate-[-45deg]`
-          } 
-        ${position === "left" &&
-          `${styles.left} hidden top-1/2 transform -translate-y-1/2 before:top-1/2 before:-translate-y-1/2 before:right-[-7px] before:transform before:rotate-[45deg]`
-          } 
-        ${position === "right" &&
-          `${styles.right} hidden top-1/2 transform -translate-y-1/2 before:top-1/2 before:-translate-y-1/2 before:left-[-7px] before:transform before:rotate-[-135deg]`
-          }`}
-        style={{
-          wordWrap: "break-word",
-          whiteSpace: "unset",
-        }}
-      >
-        {content}
-      </span>
       <span>{children}</span>
+      {visible &&
+        ReactDOM.createPortal(
+          <span
+            className={`${position} z-[10] tooltipText absolute bg-[#92EADC] w-max max-w-[300px] text-darkCharcoal whitespace-nowrap p-[10px] border border-primary rounded-md ${styles[position]}`}
+            style={{ ...tooltipStyle, position: 'fixed' }}
+            ref={tooltipRef}
+          >
+            {content}
+          </span>,
+          document.body
+        )}
     </div>
   );
 };
