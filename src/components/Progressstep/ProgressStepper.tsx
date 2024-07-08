@@ -28,9 +28,7 @@ const ProgressStep = ({
 
             </button >
             {(activeStep == index) && <span className="absolute z-[-1] top-0.5 left-0.5  flex inset-0 rounded-full overflow-visible">
-              <span
-                className={`${style.rippleAnimation} absolute !w-7 !h-7 rounded-full bg-primary opacity-50`}
-              ></span>
+              <span className={`${style.rippleAnimation} absolute !w-7 !h-7 rounded-full opacity-50`}/>
             </span>}
           </div>
           <label htmlFor={step + index + ""} className={`text-base flex ${isClickEnable ? "cursor-pointer" : "pointer-events-none cursor-default"} justify-center items-center text-center w-full mt-2 font-medium font-proxima ${activeStep < index ? "text-slatyGrey" : "text-primary"} `}>{step}</label>

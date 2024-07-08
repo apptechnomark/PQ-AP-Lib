@@ -1,5 +1,4 @@
 import React from "react";
-
 import style from "./Badge.module.scss";
 
 interface BadgeProps {
@@ -32,39 +31,34 @@ const Badge = ({
   const getColor = (type: string) => {
     switch (type) {
       case "dark":
-        return "#333333";
-        break;
+        return { bg: "#333333", text: "#333333" };
       case "secondary":
-        return "#069CDE";
-        break;
+        return { bg: "#069CDE", text: "#069CDE" };
       case "graph":
-        return "#EA6A47";
-        break;
+        return { bg: "#EA6A47", text: "#EA6A47" };
       case "success":
-        return "#198754";
-        break;
+        return { bg: "#198754", text: "#198754" };
       case "warning":
-        return "#FFC107";
-        break;
+        return { bg: "#FFC107", text: "#664D03" };
       case "error":
-        return "#DC3545";
-        break;
+        return { bg: "#DC3545", text: "#DC3545" };
       default:
-        return "#02B89D";
-        break;
+        return { bg: "#02B89D", text: "#02B89D" };
     }
   };
+
   return (
     <div
       style={
         variant === "pill"
           ? {
-              borderColor: `${getColor(badgetype)}`,
-              color: `${effect ? getColor(badgetype) : ""}`,
-              background: `${getColor(badgetype)}0D`,
+              borderColor: `${getColor(badgetype).bg}`,
+              color: `${effect ? getColor(badgetype).text : ""}`,
+              background: `${getColor(badgetype).bg}0D`,
             }
           : {
-              backgroundColor: `${getColor(badgetype)}`,
+              backgroundColor: `${getColor(badgetype).bg}`,
+              color: `${getColor(badgetype).text}`,
               width: width ? width : "18px",
               height: height ? height : "18px",
             }
@@ -72,7 +66,7 @@ const Badge = ({
       className={`${
         variant === "pill"
           ? `px-5 py-[10px] h-[27px] w-[82px] border rounded-[33px] text-[14px] font-normal leading-[16.8px] tracking-[0.28px]`
-          : `h-[18px] w-[18px] border-none rounded-full text-white text-[10px] font-semibold leading-[9px] tracking-[0.8px]`
+          : `h-[18px] w-[18px] border-none rounded-full text-[10px] font-semibold leading-[9px] tracking-[0.8px]`
       } flex items-center justify-center`}
     >
       {variant === "dot" ? (
@@ -81,14 +75,14 @@ const Badge = ({
             style={
               variant === "dot" && effect
                 ? {
-                    borderColor: `${getColor(badgetype)}`,
-                    boxShadow: `0 0 0 0 ${getColor(badgetype)}`,
+                    borderColor: `${getColor(badgetype).bg}`,
+                    boxShadow: `0 0 0 0 ${getColor(badgetype).bg}`,
                   }
                 : {
                     animation: "none",
                   }
             }
-            className={style.indicate}
+            className={`${style.indicate} text-pureWhite`}
           >
             {parseInt(text) > 99 ? "99+" : text}
             {effect && <span className={`${style.indicateBorder}`}></span>}
