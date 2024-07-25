@@ -38,7 +38,7 @@ const CheckBox = ({
     } else {
       getError && getError(false);
     }
-  }, [isChecked, isTouched, required, getError]);
+  }, [isChecked, isTouched, required]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
