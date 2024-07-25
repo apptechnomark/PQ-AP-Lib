@@ -404,6 +404,7 @@ const AvatarMultiSelect: React.FC<CompanyListProps> = ({
                         onChange={() => {
                           handleCheckboxChange(option.value);
                         }}
+                        getError={() => {}}
                       />
                     </div>
                   )}

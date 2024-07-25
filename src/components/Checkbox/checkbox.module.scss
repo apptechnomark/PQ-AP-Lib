@@ -78,6 +78,11 @@ $defaultRed: #dc3545;
         }
       }
     }
+    .requiredError {
+      > .checkBoxSpan {
+        border-color: $defaultRed;
+      }
+    }
   }
   &:disabled {
     + {
@@ -138,6 +143,11 @@ $defaultRed: #dc3545;
         > .checkBoxSpan {
           border-color: $primary;
         }
+      }
+    }
+    .requiredError {
+      > .checkBoxSpan {
+        border-color: $defaultRed;
       }
     }
   }
@@ -298,6 +308,11 @@ $defaultRed: #dc3545;
         }
       }
     }
+    .requiredError {
+      > .checkBoxSpan {
+        border-color: $defaultRed;
+      }
+    }
   }
   &:disabled {
     + {
@@ -352,4 +367,15 @@ $defaultRed: #dc3545;
       }
     }
   }
+}
+
+.errorMessage {
+  color: $defaultRed;
+  font-size: 12px;
+  margin-left: 8px;
+  display: inline-block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
 }
