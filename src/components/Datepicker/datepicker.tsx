@@ -66,7 +66,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
   const [selectedDate, setSelectedDate] = useState<Date>(
     value ? valueDate : currentDate
   );
-  const [fullDate, setFullDate] = useState<string>(value ? value : "");
+  const [fullDate, setFullDate] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [toggleOpen, setToggleOpen] = useState<boolean>(false);
   const [animate, setAnimate] = useState<string>("");
@@ -280,7 +280,6 @@ const Datepicker: React.FC<DatepickerProps> = ({
       setFocus(hasError);
     }
   }, [validate, errorMessage, hasError]);
-  console.log("fullDate", fullDate);
 
   useEffect(() => {
     getValue(fullDate);
