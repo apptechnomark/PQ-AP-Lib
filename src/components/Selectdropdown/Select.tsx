@@ -317,7 +317,7 @@ const Select: React.FC<SelectProps> = ({
             : isOpen
               ? "border-primary"
               : inputValue
-                ? "border-primary"
+                ? "border-lightSilver"
                 : error
                   ? "border-defaultRed"
                   : `border-lightSilver ${noborder ? "" : "after:block"
@@ -331,7 +331,7 @@ const Select: React.FC<SelectProps> = ({
             className={`text-[12px] font-normal w-full ${isOpen
                 ? "text-primary"
                 : inputValue
-                  ? "text-primary"
+                  ? "text-slatyGrey"
                   : error
                     ? "text-defaultRed"
                     : "text-slatyGrey"

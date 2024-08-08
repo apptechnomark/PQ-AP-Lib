@@ -304,13 +304,14 @@ const Datepicker: React.FC<DatepickerProps> = ({
       {label && (
         <span className="flex">
           <label
-            className={`text-[12px] py-1 ${
-              err
-                ? "text-defaultRed"
-                : focus
-                ? "text-primary !font-normal"
-                : "text-slatyGrey !font-normal"
-            }`}
+            className={`text-[12px] py-1 ${toggleOpen
+              ? "text-primary"
+              : focus
+                ? "text-primary"
+                : err
+                  ? "text-defaultRed"
+                  : "text-slatyGrey"
+            } ${!toggleOpen && "text-slatyGrey"}`}
           >
             {label}
           </label>
@@ -336,14 +337,14 @@ const Datepicker: React.FC<DatepickerProps> = ({
         <input
           type="text"
           placeholder={format}
-          className={`text-[14px] py-[1px] w-full tracking-wider border-b placeholder:font-proxima
+          className={`text-[14px] py-[1px] hover:cursor-pointer w-full tracking-wider border-b placeholder:font-proxima
                     ${
                       disabled
                         ? "border-lightSilver pointer-events-none"
                         : toggleOpen && !err
                         ? "border-primary placeholder:text-primary"
                         : fullDate
-                        ? "border-primary"
+                        ? "border-lightSilver hover:border-primary"
                         : err
                         ? "border-defaultRed text-defaultRed placeholder:text-defaultRed"
                         : "text-darkCharcoal border-lightSilver hover:border-primary  transition-colors duration-300 ease-in-out"

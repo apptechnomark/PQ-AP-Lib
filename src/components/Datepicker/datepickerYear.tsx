@@ -116,6 +116,7 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
     setToday(newDate);
     setShowYearList(false);
     setSelectedYear(year);
+    setCurrentPage(getCurrentPageForYear(year));
     setTimeout(() => {
       setAnimate("");
       setShowMonthList(true);
@@ -129,13 +130,24 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
     currentPage > 1 ? setCurrentPage(currentPage - 1) : currentPage;
   };
 
+  const getCurrentPageForYear = (year: number) => {
+    return Math.ceil((year - startYear + 1) / yearsPerPage);
+  };
+
   const calendarShow = () => {
     setToggleOpen(true);
     setShowYearList(true);
+    setCurrentPage(getCurrentPageForYear(selectedYear));
   };
 
   useEffect(() => {
     setFullDate(value);
+    if (value) {
+      const [month, year] = value.split("/");
+      setSelectedMonth(parseInt(month) - 1);
+      setSelectedYear(parseInt(year));
+      setToday(new Date(parseInt(year), parseInt(month) - 1, 1));
+    }
   }, [value]);
 
   useEffect(() => {
@@ -175,10 +187,7 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
       setShowYearList(true);
       setSelectedMonth(inputDate.getMonth());
       setSelectedYear(inputDate.getFullYear());
-      const selectedYearPageIndex = Math.ceil(
-        (inputDate.getFullYear() - startYear + 1) / yearsPerPage
-      );
-      setCurrentPage(selectedYearPageIndex);
+      setCurrentPage(getCurrentPageForYear(inputDate.getFullYear()));
     } else {
       setToggleOpen(false);
     }
@@ -213,21 +222,21 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
       {label && (
         <span className="flex">
           <label
-            className={`text-[12px] py-1 ${
-              err
-                ? "text-defaultRed"
-                : focus
-                ? "text-primary !font-normal"
-                : "text-slatyGrey !font-normal"
-            }`}
+            className={`text-[12px] py-1 ${toggleOpen
+              ? "text-primary"
+              : focus
+                ? "text-primary"
+                : err
+                  ? "text-defaultRed"
+                  : "text-slatyGrey"
+              } ${!toggleOpen && "text-slatyGrey"}`}
           >
             {label}
           </label>
           {validate && (
             <span
-              className={` w-3 h-4 ${
-                disabled ? "text-slatyGrey" : "text-defaultRed"
-              }`}
+              className={` w-3 h-4 ${disabled ? "text-slatyGrey" : "text-defaultRed"
+                }`}
             >
               &nbsp;*
             </span>
@@ -238,17 +247,16 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
         <input
           type="text"
           placeholder="mm/yyyy"
-          className={`text-[14px] py-[0.5px] w-full tracking-wider placeholder:tracking-wider font-proxima border-b placeholder:text-[14px] bg-transparent ${
-            disabled
-              ? "border-lightSilver pointer-events-none"
-              : toggleOpen && !err
+          className={`text-[14px] py-[0.5px] w-full tracking-wider hover:cursor-pointer placeholder:tracking-wider font-proxima border-b placeholder:text-[14px] bg-transparent ${disabled
+            ? "border-lightSilver pointer-events-none"
+            : toggleOpen && !err
               ? "border-primary placeholder:text-primary"
               : fullDate
-              ? "border-primary"
-              : err
-              ? "border-defaultRed text-defaultRed placeholder:text-defaultRed"
-              : "text-darkCharcoal border-lightSilver hover:border-primary  transition-colors duration-300 ease-in-out"
-          } outline-none`}
+                ? "border-lightSilver hover:border-primary"
+                : err
+                  ? "border-defaultRed text-defaultRed placeholder:text-defaultRed"
+                  : "text-darkCharcoal border-lightSilver hover:border-primary  transition-colors duration-300 ease-in-out"
+            } outline-none`}
           onClick={calendarShow}
           readOnly
           value={fullDate}
@@ -274,9 +282,8 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
       {toggleOpen && (
         <div className="relative">
           <div
-            className={`bottomAnimation absolute z-20  bg-white ${
-              toggleOpen && style.bottomAnimation
-            }`}
+            className={`bottomAnimation absolute z-20  bg-white ${toggleOpen && style.bottomAnimation
+              }`}
           >
             <div className="flex mx-auto  items-center">
               <div className="shadow-md overflow-hidden">
@@ -304,11 +311,10 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
                       {showYearList === true && currentPage <= totalPages && (
                         <>
                           <div
-                            className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray ${
-                              currentPage === 1
-                                ? "opacity-40 pointer-events-none"
-                                : ""
-                            } text-[20px]`}
+                            className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray ${currentPage === 1
+                              ? "opacity-40 pointer-events-none"
+                              : ""
+                              } text-[20px]`}
                             onClick={() => {
                               if (currentPage === 1) {
                                 return;
@@ -319,11 +325,10 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
                             <ChevronLeftIcon />
                           </div>
                           <div
-                            className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray ${
-                              currentPage === totalPages
-                                ? "opacity-40 pointer-events-none"
-                                : ""
-                            } rotate-180 text-[20px]`}
+                            className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray ${currentPage === totalPages
+                              ? "opacity-40 pointer-events-none"
+                              : ""
+                              } rotate-180 text-[20px]`}
                             onClick={() => {
                               if (currentPage === totalPages) {
                                 return;
@@ -349,11 +354,10 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
                             onClick={() => selectMonth(index + 1)}
                           >
                             <div
-                              className={`py-[20px]  px-5 text-sm hover:bg-lightGreen hover:text-primary transition-all duration-200 flex items-center justify-center rounded-md ${
-                                index === selectedMonth
-                                  ? "bg-lightGreen text-primary"
-                                  : ""
-                              }`}
+                              className={`py-[20px]  px-5 text-sm hover:bg-lightGreen hover:text-primary transition-all duration-200 flex items-center justify-center rounded-md ${index === selectedMonth
+                                ? "bg-lightGreen text-primary"
+                                : ""
+                                }`}
                             >
                               {month.length > 5 ? month.slice(0, 3) : month}
                             </div>
@@ -376,11 +380,10 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
                               onClick={() => selectYear(year)}
                             >
                               <div
-                                className={`py-[18px] px-5 text-sm hover:bg-lightGreen hover:text-primary transition-all duration-200 flex items-center justify-center rounded-md ${
-                                  year === selectedYear
-                                    ? "bg-lightGreen text-primary"
-                                    : ""
-                                }`}
+                                className={`py-[18px] px-5 text-sm hover:bg-lightGreen hover:text-primary transition-all duration-200 flex items-center justify-center rounded-md ${year === selectedYear
+                                  ? "bg-lightGreen text-primary"
+                                  : ""
+                                  }`}
                               >
                                 {year}
                               </div>

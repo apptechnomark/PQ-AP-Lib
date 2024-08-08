@@ -137,7 +137,7 @@ const Text: React.FC<InputProps> = ({
           <label
             className={`text-[12px] ${err
               ? "text-defaultRed"
-              : focus && value != undefined || value != ""
+              : focus
                 ? "text-primary"
                 : "text-slatyGrey"
               }`}
@@ -166,7 +166,7 @@ const Text: React.FC<InputProps> = ({
           className={`${className} placeholder:text-[14px] text-[14px] ${err && "text-defaultRed placeholder:text-defaultRed "} py-1 ${noborder ? '' : 'border-b'} outline-none transition duration-600 w-full h-full ${disabled ? "text-slatyGrey" : "text-darkCharcoal"
             } ${err
               ? "border-b-defaultRed"
-              : focus && value != undefined || value != ""
+              : focus
                 ? "border-b-primary"
                 : "border-b-lightSilver"
             }`}

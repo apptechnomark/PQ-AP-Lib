@@ -261,12 +261,16 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
 
   return (
     <>
-      <div className={`${styles.customScrollbar} relative font-medium w-full ${noborder ? "" : "border-b"} ${selectedValues.length > 0
+      <div className={`${styles.customScrollbar} relative font-medium w-full flex-row outline-none ${noborder ? "" : "border-b"} 
+      ${isOpen
         ? "border-primary"
+        : selectedValues.length > 0
+        ? "border-lightSilver"
         : error
           ? "border-defaultRed"
-          : `border-lightSilver ${noborder ? "" : "after:block"} absolute after:border-b after:mb-[-1px] after:border-primary after:scale-x-0 after:origin-left after:transition after:ease-in-out after:duration-1000 hover:after:scale-x-100`
-        } ${className}`}
+          : `border-lightSilver`
+        } ${noborder ? "" : "after:block"
+        } absolute after:border-b after:mb-[-1px] after:border-primary after:scale-x-0 after:origin-left after:transition after:ease-in-out after:duration-1000 hover:after:scale-x-100 ${className}`}
         ref={selectRef}
       >
         {label && (
@@ -274,7 +278,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
             className={`text-[12px] font-normal ${isOpen
               ? "text-primary"
               : selectedValues.length > 0
-                ? "text-primary"
+                ? "text-slatyGrey"
                 : error
                   ? "text-defaultRed"
                   : "text-slatyGrey"
@@ -295,7 +299,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               onKeyDown={(e) =>
                 (e.key === "Enter") && handleToggleOpen()
               }
-              >
+            >
               <input
                 tabIndex={-1}
                 onBlur={handleBlur}
@@ -326,7 +330,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               tabIndex={-1}
               onClick={handleToggleOpen}
               className={`${error && " text-defaultRed"
-                } text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer  ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
+                } text-[1.5rem] transition-transform text-darkCharcoal cursor-pointer ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
                 }
               }`}
             >
