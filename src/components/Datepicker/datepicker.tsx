@@ -198,7 +198,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
   };
 
   const calendarShow = () => {
-    setToggleOpen(true);
+    !disabled && setToggleOpen(true);
     setToday(selectedDate);
   };
 
@@ -361,7 +361,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
         />
         {!hideIcon && (
           <span
-            className="absolute right-0 bottom-0.5 cursor-pointer"
+            className={`absolute right-0 bottom-0.5 ${disabled ? 'cursor-default' : 'cursor-pointer'}`}
             onClick={calendarShow}
           >
             <CalendarIcon

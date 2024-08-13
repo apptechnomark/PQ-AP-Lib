@@ -136,7 +136,12 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
 
   const calendarShow = () => {
     setToggleOpen(true);
-    setShowYearList(true);
+    if (fullDate) {
+      setShowYearList(false);
+      setShowMonthList(true);
+    } else {
+      setShowYearList(true);
+    }
     setCurrentPage(getCurrentPageForYear(selectedYear));
   };
 
