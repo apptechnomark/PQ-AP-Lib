@@ -49,6 +49,7 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   noborder?: boolean;
   hideIcon?: boolean;
   openTop?: boolean;
+  isNone?:boolean
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -84,7 +85,11 @@ const Select: React.FC<SelectProps> = ({
   hideIcon,
   noborder,
   openTop = false,
+  isNone = false,
 }) => {
+  const updatedOptions = isNone
+    ? [{ value: null, label: "None" }, ...options]
+    : options;
   const [inputValue, setInputValue] = useState("");
   const [inputLabel, setInputLabel] = useState("");
   const [searchValue, setSearchValue] = useState("");
@@ -94,7 +99,7 @@ const Select: React.FC<SelectProps> = ({
   const selectRef = useRef<HTMLDivElement>(null);
   const [selectedOption, setSelectedOption] = useState<Option | null>(
     defaultValue
-      ? options.find((option) => option.value === defaultValue) ?? null
+      ? updatedOptions.find((option) => option.value === defaultValue) ?? null
       : null
   );
   const [editing, setEditing] = useState(false);
@@ -104,7 +109,7 @@ const Select: React.FC<SelectProps> = ({
   const [textNameHasError, setTextNameHasError] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
 
-  const filteredOptions = options.filter((option) =>
+  const filteredOptions = updatedOptions.filter((option) =>
     option.label.toLowerCase().includes(searchValue)
   );
 
@@ -184,27 +189,24 @@ const Select: React.FC<SelectProps> = ({
   };
 
   const handleSelect = (value: any) => {
-    let newOptions = [];
-    if (!!options && options.length > 0) {
-      newOptions = [...newOptions, ...options];
-    }
-
-    setSelectedOption(newOptions.find((option) => option.value === value));
-    setInputValue("");
-    setSearchValue("");
-    setIsOpen(false);
-
-    if (!value) {
-      setError(true);
-      getError(false);
-      setErrMsg("Please select a valid option.");
+    if (value === null) {
+      setSelectedOption(null);
+      setInputValue("");
+      setSearchValue("");
+      setIsOpen(false);
+      getValue(null);
+      getError(true);
+      setFocusedIndex(-1);
     } else {
-      setError(false);
-      setErrMsg("");
+      const selected = updatedOptions.find((option) => option.value === value);
+      setSelectedOption(selected || null);
+      setInputValue("");
+      setSearchValue("");
+      setIsOpen(false);
       getValue(value);
       getError(true);
+      setFocusedIndex(-1);
     }
-    setFocusedIndex(-1);
   };
 
   const handleBlur = () => {
@@ -268,7 +270,7 @@ const Select: React.FC<SelectProps> = ({
     } else if (e.key === "ArrowUp" && index > 0) {
       e.preventDefault();
       setFocusedIndex(index - 1);
-    } else if (e.key === "ArrowDown" && index < options.length - 1) {
+    } else if (e.key === "ArrowDown" && index < updatedOptions.length - 1) {
       e.preventDefault();
       setFocusedIndex(index + 1);
     }
@@ -287,7 +289,7 @@ const Select: React.FC<SelectProps> = ({
     if (value.key === "ArrowUp" && focusedIndex > 0) {
       value.preventDefault();
       setFocusedIndex(focusedIndex - 1);
-    } else if (value.key === "ArrowDown" && focusedIndex < options.length - 1) {
+    } else if (value.key === "ArrowDown" && focusedIndex < updatedOptions.length - 1) {
       value.preventDefault();
       setFocusedIndex(focusedIndex + 1);
     } else if (value.key === "Escape") {
@@ -297,8 +299,8 @@ const Select: React.FC<SelectProps> = ({
   };
 
   let newOptions = [];
-  if (!!options && options.length > 0) {
-    newOptions = [...newOptions, ...options];
+  if (!!updatedOptions && updatedOptions.length > 0) {
+    newOptions = [...newOptions, ...updatedOptions];
   }
 
   let newFilteredOptions = [];

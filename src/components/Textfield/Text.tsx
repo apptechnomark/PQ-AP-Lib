@@ -1,4 +1,4 @@
-import React, { LegacyRef, useEffect, useRef, useState } from "react";
+import React, { LegacyRef, useEffect, useState } from "react";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputRef?: LegacyRef<HTMLInputElement>;
@@ -52,7 +52,6 @@ const Text: React.FC<InputProps> = ({
   rangeBetween,
   ...props
 }) => {
-  // const inputRef = useRef<HTMLInputElement>(null);
   const [err, setErr] = useState<boolean>(false);
   const [focus, setFocus] = useState<boolean>(false);
   const [errMsg, setErrMsg] = useState<string>(errorMessage);
@@ -63,8 +62,7 @@ const Text: React.FC<InputProps> = ({
     setErrMsg(errorMessage);
   }, [hasError, errorMessage]);
 
-  const validateInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value.trim();
+  const validateInput = (inputValue: string) => {
     if (disabled) {
       return;
     }
@@ -116,10 +114,6 @@ const Text: React.FC<InputProps> = ({
     setFocus(true);
   };
 
-  const focusHandler = () => {
-    setFocus(true);
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     getValue(e.target.value);
     if (onChange) {
@@ -127,6 +121,21 @@ const Text: React.FC<InputProps> = ({
     }
     if (err) {
       setErr(false);
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (onBlur) {
+      onBlur(e);
+    }
+    if (validate) {
+      validateInput(e.target.value);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Tab') {
+      handleBlur(e as unknown as React.FocusEvent<HTMLInputElement>);
     }
   };
 
@@ -175,17 +184,10 @@ const Text: React.FC<InputProps> = ({
           name={name}
           value={value}
           disabled={disabled}
-          onBlur={
-            onBlur
-              ? onBlur
-              : validate
-                ? validateInput
-                : !validate
-                  ? focusHandler
-                  : undefined
-          }
+          onBlur={handleBlur}
           onChange={handleInputChange}
           onFocus={handleFocus}
+          onKeyDown={handleKeyDown}
           tabIndex={0}
           {...props}
         />

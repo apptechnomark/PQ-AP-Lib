@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ChevronRight from "./icons/ChevronRight";
 import SortIcon from "./icons/SortIcon";
-import styles from "./Datatable.module.scss";
 
 interface AComponentProps {
   children: string;
@@ -20,43 +19,41 @@ interface Column {
   header: any;
   accessor: string;
   sortable: boolean;
-  colType?: "number" | "string" | "boolean" | "date"
+  colType?: "number" | "string" | "boolean" | "date";
   colStyle?: string;
   rowStyle?: string;
   colalign?: "left" | "center" | "right";
+  group?: number; // Added for column grouping
+  groupLabel?: any;
+  hideGroupLabel?: boolean;
 }
 
 interface DataTableProps {
   columns: Column[];
-  stickyPostion?: string;
   data: any[];
   align?: "left" | "center" | "right";
   expandable?: boolean;
-  getExpandableData: (arg1: any) => void;
-  getRowId?: (arg1: any) => void;
+  getExpandableData: any;
+  getRowId?: any;
   isExpanded?: boolean;
   expandableStyle?: ExpandableStyle;
   sticky?: boolean;
   hoverEffect?: boolean;
   noHeader?: boolean;
   userClass?: string;
-  isTableLayoutFixed?: boolean
-  isRowDisabled?: boolean,
-  lazyLoadRows?: number;
+  isTableLayoutFixed?: boolean;
+  isRowDisabled?: boolean;
+  lazyLoadRows?: any;
   isHeaderTextBreak?: boolean;
+  columnGrouping?: boolean;
+  expandOneOnly?: boolean;
+  zIndex?: number;
 }
 
-// interface SortConfig {
-//   key: string | null;
-//   direction: 'asc' | 'desc' | string;
-//   colType?: 'number' | 'string' | 'boolean' | 'date';
-// }
-
-const DataTable = ({
+const DataTableDashboard = ({
   columns,
   data,
   align = "left",
-  stickyPostion,
   expandable,
   isExpanded = false,
   expandableStyle,
@@ -70,24 +67,26 @@ const DataTable = ({
   isRowDisabled = false,
   lazyLoadRows,
   isHeaderTextBreak = false,
+  columnGrouping = false,
+  expandOneOnly = true,
+  zIndex = 1,
 }: DataTableProps) => {
   const tableRef = useRef<HTMLTableElement>(null);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: '' });
-  const [expandedRows, setExpandedRows] = useState(new Set());
-  const [sortedRowIndices, setSortedRowIndices] = useState({});
-  const [visibleRows, setVisibleRows] = useState(lazyLoadRows);
+  const [sortConfig, setSortConfig] = useState<any>({
+    key: null,
+    direction: "",
+  });
+  const [expandedRows, setExpandedRows] = useState<any>(new Set());
+  const [sortedRowIndices, setSortedRowIndices] = useState<any>({});
+  const [visibleRows, setVisibleRows] = useState<any>(lazyLoadRows);
 
   const lastRowRef = useRef<HTMLTableRowElement>(null);
 
   const [totalItems, setTotalItems] = useState(data.length);
 
   const lazyLoadNext = (numRows: number) => {
-    setVisibleRows((prev) => Math.min(prev + numRows, totalItems));
-  }
-  useEffect(() => {
-    setTotalItems(data.length);
-  }, [data]);
-
+    setVisibleRows((prev: any) => Math.min(prev + numRows, totalItems));
+  };
 
   const lazyLoadBuffer = useCallback(() => {
     if (lastRowRef.current) {
@@ -101,28 +100,6 @@ const DataTable = ({
     }
   }, [lazyLoadRows]);
 
-  useEffect(() => {
-    const cleanupObserver = lazyLoadBuffer();
-    return cleanupObserver;
-  }, [lazyLoadBuffer]);
-
-
-  // const lazyLoadBuffer = () => {
-  //   if (!tableRef.current) return;
-
-  //   const { scrollTop, clientHeight, scrollHeight } = tableRef.current;
-  //   if (scrollTop + clientHeight >= scrollHeight) {
-  //     lazyLoadNext(lazyLoadRows);
-  //   }
-  // };
-
-  useEffect(() => {
-    window.addEventListener("scroll", lazyLoadBuffer);
-    return () => {
-      window.removeEventListener("scroll", lazyLoadBuffer);
-    };
-  }, []);
-
   const handleSort = (columnKey: string) => {
     let direction = "asc";
     if (sortConfig.key === columnKey && sortConfig.direction === "asc") {
@@ -133,13 +110,16 @@ const DataTable = ({
 
   const handleRowToggle = (rowIndex: any) => {
     getExpandableData(data[rowIndex]);
-    const isRowExpanded = expandedRows.has(rowIndex);
+    const isRowExpanded = expandedRows.has(rowIndex); // unused code
     const newExpandedRows = new Set(expandedRows);
 
     if (newExpandedRows.has(rowIndex)) {
       newExpandedRows.delete(rowIndex);
     } else {
-      newExpandedRows.clear();
+      if (expandOneOnly === true) {
+        newExpandedRows.clear();
+        newExpandedRows.add(rowIndex);
+      }
       newExpandedRows.add(rowIndex);
     }
 
@@ -150,15 +130,70 @@ const DataTable = ({
     getExpandableData(data[rowIndex]);
   };
 
+  const handleGetIdHover = (itemKey: any) => {
+    const currentIndex = sortedRowIndices[itemKey];
+    if (currentIndex !== undefined) {
+      getRowId(sortedData[currentIndex]);
+    } else {
+      getRowId(null);
+    }
+  };
+
+  const getAlignment = (align?: string) => {
+    switch (align) {
+      case "left":
+        return "start";
+      case "center":
+        return "center";
+      case "right":
+        return "end";
+      default:
+        return "start";
+    }
+  };
+
+  useEffect(() => {
+    if (isExpanded === true) {
+      const initialExpandedRows = new Set(expandedRows);
+
+      data.forEach((item: any, index: number) => {
+        initialExpandedRows.add(index);
+      });
+      setExpandedRows(initialExpandedRows);
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   const handleOutsideClick = (event: MouseEvent) => {
+  //     if (
+  //       tableRef?.current &&
+  //       !tableRef?.current.contains(event?.target as Node)
+  //     ) {
+  //       setExpandedRows(new Set());
+  //     }
+  //   };
+  //   document.addEventListener("click", handleOutsideClick);
+  //   return () => {
+  //     document.removeEventListener("click", handleOutsideClick);
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", lazyLoadBuffer);
+    return () => {
+      window.removeEventListener("scroll", lazyLoadBuffer);
+    };
+  }, []);
+
   const sortedData = React.useMemo(() => {
     if (!sortConfig.key) return data;
 
     const sorted = [...data].sort((a, b) => {
-      let aValue = a[sortConfig.key] ?? '';
-      let bValue = b[sortConfig.key] ?? '';
+      let aValue = a[sortConfig.key] ?? "";
+      let bValue = b[sortConfig.key] ?? "";
 
-      if (aValue == null) aValue = '';
-      if (bValue == null) bValue = '';
+      if (aValue == null) aValue = "";
+      if (bValue == null) bValue = "";
 
       if (React.isValidElement(aValue) && React.isValidElement(bValue)) {
         const aProps = aValue.props as AComponentProps;
@@ -177,6 +212,8 @@ const DataTable = ({
           return sortConfig.direction === "asc"
             ? aPropValue - bPropValue
             : bPropValue - aPropValue;
+        } else {
+          return 0; // If children are not both strings or both numbers
         }
       } else if (typeof aValue === "string" && typeof bValue === "string") {
         return sortConfig.direction === "asc"
@@ -187,8 +224,7 @@ const DataTable = ({
           ? aValue - bValue
           : bValue - aValue;
       } else {
-        // Handle other data types here if needed
-        return 0;
+        return 0; // If values are not both strings or both numbers
       }
     });
 
@@ -196,77 +232,220 @@ const DataTable = ({
   }, [data, sortConfig]);
 
   useEffect(() => {
-    const newSortedRowIndices = {};
-    sortedData?.forEach((row, index) => {
+    const newSortedRowIndices: any = {};
+    sortedData?.forEach((row, index: any) => {
       newSortedRowIndices[index] = index;
     });
     setSortedRowIndices(newSortedRowIndices);
   }, [sortedData]);
 
-  const handleGetIdHover = (itemKey: any) => {
-    const currentIndex = sortedRowIndices[itemKey];
-    if (currentIndex !== undefined) {
-      getRowId(sortedData[currentIndex]);
-    }
-    else {
-      getRowId(null)
-    }
-  };
-
-  const getAlignment = (align: string) => {
-    switch (align) {
-      case "left":
-        return "start";
-        break;
-      case "center":
-        return "center";
-        break;
-      case "right":
-        return "end";
-        break;
-      default:
-        return "start";
-        break;
-    }
-  };
+  useEffect(() => {
+    setTotalItems(data.length);
+  }, [data]);
 
   useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (
-        tableRef?.current &&
-        !tableRef?.current.contains(event?.target as Node)
-      ) {
-        setExpandedRows(new Set());
-      }
-    };
-    document.addEventListener("click", handleOutsideClick);
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, []);
+    const cleanupObserver = lazyLoadBuffer();
+    return cleanupObserver;
+  }, [lazyLoadBuffer]);
+
+  useEffect(() => {
+    if (columnGrouping) {
+      columns.sort((a: any, b: any) => {
+        if (a.group < b.group) return -1;
+        if (a.group > b.group) return 1;
+        return 0;
+      });
+    }
+  }, [columns]);
+
 
   return (
-    <table ref={tableRef} className={`w-full ${!!isTableLayoutFixed ? 'table-fixed' : ''}`}>
-      <thead className={`${sticky && styles?.customDataTable} `}>
+    <table
+      ref={tableRef}
+      className={`w-full border-separate border-spacing-0 ${
+        !!isTableLayoutFixed ? "table-fixed" : ""
+      }`}
+    >
+      <thead
+        style={
+          sticky
+            ? {
+                position: "sticky",
+                top: 0,
+                backgroundColor: "white",
+                zIndex: zIndex,
+              }
+            : {}
+        }
+      >
+        {columnGrouping && (
+          <tr className="w-full">
+            {expandable && (
+              <th
+                style={
+                  sticky
+                    ? {
+                        position: "sticky",
+                        top: 0,
+                        backgroundColor: "white",
+                        zIndex: zIndex,
+                      }
+                    : {}
+                }
+                rowSpan={2}
+                className={`h-12 w-8 border-y border-y-pureBlack ${expandableStyle?.columns}`}
+              ></th>
+            )}
+            {Array.from(new Set(columns.map((col) => col.group))).map(
+              (group, index) => {
+                const temp = columns.find((col) => col.group === group);
+                return temp?.hideGroupLabel ? (
+                  columns
+                    .filter((col) => col.group === group)
+                    .map((colItem, colIndex) => (
+                      <th
+                        style={
+                          sticky
+                            ? {
+                                position: "sticky",
+                                top: 0,
+                                backgroundColor: "white",
+                                zIndex: zIndex,
+                              }
+                            : {}
+                        }
+                        rowSpan={colItem?.hideGroupLabel ? 2 : 1}
+                        className={`border-y border-y-pureBlack min-w-[100px] ${
+                          colItem?.colStyle
+                        } h-12 ${columns.length === index ? "" : "border-l"}
+            p-2 font-proxima text-sm font-bold  ${
+              !isHeaderTextBreak ? "whitespace-nowrap" : ""
+            } ${colItem?.sortable ? "cursor-pointer" : "cursor-default"}`}
+                        key={index}
+                        onClick={() =>
+                          colItem?.sortable && handleSort(colItem?.accessor)
+                        }
+                      >
+                        {colItem?.sortable ? (
+                          <span
+                            className={`flex items-center font-proxima justify-${getAlignment(
+                              colItem?.colalign
+                            )} gap-2 ${!!isHeaderTextBreak ? "break-all" : ""}`}
+                          >
+                            {colItem?.header}
+                            <SortIcon
+                              order={
+                                sortConfig?.key === colItem?.accessor &&
+                                sortConfig?.direction
+                              }
+                            />
+                          </span>
+                        ) : (
+                          <span
+                            className={`flex items-center font-proxima justify-${getAlignment(
+                              colItem?.colalign
+                            )} ${!!isHeaderTextBreak ? "break-all" : ""}`}
+                          >
+                            {colItem?.header}
+                          </span>
+                        )}
+                      </th>
+                    ))
+                ) : (
+                  <th
+                    style={
+                      sticky
+                        ? {
+                            position: "sticky",
+                            top: 0,
+                            backgroundColor: "white",
+                            zIndex: zIndex,
+                          }
+                        : {}
+                    }
+                    rowSpan={temp?.hideGroupLabel ? 2 : 1}
+                    className={`border-t border-t-pureBlack ${temp?.colStyle} ${
+                      Array.from(new Set(columns.map((col) => col.group)))
+                        .length === index
+                        ? ""
+                        : `border-l`
+                    } ${
+                      temp?.hideGroupLabel ? "" : "border-b"
+                    } h-12 p-2 font-proxima font-bold ${
+                      !isHeaderTextBreak ? "whitespace-nowrap" : ""
+                    } ${temp?.sortable ? "cursor-pointer" : "cursor-default"}`}
+                    colSpan={
+                      columns.filter((col) => col.group === group).length
+                    }
+                    key={index}
+                  >
+                    {temp?.hideGroupLabel
+                      ? ""
+                      : !!temp?.groupLabel
+                      ? temp.groupLabel
+                      : group}
+                  </th>
+                );
+              }
+            )}
+          </tr>
+        )}
         <tr
-          className={`w-full z-[5] top-0 ${sticky ? `${userClass ? `${userClass}` : `${stickyPostion} sticky`}  bg-pureWhite` : "static border-y border-textColor"
-            } ${noHeader ? "hidden " : ""}`}
+          className={`w-full border-t border-b border-b-pureBlack border-t-pureBlack ${
+            noHeader ? "hidden" : ""
+          }`}
         >
-          {expandable && (
-            <th className={`w-8 ${expandableStyle?.columns}`}></th>
-          )}
-          {columns?.map((column, colIndex) => (
+          {expandable && !columnGrouping && (
             <th
-              className={`${column?.colStyle} p-2 font-proxima h-12 text-sm font-bold  ${!isHeaderTextBreak ? 'whitespace-nowrap' : ''} ${column?.sortable ? "cursor-pointer" : "cursor-default"
-                }`}
+              style={
+                sticky
+                  ? {
+                      position: "sticky",
+                      top: 0,
+                      backgroundColor: "white",
+                      zIndex: zIndex,
+                    }
+                  : {}
+              }
+              className={`w-8 border-t border-t-pureBlack border-y border-y-pureBlack ${expandableStyle?.columns}`}
+            ></th>
+          )}
+          {(columnGrouping
+            ? columns.filter((col) => col.hideGroupLabel === false)
+            : columns
+          ).map((column, colIndex) => (
+            <th
+              style={
+                sticky
+                  ? {
+                      position: "sticky",
+                      top: 0,
+                      backgroundColor: "white",
+                      zIndex: zIndex,
+                    }
+                  : {}
+              }
+              className={`${
+                columnGrouping ? "" : "border-t border-t-pureBlack"
+              } border-b border-b-black min-w-[100px] !h-12 ${column?.colStyle} 
+              ${
+                columns.length === colIndex
+                  ? ""
+                  : columnGrouping
+                  ? "border-l"
+                  : ""
+              }
+              p-2 font-proxima text-sm font-bold  ${
+                !isHeaderTextBreak ? "whitespace-nowrap" : ""
+              } ${column?.sortable ? "cursor-pointer" : "cursor-default"}`}
               key={colIndex}
               onClick={() => column?.sortable && handleSort(column?.accessor)}
             >
               {column?.sortable ? (
                 <span
-                  className={`flex items-center font-proxima justify-${getAlignment(
+                  className={`flex text-ellipsis break-all items-center font-proxima justify-${getAlignment(
                     column?.colalign
-                  )} gap-2 ${!!isHeaderTextBreak ? 'break-all' : ''}`}
+                  )} gap-2 ${!!isHeaderTextBreak ? "break-all" : ""}`}
                 >
                   {column?.header}
                   <SortIcon
@@ -278,9 +457,9 @@ const DataTable = ({
                 </span>
               ) : (
                 <span
-                  className={`flex font-proxima items-center justify-${getAlignment(
+                  className={`flex items-center font-proxima justify-${getAlignment(
                     column?.colalign
-                  )} ${!!isHeaderTextBreak ? 'break-all' : ''}`}
+                  )} ${!!isHeaderTextBreak ? "break-all" : ""}`}
                 >
                   {column?.header}
                 </span>
@@ -292,60 +471,104 @@ const DataTable = ({
       <tbody>
         {sortedData?.slice(0, totalItems)?.map((row, rowIndex) => (
           <React.Fragment key={rowIndex}>
-            <tr key={row} className={`${hoverEffect ? "hover:bg-whiteSmoke" : ""} ${isRowDisabled && sortedData?.length !== (rowIndex + 1) ? `row-disabled` : ''}`}
+            <tr
+              key={row}
+              className={`${hoverEffect ? "hover:bg-whiteSmoke" : ""} `}
               onMouseEnter={() => {
-                setSortedRowIndices({ ...sortedRowIndices, [rowIndex]: rowIndex });
+                setSortedRowIndices({
+                  ...sortedRowIndices,
+                  [rowIndex]: rowIndex,
+                });
                 handleGetIdHover(rowIndex);
               }}
               onMouseLeave={() => {
-                setSortedRowIndices({ ...sortedRowIndices, [rowIndex]: undefined });
+                setSortedRowIndices({
+                  ...sortedRowIndices,
+                  [rowIndex]: undefined,
+                });
                 handleGetIdHover(undefined);
               }}
-              onClick={!getRowId && getExpandableData ? () => handleGetIdClick(rowIndex) : undefined}
+              onClick={
+                !getRowId && getExpandableData
+                  ? () => handleGetIdClick(rowIndex)
+                  : undefined
+              }
             >
+              {/* Render expandable column if enabled */}
               {expandable &&
                 (row?.details ? (
                   <td
-                    className={`${expandableStyle?.rows} text-[14px] font-proxima h-12 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"}  border-[#ccc] cursor-pointer`}
+                    className={`${
+                      expandableStyle?.rows
+                    } h-12 font-proxima text-[14px] ${
+                      expandedRows.has(rowIndex) ? "border-none" : "border-b"
+                    }  cursor-pointer border-[#ccc]`}
                     onClick={() => handleRowToggle(rowIndex)}
                   >
-                    <div className={`flex justify-center items-center transition-transform p-4 ${expandedRows.has(rowIndex) || isExpanded ? "-rotate-90 duration-300" : "duration-200 rotate-90"}`}>
+                    <div
+                      className={`flex items-center justify-center ${
+                        isTableLayoutFixed ? "" : "p-4"
+                      } transition-transform ${
+                        expandedRows.has(rowIndex)
+                          ? "-rotate-90 duration-300"
+                          : "rotate-90 duration-200"
+                      }`}
+                    >
                       <ChevronRight />
                     </div>
                   </td>
                 ) : (
                   <td
-                    className={`w-8 ${expandableStyle?.rows} h-12 text-[14px] pl-2 font-proxima ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} ${noHeader && "border-t"} border-[#ccc] cursor-pointer`}
+                    className={`w-8 ${
+                      expandableStyle?.rows
+                    } h-12 pl-2 font-proxima text-[14px] ${
+                      expandedRows.has(rowIndex) ? "border-none" : "border-b"
+                    } ${noHeader && "border-t"} cursor-pointer border-[#ccc]`}
                   ></td>
                 ))}
+              {/* Render data cells */}
               {columns?.map((column, colIndex) => (
-                <td
-                  key={colIndex}
-                  className={`${row?.style} ${noHeader && column?.colStyle} ${column?.rowStyle} h-12 text-[14px] font-proxima py-1 px-1 ${expandedRows.has(rowIndex) ? "border-none" : "border-b"} border-[#ccc] break-all ${noHeader && "border-t"}`}
-                >
-                  <span
-                    className={`flex p-1 break-normal text-[14px] font-proxima items-center justify-${getAlignment(
-                      column?.colalign
-                    )}`}
+                <React.Fragment key={colIndex}>
+                  <td
+                    key={colIndex}
+                    className={`${row?.style} ${noHeader && column?.colStyle} ${
+                      column?.rowStyle
+                    } h-12 px-1 py-1 font-proxima text-[14px] ${
+                      expandedRows.has(rowIndex) ? "border-none" : "border-b"
+                    } break-all border-[#ccc] ${noHeader && "border-t"}`}
                   >
-                    {row[column?.accessor]}
-                  </span>
-                </td>
+                    <span
+                      className={`flex items-center break-normal p-1 font-proxima text-[14px] justify-${getAlignment(
+                        column?.colalign
+                      )}`}
+                    >
+                      {row[column?.accessor]}
+                    </span>
+                  </td>
+                </React.Fragment>
               ))}
             </tr>
-            {(expandedRows.has(rowIndex) || isExpanded) && (
+            {/* Render expanded row content if expanded */}
+            {(expandedRows.has(rowIndex)) && (
               <tr>
-                <td className="text-[14px] font-proxima" colSpan={columns?.length + 1}>
+                <td
+                  className="font-proxima text-[14px]"
+                  colSpan={columns?.length + 1}
+                >
                   {row?.details ? (
                     row?.details
                   ) : (
-                    <div className={`m-3 text-[14px] font-proxima ${expandableStyle?.rows}`}>
+                    <div
+                      className={`m-3 font-proxima text-[14px] ${expandableStyle?.rows}`}
+                    >
                       No data to display
                     </div>
                   )}
                 </td>
               </tr>
             )}
+            {/* Set ref to last row for lazy loading */}
+            {rowIndex === sortedData.length - 1 && <tr ref={lastRowRef}></tr>}
           </React.Fragment>
         ))}
       </tbody>
@@ -353,4 +576,4 @@ const DataTable = ({
   );
 };
 
-export default DataTable;
+export default DataTableDashboard;

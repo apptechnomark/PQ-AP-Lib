@@ -216,37 +216,46 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
     }
   };
 
+  const allValuesSelected = selectedValues.length === options.length;
+
   const selectedDisplay = selectedValues.length > 0 && (
     <div className="flex flex-row justify-center items-center">
-      {selectedValues.slice(0, 2).map((selectedValue) => {
-        const selectedOption = options.find(
-          (option) => option.value === selectedValue
-        );
-        return (
-          <div
-            key={selectedValue}
-            className={`flex items-center font-normal bg-[#E6E6E6] text-[#212529] border border-[#CED4DA] rounded-sm mr-[3px] ml-[1px] text-[14px] ${selectedOption?.label.length > 8 ? "max-w-[100px]" : ""
-              }`}
-          >
-            <span className="px-0.5" title={selectedOption?.label}>
-              {selectedOption?.label.length > 8
-                ? selectedOption?.label.substring(0, 5) + "..."
-                : selectedOption?.label}
-            </span>
-
-            <div
-              onClick={() => handleSelect(selectedValue)}
-              className="ml-1 text-[19px] pt-[1px] cursor-pointer"
-            >
-              <CrossIcon />
-            </div>
-          </div>
-        );
-      })}
-      {selectedValues.length > 2 && (
-        <div className="flex items-center h-[23px] bg-[#E6E6E6] text-darkCharcoal border border-[#CED4DA] font-normal rounded-sm px-1 text-[14px]">
-          <label className="text-[19px] text-center place-content-center pt-0.5">+</label> <label className="pt-0.5">{selectedValues.length - 2}</label>
+      {(options.length > 1 && allValuesSelected) ? (
+        <div className="flex items-center font-normal text-[#212529] mr-[3px] ml-[1px] text-[14px]">
+          <span className="px-0.5"> All {label}{options.length > 1 && !label.endsWith('s') && 's'}</span>
         </div>
+      ) : (
+        <>
+          {selectedValues.slice(0, 1).map((selectedValue) => {
+            const selectedOption = options.find(
+              (option) => option.value === selectedValue
+            );
+            return (
+              <div
+                key={selectedValue}
+                className={`flex items-center font-normal bg-[#E6E6E6] text-[#212529] border border-[#CED4DA] rounded-sm mr-[3px] ml-[1px] text-[14px] ${selectedOption?.label.length > 8 ? "max-w-[100px]" : ""
+                  }`}
+              >
+                <span className="px-0.5" title={selectedOption?.label}>
+                  {selectedOption?.label.length > 8
+                    ? selectedOption?.label.substring(0, 4) + "..."
+                    : selectedOption?.label}
+                </span>
+                <div
+                  onClick={() => handleSelect(selectedValue)}
+                  className="ml-1 text-[19px] pt-[1px] cursor-pointer"
+                >
+                  <CrossIcon />
+                </div>
+              </div>
+            );
+          })}
+          {selectedValues.length > 1 && (
+            <div className="flex items-center h-[23px] bg-[#E6E6E6] text-darkCharcoal border border-[#CED4DA] font-normal rounded-sm px-1 text-[14px]">
+              <label className="text-[19px] text-center place-content-center pt-0.5">+</label> <label className="pt-0.5">{selectedValues.length - 1}</label>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
@@ -263,12 +272,12 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
     <>
       <div className={`${styles.customScrollbar} relative font-medium w-full flex-row outline-none ${noborder ? "" : "border-b"} 
       ${isOpen
-        ? "border-primary"
-        : selectedValues.length > 0
-        ? "border-lightSilver"
-        : error
-          ? "border-defaultRed"
-          : `border-lightSilver`
+          ? "border-primary"
+          : selectedValues.length > 0
+            ? "border-lightSilver"
+            : error
+              ? "border-defaultRed"
+              : `border-lightSilver`
         } ${noborder ? "" : "after:block"
         } absolute after:border-b after:mb-[-1px] after:border-primary after:scale-x-0 after:origin-left after:transition after:ease-in-out after:duration-1000 hover:after:scale-x-100 ${className}`}
         ref={selectRef}
@@ -346,14 +355,16 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               : "max-h-0 translate-y-20 transition-opacity opacity-0 duration-500"
             } ${isOpen ? "ease-out" : ""}`}
         >
-          <label
-            tabIndex={isOpen ? 0 : -1}
-            className={`p-[10px] sticky top-0 z-[5] bg-pureWhite  text-[14px] font-normal text-primary cursor-pointer flex`}
-            onClick={handleToggleAll}
-            onKeyDown={(e: React.KeyboardEvent<HTMLLabelElement>) => handleKeyPress(e)}
-          >
-            {allOptionsSelected ? "Clear All" : "Select All"}
-          </label>
+          {options.length > 1 && (
+            <label
+              tabIndex={isOpen ? 0 : -1}
+              className={`p-[10px] sticky top-0 z-[5] bg-pureWhite  text-[14px] font-normal text-primary cursor-pointer flex`}
+              onClick={handleToggleAll}
+              onKeyDown={(e: React.KeyboardEvent<HTMLLabelElement>) => handleKeyPress(e)}
+            >
+              {allOptionsSelected ? "Clear All" : "Select All"}
+            </label>
+          )}
           {options.length > 0 &&
             options.some((option) =>
               option.label.toLowerCase().startsWith(searchValue)
@@ -389,7 +400,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
                   </div>
                 )}
 
-                {type === "checkbox" && (
+                {(type === "checkbox" && options.length > 1) && (
                   <CheckBox
                     tabIndex={-1}
                     id={option.value + Math.random()}
