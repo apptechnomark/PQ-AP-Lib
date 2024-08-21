@@ -287,7 +287,7 @@ const Password: React.FC<PasswordProps> = ({
       {!hideIcon && (
         type === "password" ? (
           <span
-            className={`absolute ${!label ? "top-2" : "top-6"
+            className={`absolute ${!label ? "bottom-0" : "bottom-[1px]"
               } right-1 text-md sm:text-lg ${err ? "text-defaultRed" : "text-darkCharcoal"
               }`}
             onClick={() => setType("text")}
@@ -296,7 +296,7 @@ const Password: React.FC<PasswordProps> = ({
           </span>
         ) : (
           <span
-            className={`absolute ${!label ? "top-2" : "top-6"
+            className={`absolute ${!label ? "bottom-[6px]" : "bottom-[6px]"
               } right-[7px] text-md sm:text-lg ${err ? "text-defaultRed" : "text-darkCharcoal"
               }`}
             onClick={() => setType("password")}

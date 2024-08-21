@@ -180,7 +180,7 @@ const Email: React.FC<EmailProps> = ({
       </div>
 
       {!err && validateIcon && inputRef.current.value.length > 9 && (
-        <span className="text-primary bg-white text-[20px] absolute right-0 top-0 mt-6 mr-3">
+        <span className="text-primary bg-white text-[20px] absolute right-0 bottom-[3px] mt-6 mr-3">
           <CheckIcon />
         </span>
       )}

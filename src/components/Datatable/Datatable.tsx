@@ -161,7 +161,7 @@ const DataTableDashboard = ({
       });
       setExpandedRows(initialExpandedRows);
     }
-  }, []);
+  }, [data]);
 
   // useEffect(() => {
   //   const handleOutsideClick = (event: MouseEvent) => {

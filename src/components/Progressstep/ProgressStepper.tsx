@@ -27,7 +27,7 @@ const ProgressStep = ({
               <label className={`text-base font-medium font-proxima cursor-pointer ${activeStep < index ? "text-slatyGrey" : activeStep > index ? "text-pureWhite" : "text-primary"} `}>{index + 1}</label>
 
             </button >
-            {(activeStep == index) && <span className="absolute z-[-1] top-0.5 left-0.5  flex inset-0 rounded-full overflow-visible">
+            {(activeStep == index) && <span className="absolute z-[-1] !top-[2.1px] !left-[1.6px] flex inset-0 rounded-full overflow-visible">
               <span className={`${style.rippleAnimation} absolute !w-7 !h-7 rounded-full opacity-50`}/>
             </span>}
           </div>

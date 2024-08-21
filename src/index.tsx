@@ -80,6 +80,7 @@ import { Timepicker } from "./components/Timepicker/Timepicker";
 import { Timepicker24Hr } from "./components/Timepicker/Timepicker24Hr";
 import { Toast } from "./components/Toast/Toast";
 import { Tooltip } from "./components/Tooltip/Tooltip";
+import { BasicTooltip } from "./components/Tooltip/BasicTooltip";
 import Typography from "./components/Typography/Typography";
 
 import Uploader from "./components/Fileupload/Fileupload";
@@ -160,4 +161,5 @@ export {
   Tooltip,
   Typography,
   PropertyDrawer,
+  BasicTooltip
 };
