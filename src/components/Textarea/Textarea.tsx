@@ -120,7 +120,7 @@ const Textarea: React.FC<TextareaProps> = ({
         <textarea
           className={`${className} py-1 border-b outline-none transition duration-600 w-full h-full text-darkCharcoal ${
             err
-              ? "border-b-defaultRed placeholder:defaultRed"
+              ? "border-b-defaultRed placeholder:text-defaultRed"
               : focus
               ? "border-b-primary"
               : "border-b-lightSilver"
