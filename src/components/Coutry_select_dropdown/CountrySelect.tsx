@@ -333,7 +333,7 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
                                 onChange={handleInputChange}
                                 onFocus={handleFocus}
                                 disabled={disabled}
-                                placeholder="1234 222 000"
+                                placeholder="0000 000 000"
                                 {...props}
                             />
                         </div>
