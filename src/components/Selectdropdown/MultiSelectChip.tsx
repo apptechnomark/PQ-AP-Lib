@@ -302,8 +302,8 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
         )}
 
         <div id={id} className={`flex relative flex-row ${label ? "mt-[7px]" : ""} items-center justify-center`}>
-          <div className="w-full outline-none flex justify-evenly">
-            <div className="min-w-fit flex flex-row pb-[1px]">
+            <div className="w-full outline-none flex justify-evenly" onClick={handleToggleOpen}>
+            <div className="min-w-fit  cursor-pointer flex flex-row pb-[1px]">
               {selectedDisplay}
             </div>
             <div className="w-full" tabIndex={0}
@@ -314,7 +314,6 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
               <input
                 tabIndex={-1}
                 onBlur={handleBlur}
-                onClick={handleToggleOpen}
                 onChange={(e) => setSearchInput(e.target.value)}
                 readOnly={!isOpen}
                 placeholder={

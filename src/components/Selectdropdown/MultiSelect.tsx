@@ -280,11 +280,10 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
           </label>
         )}
 
-        <div className={`flex flex-row ${label ? "mt-[7px]" : ""} items-center justify-center relative`}>
+        <div className={`flex flex-row ${label ? "mt-[7px]" : ""} items-center justify-center relative`} onClick={handleToggleOpen}>
           <input
             id={id}
             onBlur={handleBlur}
-            onClick={handleToggleOpen}
             onChange={handleInputChange}
             readOnly={!isOpen}
             placeholder={

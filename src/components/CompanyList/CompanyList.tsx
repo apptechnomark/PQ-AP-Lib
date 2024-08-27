@@ -17,6 +17,7 @@ interface CompanyListProps {
     isChecked?: any;
   }[];
   label?: string;
+  noEditable?: boolean;
   className?: string;
   required?: boolean;
   defaultValue?: string;
@@ -74,15 +75,16 @@ const CompanyList: React.FC<CompanyListProps> = ({
   openUpside,
   isSearchEnable = true,
   isSelectAllEnable = true,
+  noEditable,
   ...props
 }) => {
   const selectRef = useRef<HTMLDivElement>(null);
   const staticSelectedValuesForClearAll =
-  values && values.length > 0
-    ? options
+    values && values.length > 0
+      ? options
         .filter((option) => !option.isEnable && values.includes(option.value))
         .map((option) => option.value)
-    : [];
+      : [];
 
   const [selectedValues, setSelectedValues] = useState<string[]>(
     values && values.length > 0 ? values : []
@@ -243,13 +245,13 @@ const CompanyList: React.FC<CompanyListProps> = ({
       setFocusedIndex(-1);
     } else {
       const allOptionValues = options
-      .filter(
-        (option) =>
-          option.isEnable ||
-          option.isEnable === undefined ||
-          selectedValues.includes(option.value)
-      )
-      .map((option) => option.value);
+        .filter(
+          (option) =>
+            option.isEnable ||
+            option.isEnable === undefined ||
+            selectedValues.includes(option.value)
+        )
+        .map((option) => option.value);
       setSelectedValues(allOptionValues);
       getValue(allOptionValues.map((value) => value.toString()));
       setFocusedIndex(-1);
@@ -383,7 +385,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
                 />
               </li>
             )}
-            {options.length > 0 && !!isSelectAllEnable && (
+            {options.length > 0 && !noEditable && !!isSelectAllEnable && (
               <li
                 className={`sticky ${isSearchEnable ? 'top-[49px]' : 'top-0 pt-1.5'} z-[3]  bg-pureWhite outline-none focus:bg-whiteSmoke text-sm font-normal cursor-pointer flex items-center`}
               >

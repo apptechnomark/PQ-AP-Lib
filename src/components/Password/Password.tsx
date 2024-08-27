@@ -5,6 +5,7 @@ import React, {
   InputHTMLAttributes,
 } from "react";
 import { Dot, Check, EyeOpen, EyeClose } from "./icons/icons";
+import styles from "./password.module.scss";
 
 interface PasswordProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -259,7 +260,7 @@ const Password: React.FC<PasswordProps> = ({
           }`}
       >
         <input
-          className={`${className} py-1 border-b outline-none w-full pr-10 ${err
+          className={`${className} ${styles} py-1 border-b outline-none w-full pr-10 ${err
             ? "border-defaultRed text-defaultRed placeholder-defaultRed"
             : focus
               ? "border-primary"
@@ -287,8 +288,8 @@ const Password: React.FC<PasswordProps> = ({
       {!hideIcon && (
         type === "password" ? (
           <span
-            className={`absolute ${!label ? "bottom-0" : "bottom-[1px]"
-              } right-1 text-md sm:text-lg ${err ? "text-defaultRed" : "text-darkCharcoal"
+            className={`absolute hover:cursor-pointer ${!label ? "bottom-0" : "bottom-[1px]"
+              } right-1 text-md sm:text-lg ${err ? "text-defaultRed top-8" : "text-darkCharcoal"
               }`}
             onClick={() => setType("text")}
           >
@@ -296,8 +297,8 @@ const Password: React.FC<PasswordProps> = ({
           </span>
         ) : (
           <span
-            className={`absolute ${!label ? "bottom-[6px]" : "bottom-[6px]"
-              } right-[7px] text-md sm:text-lg ${err ? "text-defaultRed" : "text-darkCharcoal"
+            className={`absolute hover:cursor-pointer ${!label ? "bottom-[6px]" : "bottom-[6px]"
+              } right-[7px] text-md sm:text-lg ${err ? "text-defaultRed top-8" : "text-darkCharcoal"
               }`}
             onClick={() => setType("password")}
           >
