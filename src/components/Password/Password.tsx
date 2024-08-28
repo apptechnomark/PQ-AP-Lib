@@ -288,8 +288,8 @@ const Password: React.FC<PasswordProps> = ({
       {!hideIcon && (
         type === "password" ? (
           <span
-            className={`absolute hover:cursor-pointer ${!label ? "bottom-0" : "bottom-[1px]"
-              } right-1 text-md sm:text-lg ${err ? "text-defaultRed top-8" : "text-darkCharcoal"
+            className={`absolute hover:cursor-pointer ${!label ? "top-1" : "top-8"
+              } right-1 text-md sm:text-lg ${err ? "text-defaultRed" : "text-darkCharcoal"
               }`}
             onClick={() => setType("text")}
           >
@@ -297,8 +297,8 @@ const Password: React.FC<PasswordProps> = ({
           </span>
         ) : (
           <span
-            className={`absolute hover:cursor-pointer ${!label ? "bottom-[6px]" : "bottom-[6px]"
-              } right-[7px] text-md sm:text-lg ${err ? "text-defaultRed top-8" : "text-darkCharcoal"
+            className={`absolute hover:cursor-pointer ${!label ? "top-1" : "top-8"
+              } right-[7px] text-md sm:text-lg ${err ? "text-defaultRed" : "text-darkCharcoal"
               }`}
             onClick={() => setType("password")}
           >
