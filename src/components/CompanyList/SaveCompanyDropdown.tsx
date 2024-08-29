@@ -45,7 +45,7 @@ interface CompanyListProps {
   isSearchEnable?: boolean;
   isSelectAllEnable?: boolean;
 }
-const CompanyList: React.FC<CompanyListProps> = ({
+const SaveCompanyDropdown: React.FC<CompanyListProps> = ({
   id,
   options,
   values,
@@ -90,6 +90,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
     values && values.length > 0 ? values : []
   );
   const [inputValue, setInputValue] = useState<string>("");
+  const [tempSelectedValues, setTempSelectedValues] = useState(values || []);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   const [err, setErr] = useState<boolean>(false);
@@ -110,6 +111,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
   const handleToggleOpen = () => {
     setIsOpen(!isOpen);
     setFocus(!focus);
+    // selectedValues.length === 0 && setErr(true);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,13 +122,15 @@ const CompanyList: React.FC<CompanyListProps> = ({
   useEffect(() => {
     if (values?.length > 0) {
       setSelectedValues(values);
+      setTempSelectedValues(values); // Sync temp state with final state
     } else {
       setSelectedValues([]);
+      setTempSelectedValues([]);
     }
   }, [values?.length]);
 
-  const handleCheckboxChange = (value: string) => {
-    setSelectedValues((prevSelected) => {
+  const handleCheckboxChange = (value) => {
+    setTempSelectedValues((prevSelected) => {
       if (prevSelected.includes(value)) {
         return prevSelected.filter((item) => item !== value);
       } else {
@@ -164,8 +168,8 @@ const CompanyList: React.FC<CompanyListProps> = ({
   const getValueRef = useRef(getValue);
 
   useEffect(() => {
-    getValueRef.current(selectedValues);
-  }, [selectedValues]);
+    getValueRef.current(tempSelectedValues);
+  }, [tempSelectedValues]);
 
   const updatedAvatars = selectedValues.map((value, index) => {
     const option = options?.find((item) => item.value == value);
@@ -184,6 +188,8 @@ const CompanyList: React.FC<CompanyListProps> = ({
       if (!selectRef.current?.contains(event.target as Node)) {
         setIsOpen(false);
         setFocus(false);
+        // setSelectedValues(values)
+        setTempSelectedValues(selectedValues);
       }
     };
     window.addEventListener("click", handleOutsideClick);
@@ -231,30 +237,29 @@ const CompanyList: React.FC<CompanyListProps> = ({
       (option) =>
         option.isEnable ||
         option.isEnable === undefined ||
-        selectedValues.includes(option.value)
+        tempSelectedValues.includes(option.value)
     )
-    .every((option) => selectedValues.includes(option.value));
+    .every((option) => tempSelectedValues.includes(option.value));
 
   const handleToggleAll = () => {
     if (allOptionsSelected) {
-      setSelectedValues([])
-      getValue([])
-      //  setSelectedValues(staticSelectedValuesForClearAll);
-      // getValue(staticSelectedValuesForClearAll);
-      setFocusedIndex(-1);
+      setTempSelectedValues([]);
     } else {
       const allOptionValues = options
         .filter(
           (option) =>
             option.isEnable ||
             option.isEnable === undefined ||
-            selectedValues.includes(option.value)
+            tempSelectedValues.includes(option.value)
         )
         .map((option) => option.value);
-      setSelectedValues(allOptionValues);
-      getValue(allOptionValues.map((value) => value.toString()));
-      setFocusedIndex(-1);
+      setTempSelectedValues(allOptionValues);
     }
+  };
+
+  const handleSaveClick = (event) => {
+    setSelectedValues(tempSelectedValues);
+    if (onSaveClick) onSaveClick(event);
   };
 
   return (
@@ -439,12 +444,17 @@ const CompanyList: React.FC<CompanyListProps> = ({
                           : "pointer-events-none opacity-60"
                       }
                     >
-                      <CheckBox
+                      {/* <CheckBox
                         id={Math.random() + "" + index}
                         checked={selectedValues.includes(option.value)}
                         onChange={() => {
                           handleCheckboxChange(option.value);
                         }}
+                      /> */}
+                      <CheckBox
+                        id={Math.random() + "" + index}
+                        checked={tempSelectedValues.includes(option.value)}
+                        onChange={() => handleCheckboxChange(option.value)}
                       />
                     </div>
                   )}
@@ -473,7 +483,7 @@ const CompanyList: React.FC<CompanyListProps> = ({
                 <Button
                   variant="btn-primary"
                   className="w-full font-semibold"
-                  onClick={onSaveClick}
+                  onClick={handleSaveClick}
                 >
                   Save
                 </Button>
@@ -491,4 +501,4 @@ const CompanyList: React.FC<CompanyListProps> = ({
   );
 };
 
-export { CompanyList };
+export { SaveCompanyDropdown };

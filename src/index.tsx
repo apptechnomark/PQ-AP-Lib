@@ -17,6 +17,7 @@ import CheckBox from "./components/Checkbox/Checkbox";
 import { Close } from "./components/Closebutton/Close";
 import { ColorPicker } from "./components/Colorpicker/Colorpicker";
 import { CompanyList } from "./components/CompanyList/CompanyList";
+import { SaveCompanyDropdown } from "./components/CompanyList/SaveCompanyDropdown";
 import { CommentSentBox } from "./components/CommentSentBox/CommentSentBox";
 import { CountrySelect } from "./components/Coutry_select_dropdown/CountrySelect";
 
@@ -161,5 +162,6 @@ export {
   Tooltip,
   Typography,
   PropertyDrawer,
-  BasicTooltip
+  BasicTooltip,
+  SaveCompanyDropdown
 };
