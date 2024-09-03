@@ -53,6 +53,7 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
     const [searchValue, setSearchValue] = useState<string>("");
     const [inputValue, setInputValue] = useState<string>("");
     const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+    const [maxInputLength, setMaxInputLength] = useState<number>(12);
 
     useEffect(() => {
         if (value !== '') {
@@ -71,6 +72,19 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
     }, [countryCode])
 
     useEffect(() => {
+        const selectedCountryJsxElement = country.find(
+            (item) => item.value == selectedCountryCode
+        )?.JsxElement;
+        setSelectedCountryFlag(selectedCountryJsxElement);
+
+        const selectedCountry = country.find(
+            (code) => code.value === selectedCountryCode
+        );
+        const requiredLength = selectedCountry && selectedCountry.telLength;
+        setMaxInputLength(requiredLength)
+    }, [selectedCountryCode]);
+
+    useEffect(() => {
         if (validate) {
             setFocus(hasError);
             setErrorMsg(errorMessage);
@@ -86,13 +100,6 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
             setTelValue(value)
         }
     }, [value])
-
-    useEffect(() => {
-        const selectedCountryJsxElement = country.find(
-            (item) => item.value == selectedCountryCode
-        )?.JsxElement;
-        setSelectedCountryFlag(selectedCountryJsxElement);
-    }, [selectedCountryCode]);
 
     const validateInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value === "") {
@@ -134,7 +141,7 @@ const CountrySelect: React.FC<CountryCodeProps> = ({
         inputValue = inputValue.replace(/\s/g, "");
         inputValue = inputValue.replace(/[^\d]/g, "");
 
-        inputValue = inputValue.slice(0, 14);
+        inputValue = inputValue.slice(0, maxInputLength);
 
         let formattedValue = "";
         for (let i = 0; i < inputValue.length; i++) {

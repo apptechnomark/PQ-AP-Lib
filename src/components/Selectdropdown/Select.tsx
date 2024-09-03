@@ -49,7 +49,7 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   noborder?: boolean;
   hideIcon?: boolean;
   openTop?: boolean;
-  isNone?:boolean
+  isNone?: boolean
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -110,7 +110,7 @@ const Select: React.FC<SelectProps> = ({
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
 
   const filteredOptions = updatedOptions.filter((option) =>
-    option.label.toLowerCase().includes(searchValue)
+    option.label.toLowerCase().includes(searchValue.toLowerCase())
   );
 
   useEffect(() => {
@@ -176,7 +176,7 @@ const Select: React.FC<SelectProps> = ({
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value.toLowerCase();
+    const inputValue = e.target.value;
     setSearchValue(inputValue); // Update search input value
 
     if (validate && inputValue === "") {
@@ -274,10 +274,18 @@ const Select: React.FC<SelectProps> = ({
       e.preventDefault();
       setFocusedIndex(index + 1);
     }
+    else if (e.key === "Tab") {
+      setIsOpen(false)
+      setFocusedIndex(-1);
+    }
+    else if (e.key === "Escape") {
+      setFocusedIndex(0);
+      setIsOpen(false);
+    }
   };
 
   useEffect(() => {
-    if (focusedIndex !== -1) {
+    if (focusedIndex !== -1 && options.length > 0) {
       const optionsElements = Array.from(
         selectRef.current!.querySelectorAll("li")
       );
@@ -285,16 +293,16 @@ const Select: React.FC<SelectProps> = ({
     }
   }, [focusedIndex]);
 
-  const handleKeyDown = (value: any) => {
-    if (value.key === "ArrowUp" && focusedIndex > 0) {
-      value.preventDefault();
+  const handleKeyDown = (e: any) => {
+    if (e.key === "ArrowUp" && options.length > 0) {
+      e.preventDefault();
       setFocusedIndex(focusedIndex - 1);
-    } else if (value.key === "ArrowDown" && focusedIndex < updatedOptions.length - 1) {
-      value.preventDefault();
+    } else if (e.key === "ArrowDown" && options.length > 0) {
+      e.preventDefault();
       setFocusedIndex(focusedIndex + 1);
-    } else if (value.key === "Escape") {
-      setFocusedIndex(-1);
-      setIsOpen(!isOpen);
+    } else if (e.key === "Escape") {
+      setFocusedIndex(0);
+      setIsOpen(false);
     }
   };
 
@@ -306,6 +314,20 @@ const Select: React.FC<SelectProps> = ({
   let newFilteredOptions = [];
   if (!!filteredOptions && filteredOptions.length > 0) {
     newFilteredOptions = [...newFilteredOptions, ...filteredOptions];
+  }
+
+  const handleKeyEnter = (e: any) => {
+    if (disabled) return;
+    if ((e.key === "Enter" || (e.key === "ArrowDown" && focusedIndex == -1))) {
+      handleToggleOpen()
+      setFocusedIndex(0);
+    }
+    else if (e.key === "Escape") {
+      setFocusedIndex(0);
+      setIsOpen(false);
+      // setEditing(false);
+      // selectRef.current?.focus();
+    }
   }
 
   return (
@@ -327,16 +349,17 @@ const Select: React.FC<SelectProps> = ({
           }
           ${className}`}
         ref={selectRef}
+        onBlur={handleBlur}
       >
         {label && (
           <label
             className={`text-[12px] font-normal w-full ${isOpen
-                ? "text-primary"
-                : inputValue
-                  ? "text-slatyGrey"
-                  : error
-                    ? "text-defaultRed"
-                    : "text-slatyGrey"
+              ? "text-primary"
+              : inputValue
+                ? "text-slatyGrey"
+                : error
+                  ? "text-defaultRed"
+                  : "text-slatyGrey"
               } ${disabled && "text-slatyGrey"}`}
             htmlFor={id}
             tabIndex={-1}
@@ -355,13 +378,10 @@ const Select: React.FC<SelectProps> = ({
         )}
 
         <div
-          className={`flex flex-row items-center relative ${label ? "mt-[8px]" : ""
+          className={`focus:border-b focus:mb-[-1px] focus:border-primary outline-none flex flex-row items-center relative ${label ? "mt-[8px]" : ""
             } mb-0 w-full`}
           tabIndex={0}
-          onKeyDown={(e) =>
-            (e.key === "Enter" || e.key === " ") && handleToggleOpen()
-          }
-        >
+          onKeyDown={handleKeyEnter}>
           <input
             id={id}
             onBlur={handleBlur}
@@ -408,8 +428,8 @@ const Select: React.FC<SelectProps> = ({
               tabIndex={-1}
               onClick={handleToggleOpen}
               className={`text-[1.5rem] transition-transform ${disabled
-                  ? "text-slatyGrey cursor-default"
-                  : "text-darkCharcoal cursor-pointer"
+                ? "text-slatyGrey cursor-default"
+                : "text-darkCharcoal cursor-pointer"
                 } ${error && " text-defaultRed"} ${isOpen ? "rotate-180 text-primary duration-400" : "duration-200"
                 }`}
             >
@@ -418,7 +438,7 @@ const Select: React.FC<SelectProps> = ({
           )}
         </div>
         <ul
-          className={`bottomAnimation absolute z-10 w-full bg-pureWhite mt-[${noborder ? 13 : 1
+          className={`bottomAnimation absolute !z-10 w-full bg-pureWhite mt-[${noborder ? 13 : 1
             }px] overflow-y-auto shadow-md transition-transform ${isOpen
               ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
               : "max-h-0 translate-y-10 transition-opacity opacity-0 duration-500"
@@ -436,8 +456,8 @@ const Select: React.FC<SelectProps> = ({
                   <li
                     key={index}
                     className={`${option.value == selectedOption?.value
-                        ? "bg-whiteSmoke"
-                        : ""
+                      ? "bg-whiteSmoke"
+                      : ""
                       } px-[10px] ${option.active ? "active" : ""
                       } py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
                         addDynamicForm_Icons_Edit ||
@@ -570,7 +590,7 @@ const Select: React.FC<SelectProps> = ({
         </span>
       )}
 
-      {error && !inputValue && (
+      {error && !inputValue && !disabled && (
         <span
           tabIndex={-1}
           className={`text-defaultRed text-[12px] sm:text-[14px] ${errorClass}`}>

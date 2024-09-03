@@ -248,11 +248,11 @@ const DatepickerYear: React.FC<DatepickerProps> = ({
           )}
         </span>
       )}
-      <div className={`relative flex`} ref={inputRef}>
+      <div className={`relative mt-1 flex`} ref={inputRef}>
         <input
           type="text"
           placeholder="mm/yyyy"
-          className={`text-[14px] py-[0.5px] w-full tracking-wider hover:cursor-pointer placeholder:tracking-wider font-proxima border-b placeholder:text-[14px] bg-transparent ${disabled
+          className={`text-[14px] py-[1px] w-full tracking-wider hover:cursor-pointer placeholder:tracking-wider font-proxima border-b placeholder:text-[14px] bg-transparent ${disabled
             ? "border-lightSilver pointer-events-none"
             : toggleOpen && !err
               ? "border-primary placeholder:text-primary"

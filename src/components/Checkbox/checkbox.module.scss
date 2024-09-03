@@ -77,6 +77,12 @@ $defaultRed: #dc3545;
           border-color: $primary;
         }
       }
+      &:focus {
+        cursor: pointer;
+        > .checkBoxSpan {
+          border-color: $primary;
+        }
+      }
     }
     .requiredError {
       > .checkBoxSpan {
@@ -144,6 +150,12 @@ $defaultRed: #dc3545;
           border-color: $primary;
         }
       }
+      &:focus {
+        cursor: pointer;
+        > .checkBoxSpan {
+          border-color: $primary;
+        }
+      }
     }
     .requiredError {
       > .checkBoxSpan {
@@ -195,6 +207,11 @@ $defaultRed: #dc3545;
           border-color: $defaultRed;
         }
       }
+      &:focus {
+        > .checkBoxSpan {
+          border-color: $defaultRed;
+        }
+      }
     }
   }
   &:focus {
@@ -242,6 +259,12 @@ $defaultRed: #dc3545;
         transition: all 250ms cubic-bezier(0.4, 0, 0.23, 1);
       }
       &:hover {
+        cursor: pointer;
+        > .i__checkBoxSpan {
+          border-color: $primary;
+        }
+      }
+      &:focus {
         cursor: pointer;
         > .i__checkBoxSpan {
           border-color: $primary;
@@ -307,6 +330,12 @@ $defaultRed: #dc3545;
           border-color: $primary;
         }
       }
+      &:focus {
+        cursor: pointer;
+        > .i__checkBoxSpan {
+          border-color: $primary;
+        }
+      }
     }
     .requiredError {
       > .checkBoxSpan {
@@ -352,6 +381,11 @@ $defaultRed: #dc3545;
         border: 2px solid $defaultRed;
       }
       &:hover {
+        > .i__checkBoxSpan {
+          border-color: $defaultRed;
+        }
+      }
+      &:focus {
         > .i__checkBoxSpan {
           border-color: $defaultRed;
         }

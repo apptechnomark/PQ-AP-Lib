@@ -272,7 +272,7 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
 
   return (
     <>
-      <div className={`${styles.customScrollbar} relative font-medium w-full flex-row outline-none ${noborder ? "" : "border-b"} 
+      <div className={`${styles.customScrollbar} relative font-medium w-full flex-row outline-none ${noborder ? "" : "border-b"}
       ${isOpen
           ? "border-primary"
           : selectedValues.length > 0
@@ -368,18 +368,18 @@ const MultiSelectChip: React.FC<MultiSelectChipProps> = ({
           )}
           {options.length > 0 &&
             options.some((option) =>
-              option.label.toLowerCase().startsWith(searchValue)
+              option.label.toLowerCase().startsWith(searchValue.toLowerCase())
             ) ? (
             options.map((option, index) => (
               <li
                 key={index}
                 className={`p-[10px] outline-none focus:bg-whiteSmoke text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex items-center ${selectedValues.includes(option.value) ? "bg-whiteSmoke" : ""
-                  } ${!option.label.toLowerCase().startsWith(searchValue)
+                  } ${!option.label.toLowerCase().startsWith(searchValue.toLowerCase())
                     ? "hidden"
                     : ""
                   }`}
                 onClick={() => {
-                  if (option.value !== searchValue) {
+                  if (option.value !== searchValue.toLowerCase()) {
                     handleSelect(option.value);
                   }
                 }}

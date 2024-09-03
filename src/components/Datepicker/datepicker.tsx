@@ -73,6 +73,10 @@ const Datepicker: React.FC<DatepickerProps> = ({
   const [err, setErr] = useState<boolean>(false);
   const [focus, setFocus] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const [focusedIndex, setFocusedIndex] = useState<number>(0);
+  const [dateFocusedIndex, setDateFocusedIndex] = useState<number>(0);
+  const [rightIconFocusedIndex, setRightIconFocusedIndex] = useState<number>(0);
+  const [leftIconFocusedIndex, setLeftIconFocusedIndex] = useState<number>(0);
 
   const currentMonth = today.getMonth();
   const [selectedMonth, setSelectedMonth] = useState<number>(
@@ -89,7 +93,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
     ((isMaxMinRequired ? maxDate.getFullYear() : endYear) -
       (isMaxMinRequired ? minDate.getFullYear() : startYear) +
       1) /
-      yearsPerPage
+    yearsPerPage
   );
   const startIndex: number = (currentPage - 1) * yearsPerPage;
   const displayedYears: number[] = Array.from(
@@ -117,7 +121,9 @@ const Datepicker: React.FC<DatepickerProps> = ({
   const toggleMonthList = () => {
     setAnimate("");
     setShowMonthList(!showMonthList);
+    setFocusedIndex(selectedMonth)
   };
+
   const selectMonth = (month: number) => {
     setAnimate(style.slideRightAnimation);
     const newDate = new Date(today);
@@ -126,18 +132,20 @@ const Datepicker: React.FC<DatepickerProps> = ({
     setShowMonthList(false);
     setSelectedMonth(month);
     selectedMonth ? setAnimate(style.slideRightAnimation) : setAnimate("");
+    setFocusedIndex(0);
   };
 
   const toggleYearList = () => {
     setShowYearList(true);
     setAnimate("");
     if (!showYearList && !showMonthList) {
+      setFocusedIndex(selectedYear)
       setCurrentPage(
         Math.ceil(
           (selectedYear -
             (isMaxMinRequired ? minDate.getFullYear() : startYear) +
             1) /
-            yearsPerPage
+          yearsPerPage
         )
       );
     } else {
@@ -198,7 +206,10 @@ const Datepicker: React.FC<DatepickerProps> = ({
   };
 
   const calendarShow = () => {
-    !disabled && setToggleOpen(true);
+    if (disabled) {
+      return;
+    }
+    setToggleOpen(true);
     setToday(selectedDate);
   };
 
@@ -238,6 +249,8 @@ const Datepicker: React.FC<DatepickerProps> = ({
       const isCalendarClick = target.closest(".bottomAnimation");
       if (!isInputClick && !isCalendarClick) {
         setToggleOpen(false);
+        setShowMonthList(false);
+        setShowYearList(false);
       }
     };
     const handleMouseDown = (event: any) => {
@@ -251,7 +264,7 @@ const Datepicker: React.FC<DatepickerProps> = ({
     };
   }, []);
 
-  const updateFromInput = (inputValue: string) => {
+  const updateFromInput1 = (inputValue: string) => {
     const inputDate = new Date(inputValue);
     if (
       !isNaN(inputDate.getTime()) &&
@@ -265,6 +278,74 @@ const Datepicker: React.FC<DatepickerProps> = ({
       setSelectedYear(inputDate.getFullYear());
       setFullDate(formattedDate);
     } else {
+      setToggleOpen(false);
+    }
+  };
+
+  const updateFromInput = (inputValue: string) => {
+    const inputParts = inputValue.split("/");
+
+    // Check if the input matches the MM/DD/YYYY format
+    if (inputParts.length === 3) {
+      const month = parseInt(inputParts[0]) - 1; // MM is at index 0
+      const day = parseInt(inputParts[1]); // DD is at index 1
+      const year = parseInt(inputParts[2]); // YYYY is at index 2
+
+      // Validate the year
+      if (isNaN(year) || year.toString().length !== 4 || year < 1000) {
+        setErr(true);
+        getError(true);
+        setErrorMsg("Invalid year format. Please enter a four-digit year.");
+        setToggleOpen(false);
+        return;
+      }
+
+      // Validate the month
+      if (isNaN(month) || month < 0 || month > 11) {
+        setErr(true);
+        getError(true);
+        setErrorMsg("Invalid month format. Please enter a month between 01 and 12.");
+        setToggleOpen(false);
+        return;
+      }
+
+      // Validate the day
+      const maxDays = new Date(year, month + 1, 0).getDate(); // Get the number of days in the given month/year
+      if (isNaN(day) || day < 1 || day > maxDays) {
+        setErr(true);
+        getError(true);
+        setErrorMsg(`Invalid day. The selected month has a maximum of ${maxDays} days.`);
+        setToggleOpen(false);
+        return;
+      }
+
+      const inputDate = new Date(year, month, day);
+
+      // Check if the constructed date is valid
+      if (
+        !isNaN(inputDate.getTime()) &&
+        inputDate.getFullYear() === year &&
+        inputDate.getMonth() === month &&
+        inputDate.getDate() === day
+      ) {
+        setToday(inputDate);
+        setSelectedDate(inputDate);
+        setSelectedMonth(month);
+        setSelectedYear(year);
+        setFullDate(inputValue);
+        setErr(false);
+        getError(false);
+        setErrorMsg("");
+      } else {
+        setErr(true);
+        getError(true);
+        setErrorMsg("Invalid date input.");
+        setToggleOpen(false);
+      }
+    } else {
+      setErr(true);
+      getError(true);
+      setErrorMsg("Invalid date format. Please use MM/DD/YYYY.");
       setToggleOpen(false);
     }
   };
@@ -286,18 +367,171 @@ const Datepicker: React.FC<DatepickerProps> = ({
   }, [fullDate]);
 
   const handleInputBlur = () => {
-    if (validate && fullDate === "") {
+    if (!toggleOpen && validate && fullDate === "") {
       setErr(true);
       setErrorMsg("Please select a date.");
       getError(true);
     }
   };
+
   const handleFocus = () => {
     setFocus(true);
   };
 
   const minDateInMilliSeconds = new Date(minDate).getTime();
   const maxDateInMilliSeconds = new Date(maxDate).getTime();
+
+  const handleKeyEnter = (e: any) => {
+    if (disabled) return;
+
+    const rowSize = 7;
+    const totalItems = 42;
+    switch (e.key) {
+      case "Enter":
+        calendarShow()
+        break;
+      // case "ArrowUp":
+      //   e.preventDefault();
+      //   setDateFocusedIndex((prev) => (prev - rowSize + totalItems) % totalItems);
+      //   break;
+      // case "ArrowDown":
+      //   e.preventDefault();
+      //   setDateFocusedIndex((prev) => (prev + rowSize) % totalItems);
+      //   break;
+      // case "ArrowLeft":
+      //   e.preventDefault();
+      //   setDateFocusedIndex((prev) => (prev - 1 + totalItems) % totalItems);
+      //   break;
+      // case "ArrowRight":
+      //   e.preventDefault();
+      //   setDateFocusedIndex((prev) => (prev + 1) % totalItems);
+      //   break;
+      default:
+        break;
+    }
+  }
+
+  const handleMonthKeyNavigation = (e: any, index: number) => {
+    switch (e.key) {
+      case "Enter":
+        selectMonth(index);
+        setDateFocusedIndex(1)
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setFocusedIndex((prev) => (prev - 4 + 12) % 12);
+        break;
+      case "ArrowDown":
+        e.preventDefault();
+        setFocusedIndex((prev) => (prev + 4) % 12);
+        break;
+      case "ArrowLeft":
+        e.preventDefault();
+        setFocusedIndex((prev) => (prev - 1 + 12) % 12);
+        break;
+      case "ArrowRight":
+        e.preventDefault();
+        setFocusedIndex((prev) => (prev + 1) % 12);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleYearKeyNavigation = (e: any, year: any) => {
+    const rowSize = 4;
+    const totalItems = displayedYears.length;
+    switch (e.key) {
+      case "Enter":
+        selectYear(year);
+        setDateFocusedIndex(0)
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setFocusedIndex((prev) => (prev - rowSize + totalItems) % totalItems);
+        break;
+      case "ArrowDown":
+        e.preventDefault();
+        setFocusedIndex((prev) => (prev + rowSize) % totalItems);
+        break;
+      case "ArrowLeft":
+        e.preventDefault();
+        setFocusedIndex((prev) => (prev - 1 + totalItems) % totalItems);
+        break;
+      case "ArrowRight":
+        e.preventDefault();
+        setFocusedIndex((prev) => (prev + 1) % totalItems);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleDateKeyNavigation = (e: any, date: any) => {
+    const rowSize = 7;
+    const totalItems = 42;
+    switch (e.key) {
+      case "Shift":
+        setRightIconFocusedIndex(0)
+        setDateFocusedIndex(-1)
+        break;
+      case "Tab":
+        setDateFocusedIndex(-1)
+        break;
+      case "Escape":
+        setFocusedIndex(0);
+        setToggleOpen(false);
+        setToday(date);
+        break;
+      case "Enter":
+        handleDateClick(date)
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setDateFocusedIndex((prev) => (prev - rowSize + totalItems) % totalItems);
+        break;
+      case "ArrowDown":
+        e.preventDefault();
+        setDateFocusedIndex((prev) => (prev + rowSize) % totalItems);
+        break;
+      case "ArrowLeft":
+        e.preventDefault();
+        setDateFocusedIndex((prev) => (prev - 1 + totalItems) % totalItems);
+        break;
+      case "ArrowRight":
+        e.preventDefault();
+        setDateFocusedIndex((prev) => (prev + 1) % totalItems);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleIconKeyNavigation = (e: any) => {
+    if (disabled) return;
+
+    switch (e.key) {
+      case "Enter":
+        handleIconClick(true)
+        setDateFocusedIndex(-1)
+        break;
+      case "Tab":
+        if (e.shiftKey) {
+          setLeftIconFocusedIndex(0);
+        }
+        else {
+          e.preventDefault();
+          setDateFocusedIndex(1);
+        }
+        break;
+      case "Shift":
+        // e.preventDefault();
+        setLeftIconFocusedIndex(0);
+        break;
+      default:
+        break;
+    }
+  }
 
   return (
     <>
@@ -306,20 +540,19 @@ const Datepicker: React.FC<DatepickerProps> = ({
           <label
             className={`text-[12px] py-1 ${toggleOpen
               ? "text-primary"
-              : focus
+              : focus && !err
                 ? "text-primary"
                 : err
                   ? "text-defaultRed"
                   : "text-slatyGrey"
-            } ${!toggleOpen && "text-slatyGrey"}`}
+              } ${(!toggleOpen && err) && "text-defaultRed"}`}
           >
             {label}
           </label>
           {validate && (
             <span
-              className={` w-3 h-4 ${
-                disabled ? "text-slatyGrey" : "text-defaultRed"
-              }`}
+              className={` w-3 h-4 ${disabled ? "text-slatyGrey" : "text-defaultRed"
+                }`}
             >
               &nbsp;*
             </span>
@@ -327,42 +560,41 @@ const Datepicker: React.FC<DatepickerProps> = ({
         </span>
       )}
       <div
-        className={`relative mt-1`}
+        className={`relative mt-1 outline-none`}
         ref={inputRef}
-        tabIndex={0}
-        onKeyDown={(e) =>
-          (e.key === "Enter" || e.key === " ") && calendarShow()
-        }
+        tabIndex={-1}
       >
         <input
+          key={fullDate}
           type="text"
           placeholder={format}
-          className={`text-[14px] py-[1px] hover:cursor-pointer w-full tracking-wider border-b placeholder:font-proxima
-                    ${
-                      disabled
-                        ? "border-lightSilver pointer-events-none"
-                        : toggleOpen && !err
-                        ? "border-primary placeholder:text-primary"
-                        : fullDate
-                        ? "border-lightSilver hover:border-primary"
-                        : err
-                        ? "border-defaultRed text-defaultRed placeholder:text-defaultRed"
-                        : "text-darkCharcoal border-lightSilver hover:border-primary  transition-colors duration-300 ease-in-out"
-                    } outline-none`}
+          className={`outline-none text-[14px] py-[1px] hover:cursor-pointer w-full tracking-wider border-b placeholder:font-proxima
+                    ${disabled
+              ? "border-lightSilver pointer-events-none"
+              : toggleOpen && !err
+                ? "border-primary placeholder:text-primary"
+                : fullDate
+                  ? "border-lightSilver hover:border-primary"
+                  : err
+                    ? "border-defaultRed text-defaultRed placeholder:text-defaultRed"
+                    : "text-darkCharcoal focus:border-primary border-lightSilver hover:border-primary  transition-colors duration-300 ease-in-out"
+            } outline-none`}
           style={{ background: "transparent" }}
-          onClick={calendarShow}
-          readOnly
+          // onClick={calendarShow}
+          // readOnly
           defaultValue={fullDate}
           onChange={(e: any) => updateFromInput(e.target.value)}
           onBlur={handleInputBlur}
           onFocus={handleFocus}
-          tabIndex={-1}
+          tabIndex={0}
           {...props}
         />
         {!hideIcon && (
           <span
             className={`absolute right-0 bottom-0.5 ${disabled ? 'cursor-default' : 'cursor-pointer'}`}
+            tabIndex={0}
             onClick={calendarShow}
+            onKeyDown={handleKeyEnter}
           >
             <CalendarIcon
               bgColor={
@@ -375,9 +607,8 @@ const Datepicker: React.FC<DatepickerProps> = ({
       {toggleOpen && (
         <div className="relative">
           <div
-            className={`bottomAnimation absolute z-10 bg-pureWhite ${
-              toggleOpen ? style.bottomAnimation : ""
-            }`}
+            className={`bottomAnimation absolute z-10 bg-pureWhite ${toggleOpen ? style.bottomAnimation : ""
+              }`}
           >
             <div className="flex mx-auto  items-center">
               <div className="shadow-md overflow-hidden">
@@ -391,8 +622,10 @@ const Datepicker: React.FC<DatepickerProps> = ({
                       ""
                     ) : (
                       <h1
+                        tabIndex={toggleOpen ? 0 : -1}
                         className="font-proxima text-sm font-semibold cursor-pointer text-slatyBlue"
                         onClick={toggleMonthList}
+                        onKeyDown={(e) => e.key === "Enter" && toggleMonthList()}
                       >
                         {months[currentMonth]}
                       </h1>
@@ -407,6 +640,8 @@ const Datepicker: React.FC<DatepickerProps> = ({
                       <h1
                         className={`font-proxima text-sm font-semibold ml-1 cursor-pointer text-slatyBlue`}
                         onClick={toggleYearList}
+                        onKeyDown={(e) => e.key === "Enter" && toggleYearList()}
+                        tabIndex={toggleOpen ? 0 : -1}
                       >
                         {currentYear}
                       </h1>
@@ -417,42 +652,41 @@ const Datepicker: React.FC<DatepickerProps> = ({
                       <>
                         <div
                           className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray
-                                                    ${
-                                                      currentYear >
-                                                        (isMaxMinRequired
-                                                          ? minDate.getFullYear()
-                                                          : startYear) ||
-                                                      currentMonth >
-                                                        minDate.getMonth()
-                                                        ? ""
-                                                        : "opacity-40 pointer-events-none"
-                                                    }
-                                                        ${
-                                                          showMonthList
-                                                            ? "hidden"
-                                                            : ""
-                                                        } text-[20px]`}
+                            ${currentYear >
+                              (isMaxMinRequired
+                                ? minDate.getFullYear()
+                                : startYear) ||
+                              currentMonth >
+                              minDate.getMonth()
+                              ? ""
+                              : "opacity-40 pointer-events-none"
+                            } ${showMonthList
+                              ? "hidden"
+                              : ""
+                            } text-[20px]`}
+                          tabIndex={toggleOpen ? leftIconFocusedIndex : -1}
+                          onKeyDown={(e) => e.key === "Enter" && handleIconClick(false)}
                           onClick={() => handleIconClick(false)}
                         >
                           <ChevronLeftIcon />
                         </div>
                         <div
                           className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray
-                                                    ${
-                                                      currentYear + 1 <=
-                                                        (isMaxMinRequired
-                                                          ? maxDate.getFullYear()
-                                                          : endYear) ||
-                                                      currentMonth <
-                                                        maxDate.getMonth()
-                                                        ? ""
-                                                        : "opacity-40 pointer-events-none"
-                                                    }
-                                                    ${
-                                                      showMonthList
-                                                        ? "hidden"
-                                                        : ""
-                                                    } rotate-180 text-[20px]`}
+                            ${currentYear + 1 <=
+                              (isMaxMinRequired
+                                ? maxDate.getFullYear()
+                                : endYear) ||
+                              currentMonth <
+                              maxDate.getMonth()
+                              ? ""
+                              : "opacity-40 pointer-events-none"
+                            }
+                            ${showMonthList
+                              ? "hidden"
+                              : ""
+                            } rotate-180 text-[20px]`}
+                          tabIndex={toggleOpen ? rightIconFocusedIndex : -1}
+                          onKeyDown={handleIconKeyNavigation}
                           onClick={() => handleIconClick(true)}
                         >
                           <ChevronLeftIcon />
@@ -463,34 +697,35 @@ const Datepicker: React.FC<DatepickerProps> = ({
                         {currentPage <= totalPages && (
                           <>
                             <div
-                              className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray ${
-                                currentPage === 1
-                                  ? "opacity-40 pointer-events-none"
-                                  : ""
-                              } text-[20px]`}
+                              className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray ${currentPage === 1
+                                ? "opacity-40 pointer-events-none"
+                                : ""
+                                } text-[20px]`}
                               onClick={() => {
                                 if (currentPage === 1) {
                                   return;
                                 }
                                 goToPreviousPage();
                               }}
+                              tabIndex={toggleOpen ? 0 : -1}
+                              onKeyDown={(e) => e.key === "Enter" && goToPreviousPage()}
                             >
                               <ChevronLeftIcon />
                             </div>
                             <div
                               className={`w-5 h-5 cursor-pointer hover:scale-105 transition-all text-darkGray
-                                                             ${
-                                                               currentPage ===
-                                                               totalPages
-                                                                 ? "opacity-40 pointer-events-none"
-                                                                 : ""
-                                                             } rotate-180 text-[20px]`}
+                                  ${currentPage === totalPages
+                                  ? "opacity-40 pointer-events-none"
+                                  : ""
+                                } rotate-180 text-[20px]`}
                               onClick={() => {
                                 if (currentPage === totalPages) {
                                   return;
                                 }
                                 goToNextPage();
                               }}
+                              tabIndex={toggleOpen ? 0 : -1}
+                              onKeyDown={(e) => e.key === "Enter" && goToNextPage()}
                             >
                               <ChevronLeftIcon />
                             </div>
@@ -507,22 +742,30 @@ const Datepicker: React.FC<DatepickerProps> = ({
                         {months.map((month, index) => (
                           <div
                             key={index}
-                            className={` ${
-                              (index < minDate.getMonth() &&
-                                selectedYear === minDate.getFullYear()) ||
+                            className={` ${(index < minDate.getMonth() &&
+                              selectedYear === minDate.getFullYear()) ||
                               (index > maxDate.getMonth() &&
                                 selectedYear === maxDate.getFullYear())
-                                ? "opacity-40 pointer-events-none"
-                                : ""
-                            } py-[19.4px] w-[70px]  grid place-content-center text-sm text-textColor font-proxima relative cursor-pointer `}
+                              ? "opacity-40 pointer-events-none"
+                              : ""
+                              } py-[19.4px] w-[70px] outline-none grid place-content-center text-sm text-textColor font-proxima relative cursor-pointer `}
                             onClick={() => selectMonth(index)}
+                            tabIndex={-1}
                           >
                             <div
-                              className={`py-[20px]  px-5 text-sm hover:bg-lightGreen hover:text-primary transition-all duration-200 flex items-center justify-center rounded-md ${
-                                index === selectedMonth
-                                  ? "bg-lightGreen text-primary"
-                                  : ""
-                              }`}
+                              className={`py-[20px] focus:bg-lightGreen focus:text-primary outline-none px-5 text-sm hover:bg-lightGreen hover:text-primary transition-all duration-200 flex items-center justify-center rounded-md ${index === selectedMonth
+                                ? "bg-lightGreen text-primary"
+                                : ""
+                                }`}
+                              tabIndex={showMonthList ? 0 : -1}
+                              onKeyDown={(e) =>
+                                handleMonthKeyNavigation(e, index)
+                              }
+                              ref={(el) => {
+                                if (index === focusedIndex) {
+                                  el?.focus();
+                                }
+                              }}
                             >
                               {month.length > 5 ? month.slice(0, 3) : month}
                             </div>
@@ -535,18 +778,27 @@ const Datepicker: React.FC<DatepickerProps> = ({
                   <div className="overflow-hidden">
                     <div className={`${animate} ${style.topAnimation}  w-full`}>
                       <div className="grid grid-cols-4 grid-rows-4 place-content-center overflow-hidden font-proxima">
-                        {displayedYears.map((year) => (
+                        {displayedYears.map((year, index) => (
                           <div
                             key={year}
-                            className={`py-[9px] w-[70px] grid place-content-center text-sm text-textColor font-proxima relative cursor-pointer`}
+                            className={`py-[9px] outline-none w-[70px] grid place-content-center text-sm text-textColor font-proxima relative cursor-pointer`}
                             onClick={() => selectYear(year)}
+                            tabIndex={-1}
                           >
                             <div
-                              className={`py-[18px] px-5 text-sm hover:bg-lightGreen hover:text-primary transition-all duration-200 flex items-center justify-center rounded-md ${
-                                year === selectedYear
-                                  ? "bg-lightGreen text-primary"
-                                  : ""
-                              }`}
+                              className={`py-[18px] outline-none focus:bg-lightGreen focus:text-primary px-5 text-sm hover:bg-lightGreen hover:text-primary transition-all duration-200 flex items-center justify-center rounded-md ${year === selectedYear
+                                ? "bg-lightGreen text-primary"
+                                : ""
+                                }`}
+                              tabIndex={showYearList ? 0 : -1}
+                              onKeyDown={(e) =>
+                                handleYearKeyNavigation(e, year)
+                              }
+                              ref={(el) => {
+                                if (index === focusedIndex) {
+                                  el?.focus();
+                                }
+                              }}
                             >
                               {year}
                             </div>
@@ -585,40 +837,45 @@ const Datepicker: React.FC<DatepickerProps> = ({
                           const isSameDay =
                             currentDate.getDate() === selectedDate.getDate() &&
                             currentDate.getMonth() ===
-                              selectedDate.getMonth() &&
+                            selectedDate.getMonth() &&
                             currentDate.getFullYear() ===
-                              selectedDate.getFullYear();
+                            selectedDate.getFullYear();
                           return (
                             <div
                               key={index}
-                              className={`h-full w-full grid place-content-center text-sm text-textColor font-proxima relative  ${
-                                currentDateInMilliSeconds <
+                              className={` outline-none h-full w-full grid place-content-center text-sm text-textColor font-proxima relative  ${currentDateInMilliSeconds <
                                 minDateInMilliSeconds
+                                ? "opacity-40 pointer-events-none"
+                                : ""
+                                }
+                              ${currentDateInMilliSeconds >
+                                  maxDateInMilliSeconds
                                   ? "opacity-40 pointer-events-none"
                                   : ""
-                              }
-                              ${
-                                currentDateInMilliSeconds >
-                                maxDateInMilliSeconds
-                                  ? "opacity-40 pointer-events-none"
-                                  : ""
-                              }`}
+                                }`}
                               onClick={() => handleDateClick(currentDate)}
+                              tabIndex={-1}
                             >
                               <h1
-                                className={`h-[40px] w-[40px] grid place-content-center rounded-full cursor-pointer z-10
-                             
-                                                                ${
-                                                                  currentMonth
-                                                                    ? ""
-                                                                    : "text-[#cbd5e0] "
-                                                                } 
-                                                                     ${
-                                                                       isSameDay &&
-                                                                       currentMonth
-                                                                         ? " bg-primary text-white"
-                                                                         : "hover:bg-whiteSmoke"
-                                                                     }`}
+                                className={` h-[40px] w-[40px] grid place-content-center rounded-full cursor-pointer z-10
+                                ${currentMonth
+                                    ? ""
+                                    : "text-[#cbd5e0] "
+                                  }
+                                    ${isSameDay &&
+                                    currentMonth
+                                    ? " bg-primary text-white"
+                                    : "hover:bg-whiteSmoke"
+                                  }`}
+                                onKeyDown={(e) =>
+                                  handleDateKeyNavigation(e, currentDate)
+                                }
+                                ref={(el) => {
+                                  if (index === dateFocusedIndex) {
+                                    el?.focus();
+                                  }
+                                }}
+                                tabIndex={toggleOpen ? dateFocusedIndex : -1}
                               >
                                 {currentDate.getDate()}
                               </h1>
