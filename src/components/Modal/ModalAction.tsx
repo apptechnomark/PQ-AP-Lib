@@ -18,7 +18,7 @@ const ModalAction: React.FC<ModalActionProps> = ({ children, position,className 
     justifyClasses = "justify-end";
   }
   return (
-    <div className={`${className} flex flex-wrap items-center border-t border-solid border-lightSilver rounded-b ${justifyClasses}`}>
+    <div className={`${className} sticky bottom-0 bg-pureWhite flex flex-wrap items-center border-t border-solid border-lightSilver rounded-b ${justifyClasses}`}>
       {children || "Modal Action"}
     </div>
   );

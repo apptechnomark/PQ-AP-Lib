@@ -49,7 +49,8 @@ interface SelectProps extends React.InputHTMLAttributes<HTMLInputElement> {
   noborder?: boolean;
   hideIcon?: boolean;
   openTop?: boolean;
-  isNone?: boolean
+  isNone?: boolean;
+  heightClass?: string;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -86,6 +87,7 @@ const Select: React.FC<SelectProps> = ({
   noborder,
   openTop = false,
   isNone = false,
+  heightClass = 'max-h-60'
 }) => {
   const updatedOptions = isNone
     ? [{ value: null, label: "None" }, ...options]
@@ -108,6 +110,7 @@ const Select: React.FC<SelectProps> = ({
   const [textNameError, setTextNameError] = useState(false);
   const [textNameHasError, setTextNameHasError] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const [accumulatedSearch, setAccumulatedSearch] = useState("");
 
   const filteredOptions = updatedOptions.filter((option) =>
     option.label.toLowerCase().includes(searchValue.toLowerCase())
@@ -178,6 +181,7 @@ const Select: React.FC<SelectProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setSearchValue(inputValue); // Update search input value
+    setAccumulatedSearch(inputValue);
 
     if (validate && inputValue === "") {
       setError(true);
@@ -193,6 +197,7 @@ const Select: React.FC<SelectProps> = ({
       setSelectedOption(null);
       setInputValue("");
       setSearchValue("");
+      setAccumulatedSearch("")
       setIsOpen(false);
       getValue(null);
       getError(true);
@@ -202,6 +207,7 @@ const Select: React.FC<SelectProps> = ({
       setSelectedOption(selected || null);
       setInputValue("");
       setSearchValue("");
+      setAccumulatedSearch("")
       setIsOpen(false);
       getValue(value);
       getError(true);
@@ -316,11 +322,24 @@ const Select: React.FC<SelectProps> = ({
     newFilteredOptions = [...newFilteredOptions, ...filteredOptions];
   }
 
+  // let searchVal = "";
   const handleKeyEnter = (e: any) => {
     if (disabled) return;
+
     if ((e.key === "Enter" || (e.key === "ArrowDown" && focusedIndex == -1))) {
-      handleToggleOpen()
+      setIsOpen(true);
       setFocusedIndex(0);
+    }
+    else if (/^[a-zA-Z0-9]$/.test(e.key)) {
+      // If the key is an alphanumeric character
+      setIsOpen(true);
+      const newSearchValue = accumulatedSearch + e.key;
+      setAccumulatedSearch(newSearchValue);
+      setSearchValue(newSearchValue);
+    } else if (e.key === "Backspace") {
+      const newSearchValue = accumulatedSearch.slice(0, -1);
+      setAccumulatedSearch(newSearchValue);
+      setSearchValue(newSearchValue);
     }
     else if (e.key === "Escape") {
       setFocusedIndex(0);
@@ -390,7 +409,7 @@ const Select: React.FC<SelectProps> = ({
             readOnly={!search || !isOpen}
             disabled={disabled}
             placeholder={placeholder || "Please select"}
-            tabIndex={-1}
+            tabIndex={search ? 0 : -1}
             value={
               search && isOpen
                 ? searchValue // If in search mode and input is open, use searchValue
@@ -440,7 +459,7 @@ const Select: React.FC<SelectProps> = ({
         <ul
           className={`bottomAnimation absolute !z-10 w-full bg-pureWhite mt-[${noborder ? 13 : 1
             }px] overflow-y-auto shadow-md transition-transform ${isOpen
-              ? "max-h-60 translate-y-0 transition-opacity opacity-100 duration-500"
+              ? `${heightClass ? heightClass : "max-h-60"} translate-y-0 transition-opacity opacity-100 duration-500`
               : "max-h-0 translate-y-10 transition-opacity opacity-0 duration-500"
             } ${isOpen ? "ease-out" : ""} ${openTop ? "bottom-full" : "top-full"
             }`}

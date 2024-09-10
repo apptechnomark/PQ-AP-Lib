@@ -7,6 +7,7 @@ interface TooltipProps {
   position: "top" | "bottom" | "left" | "right";
   children?: ReactNode;
   className?: string;
+  align?: "left" | "center" | "right";
 }
 
 const Tooltip: React.FC<TooltipProps> = ({
@@ -14,11 +15,13 @@ const Tooltip: React.FC<TooltipProps> = ({
   position,
   children,
   className,
+  align = "center",
 }) => {
   const [visible, setVisible] = useState(false);
   const [tooltipStyle, setTooltipStyle] = useState({});
   const tooltipRef = useRef<HTMLSpanElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
+  const [childrenWidth, setChildrenWidth] = useState(0);
 
   const handleMouseEnter = () => {
     setVisible(true);
@@ -29,6 +32,14 @@ const Tooltip: React.FC<TooltipProps> = ({
   };
 
   useEffect(() => {
+    if (triggerRef.current) {
+      // Get the width of the children element
+      const width = triggerRef.current.getBoundingClientRect().width;
+      setChildrenWidth(width);
+    }
+  }, [children]);
+
+  useEffect(() => {
     if (visible && triggerRef.current && tooltipRef.current) {
       const triggerRect = triggerRef.current.getBoundingClientRect();
       const tooltipRect = tooltipRef.current.getBoundingClientRect();
@@ -36,16 +47,33 @@ const Tooltip: React.FC<TooltipProps> = ({
       const scrollY = window.scrollY || window.pageYOffset;
 
       let style = {};
+      let left: number;
+
+      switch (align) {
+        case "left":
+          left = scrollX + triggerRect.left;
+          break;
+        case "right":
+          left = scrollX + triggerRect.left - (triggerRect.width / 2) + (childrenWidth / 2)
+          break;
+        case "center":
+          left = scrollX + triggerRect.left + (triggerRect.width / 2)
+          break
+        default:
+          left = scrollX + triggerRect.left + (triggerRect.width / 2)
+          break;
+      }
+
       switch (position) {
         case "top":
           style = {
-            left: scrollX + triggerRect.left + (triggerRect.width / 2),
+            left,
             top: scrollY + triggerRect.top - tooltipRect.height,
           };
           break;
         case "bottom":
           style = {
-            left: scrollX + triggerRect.left + (triggerRect.width / 2),
+            left,
             top: scrollY + triggerRect.bottom,
           };
           break;
@@ -66,7 +94,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       }
       setTooltipStyle(style);
     }
-  }, [visible, position]);
+  }, [visible, position, align]);
 
   return (
     <div
@@ -79,8 +107,8 @@ const Tooltip: React.FC<TooltipProps> = ({
       {visible &&
         ReactDOM.createPortal(
           <span
-            className={`${position} z-[10] tooltipText absolute bg-[#92EADC] w-max max-w-[300px] text-darkCharcoal whitespace-nowrap p-[10px] border border-primary rounded-md ${styles[position]}`}
-            style={{ ...tooltipStyle, position: 'fixed' }}
+            className={`${position} z-[10] tooltipText absolute bg-[#92EADC] max-w-[300px] text-darkCharcoal  whitespace-nowrap p-[10px] border border-primary rounded-md ${styles[position]} ${styles[`align-${align}`]}`}
+            style={{ ...tooltipStyle }}
             ref={tooltipRef}
           >
             {content}

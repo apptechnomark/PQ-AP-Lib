@@ -3,56 +3,58 @@
   display: inline-block;
 }
 
-.top::after {
-  content: "";
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  background-color: #92eadc;
-  border-top: 1px solid #02B89D;
-  border-left: 1px solid #02B89D;
-  bottom: -13px;
-  transform: translateY(-50%) translateX(-7px) rotate(-135deg);
-  left: 50%;
-}
-
-.bottom::after {
-  content: "";
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  background-color: #92eadc;
-  border-bottom: 1px solid #02B89D;
-  border-right: 1px solid #02B89D;
-  top: 0;
-  transform: translateY(-50%) translateX(-7px) rotate(-135deg);
-  left: 50%;
-}
-
-.left::after {
-  content: "";
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  background-color: #92eadc;
-  border-bottom: 1px solid #02B89D;
-  border-left: 1px solid #02B89D;
-  top: 50%;
-  transform: translateY(-50%) translateX(-7px) rotate(-135deg);
-  right: -13px;
-}
-
+.top::after,
+.bottom::after,
+.left::after,
 .right::after {
   content: "";
   position: absolute;
   width: 12px;
   height: 12px;
   background-color: #92eadc;
+  transform: translateY(-50%) translateX(-7px) rotate(-135deg);
+}
+
+.top::after {
+  border-top: 1px solid #02B89D;
+  border-left: 1px solid #02B89D;
+  bottom: -13px;
+}
+
+.bottom::after {
+  border-bottom: 1px solid #02B89D;
+  border-right: 1px solid #02B89D;
+  top: 0;
+}
+
+.left::after {
+  border-bottom: 1px solid #02B89D;
+  border-left: 1px solid #02B89D;
+  top: 50%;
+  right: -13px !important;
+}
+
+.right::after {
   border-top: 1px solid #02B89D;
   border-right: 1px solid #02B89D;
+  left: 0 !important;
   top: 50%;
-  transform: translateY(-50%) translateX(-7px) rotate(-135deg);
-  left: 0;
+}
+
+.align-left.top::after,
+.align-left.bottom::after {
+  left: 16px;
+}
+
+.align-center.top::after,
+.align-center.bottom::after {
+  left: 50%;
+}
+
+.align-right.top::after,
+.align-right.bottom::after {
+  left: auto;
+  right: 10px;
 }
 
 .tooltipText {
@@ -87,6 +89,7 @@
     transform: translate(-50%, -50%);
     opacity: 0;
   }
+
   100% {
     transform: translate(-50%, 0);
     opacity: 1;
@@ -98,6 +101,7 @@
     transform: translate(-50%, 50%);
     opacity: 0;
   }
+
   100% {
     transform: translate(-50%, 0);
     opacity: 1;
@@ -109,6 +113,7 @@
     transform: translate(-30%, -50%);
     opacity: 0;
   }
+
   100% {
     transform: translate(0, -50%);
     opacity: 1;
@@ -120,6 +125,7 @@
     transform: translate(30%, -50%);
     opacity: 0;
   }
+
   100% {
     transform: translate(0, -50%);
     opacity: 1;

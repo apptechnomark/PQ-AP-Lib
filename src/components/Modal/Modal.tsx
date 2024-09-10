@@ -102,29 +102,22 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <>
       {isOpen && (
-        <div
-          className={`fixed inset-0
-          bg-[rgba(0,0,0,0.4)]  backdrop-blur-[1px] z-50`}
-        >
+        <div className={`h-screen w-screen fixed inset-0 bg-[rgba(0,0,0,0.4)] backdrop-blur-[1px] z-50`}>
+        <div className={`h-screen w-screen flex items-center justify-center ${Style.modal}`}>
           <div
-            className={`fixed inset-0 z-50 flex items-center justify-center overflow-y-auto ${Style.modal}`}
+            className={`flex justify-center items-center my-6 outline-none mx-auto ${getSizeClasses()} `}
+            style={modalStyles}
+            ref={modalRef}
+            tabIndex={0}
+            onClick={handleModalClick}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
           >
-            <div
-              className={`${className} my-6 outline-none mx-auto ${getSizeClasses()} `}
-              style={modalStyles}
-              ref={modalRef}
-              tabIndex={0}
-              onClick={handleModalClick}
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
-            >
-              <div
-                className={`${className} border-[1px] border-lightSilver rounded-lg flex flex-col bg-pureWhite outline-none focus:outline-none`}
-              >
-                {children}
-              </div>
+            <div className={`${className} overflow-hidden w-full max-h-full border-[1px] border-lightSilver rounded-lg flex flex-col bg-pureWhite outline-none focus:outline-none`}>
+              {children}
             </div>
           </div>
+        </div>
         </div>
       )}
     </>

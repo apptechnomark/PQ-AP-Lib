@@ -68,32 +68,38 @@ function Uploader({
   };
 
   const handleFileChange = (newFiles: FileList) => {
-    const remainingSpace = maxFileCount
-      ? maxFileCount - files.length
-      : Infinity;
-    const filesToAdd = Array.from(newFiles).slice(0, remainingSpace);
-    const updatedFiles = [...files, ...filesToAdd];
+    // const remainingSpace = maxFileCount
+    //   ? maxFileCount - files.length
+    //   : Infinity;
+    // const filesToAdd = Array.from(newFiles).slice(0, remainingSpace);
+    const totalFileCount = files.length + newFiles.length;
 
-    if (maxFileCount && updatedFiles.length > maxFileCount) {
-      Toast.error(
-        `You are only allowed to upload a maximum of ${maxFileCount} files at a time`
-      );
+    if (maxFileCount && totalFileCount > maxFileCount) {
+      Toast.error(`You are only allowed to upload a maximum of ${maxFileCount} files at a time`);
+      setFiles([]);
+      setFileNames([]);
+      getValue([]);
+      setUploaded(false);
+      setIsChecked(false);
+      return
     }
+    else {
+      const updatedFiles = [...files, ...Array.from(newFiles)];
+      setFiles(updatedFiles);
 
-    setFiles(updatedFiles);
+      const updatedFileNames = updatedFiles.map((file) => file.name);
+      setFileNames(updatedFileNames);
 
-    const updatedFileNames = updatedFiles.map((file) => file.name);
-    setFileNames(updatedFileNames);
+      getValue(updatedFiles);
 
-    getValue(updatedFiles);
+      setTimeout(() => {
+        setIsChecked(true);
+      }, 2000);
 
-    setTimeout(() => {
-      setIsChecked(true);
-    }, 2000);
-
-    setTimeout(() => {
-      setUploaded(true);
-    }, 2500);
+      setTimeout(() => {
+        setUploaded(true);
+      }, 2500);
+    }
   };
 
   const handleBrowseClick = () => {
@@ -103,11 +109,6 @@ function Uploader({
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      if (maxFileCount && files.length >= maxFileCount) {
-        Toast.error(
-          `You are only allowed to upload a maximum of ${maxFileCount} files at a time`
-        );
-      }
       handleFileChange(files);
     }
 
@@ -129,9 +130,6 @@ function Uploader({
 
     setIsChecked(false);
   };
-
-  // console.log(fileNames);
-  // console.log(isChecked);
 
   const getFileExtension = (fileName: string) => {
     const extension = fileName
@@ -164,7 +162,7 @@ function Uploader({
       }
 
       // Perform upload logic using the fileUrl
-      console.log("Uploading file from URL:", fileUrl);
+      // console.log("Uploading file from URL:", fileUrl);
       // Add your upload logic here
 
       // Store uploaded file information
@@ -215,9 +213,8 @@ function Uploader({
       <div>
         {(multiSelect || !variant) && (
           <div
-            className={`upload-container w-full flex items-center justify-center ${
-              variant === "small" ? "h-[36px]" : "flex-col h-[230px]"
-            } justify-center items-centerborder transition-all duration-200 ease-in 
+            className={`upload-container w-full flex items-center justify-center ${variant === "small" ? "h-[36px]" : "flex-col h-[230px]"
+              } justify-center items-centerborder transition-all duration-200 ease-in
         border border-dashed border-lightSilver hover:border-primary hover:bg-[#EDFFFC] cursor-pointer rounded-[4px]`}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
@@ -232,19 +229,17 @@ function Uploader({
               onChange={handleFileInputChange}
             />
             <div
-              className={`text-[15px] text-slatyGrey ${
-                variant === "small"
-                  ? ""
-                  : "border-2 border-lightSilver rounded-[4px] p-2"
-              }`}
+              className={`text-[15px] text-slatyGrey ${variant === "small"
+                ? ""
+                : "border-2 border-lightSilver rounded-[4px] p-2"
+                }`}
             >
               <UploadIcon />
             </div>
 
             <p
-              className={`${
-                variant === "small" ? "ml-[10px]" : "mt-4"
-              } text-[14px] text-darkCharcoal `}
+              className={`${variant === "small" ? "ml-[10px]" : "mt-4"
+                } text-[14px] text-darkCharcoal `}
             >
               Drag and Drop or <span className="text-primary">Browse</span> to
               Upload
@@ -258,40 +253,40 @@ function Uploader({
               <div className="flex flex-row ml-2 flex-wrap overflow-x-auto">
                 {fileNames.length > 0 && uploaded
                   ? fileNames.map((name, index) => (
+                    <span
+                      className="text-[14px] text-darkCharcoal  flex items-center gap-2 bg-whiteSmoke px-[2px] py-[2.5px] rounded-[2px] mr-2 mb-2"
+                      key={name}
+                    >
+                      <span className="text-[14px]">
+                        {renderFileIcon(name)}
+                      </span>
+                      {name.length > 8 ? (
+                        <>{name.slice(0, 8)}..</>
+                      ) : (
+                        <>{name}</>
+                      )}
                       <span
-                        className="text-[14px] text-darkCharcoal  flex items-center gap-2 bg-whiteSmoke px-[2px] py-[2.5px] rounded-[2px] mr-2 mb-2"
-                        key={name}
+                        onClick={() => handleRemoveFile(index)}
+                        className="text-[14px] text-slatyGrey cursor-pointer"
                       >
-                        <span className="text-[14px]">
-                          {renderFileIcon(name)}
-                        </span>
-                        {name.length > 8 ? (
-                          <>{name.slice(0, 8)}..</>
-                        ) : (
-                          <>{name}</>
-                        )}
-                        <span
-                          onClick={() => handleRemoveFile(index)}
-                          className="text-[14px] text-slatyGrey cursor-pointer"
-                        >
-                          <ClearIcon />
-                        </span>
+                        <ClearIcon />
                       </span>
-                    ))
+                    </span>
+                  ))
                   : !uploaded && (
-                      <span className="flex flex-row items-center gap-2 text-[14px] text-darkCharcoal ">
-                        {fileNames.length === 0 ? (
-                          <>
-                            <FileIcon /> No selected files
-                          </>
-                        ) : (
-                          <>
-                            {fileNames.length} file
-                            {fileNames.length > 1 ? "s" : ""} selected
-                          </>
-                        )}
-                      </span>
-                    )}
+                    <span className="flex flex-row items-center gap-2 text-[14px] text-darkCharcoal ">
+                      {fileNames.length === 0 ? (
+                        <>
+                          <FileIcon /> No selected files
+                        </>
+                      ) : (
+                        <>
+                          {fileNames.length} file
+                          {fileNames.length > 1 ? "s" : ""} selected
+                        </>
+                      )}
+                    </span>
+                  )}
               </div>
             </div>
             {fileNames.length > 0 && !uploaded && (
@@ -314,12 +309,11 @@ function Uploader({
           </section>
         ) : (
           <section
-            className={`${
-              variant === "small"
-                ? fileNames.length > 0 &&
-                  "flex justify-between items-center border border-lightSilver h-[36px] px-[20px] rounded-[4px]"
-                : "mt-2 flex justify-between items-center border border-lightSilver h-[36px] px-[20px] rounded-[4px]"
-            }`}
+            className={`${variant === "small"
+              ? fileNames.length > 0 &&
+              "flex justify-between items-center border border-lightSilver h-[36px] px-[20px] rounded-[4px]"
+              : "mt-2 flex justify-between items-center border border-lightSilver h-[36px] px-[20px] rounded-[4px]"
+              }`}
           >
             {fileNames.length > 0 && !uploaded ? (
               <>
@@ -362,8 +356,8 @@ function Uploader({
             ) : variant === "small" ? (
               <div
                 className="upload-container w-full flex justify-center h-[36px]
-                  items-center transition-all duration-200 ease-in 
-                border border-dashed border-lightSilver hover:border-primary hover:bg-[#EDFFFC] 
+                  items-center transition-all duration-200 ease-in
+                border border-dashed border-lightSilver hover:border-primary hover:bg-[#EDFFFC]
                 cursor-pointer rounded-[4px]"
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
@@ -377,19 +371,17 @@ function Uploader({
                   onChange={handleFileInputChange}
                 />
                 <div
-                  className={`text-[15px] text-slatyGrey ${
-                    variant === "small"
-                      ? ""
-                      : "border-2 border-lightSilver rounded-[4px] p-2"
-                  }`}
+                  className={`text-[15px] text-slatyGrey ${variant === "small"
+                    ? ""
+                    : "border-2 border-lightSilver rounded-[4px] p-2"
+                    }`}
                 >
                   <UploadIcon />
                 </div>
 
                 <p
-                  className={`${
-                    variant === "small" ? "ml-[10px]" : "mt-4"
-                  } text-[14px] text-darkCharcoal `}
+                  className={`${variant === "small" ? "ml-[10px]" : "mt-4"
+                    } text-[14px] text-darkCharcoal `}
                 >
                   Drag and Drop or <span className="text-primary">Browse</span>{" "}
                   to Upload
