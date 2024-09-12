@@ -46,7 +46,7 @@ class Breadcrumb extends React.Component<BreadcrumbProps> {
               {item.url ? (
                 <a
                   href={item.url}
-                  className={`text-sm font-medium ${index === items.length - 1 ? 'text-slatyGrey' : 'text-primary border-b border-primary'}`}
+                  className={`text-sm font-medium ${index === items.length - 1 ? 'text-slatyGrey cursor-default' : 'text-primary border-b border-primary cursor-pointer'}`}
                   style={linkStyle}
                 >
                   {item.label}
@@ -54,7 +54,7 @@ class Breadcrumb extends React.Component<BreadcrumbProps> {
               ) : (
                 <button
                   onClick={item.goBack}
-                  className={`text-sm font-medium ${index === items.length - 1 ? 'text-slatyGrey' : 'text-primary border-b border-primary'}`}
+                  className={`text-sm font-medium ${index === items.length - 1 ? 'text-slatyGrey cursor-default' : 'text-primary border-b border-primary cursor-pointer'}`}
                   style={linkStyle}
                 >
                   {item.label}
