@@ -330,13 +330,15 @@ const Select: React.FC<SelectProps> = ({
       setIsOpen(true);
       setFocusedIndex(0);
     }
-    else if (/^[a-zA-Z0-9]$/.test(e.key)) {
+    else if (/^[a-zA-Z0-9\s\-@&#._]$/.test(e.key) || e.key === " ") {
+      e.preventDefault();
       // If the key is an alphanumeric character
       setIsOpen(true);
       const newSearchValue = accumulatedSearch + e.key;
       setAccumulatedSearch(newSearchValue);
       setSearchValue(newSearchValue);
-    } else if (e.key === "Backspace") {
+    }
+    else if (e.key === "Backspace") {
       const newSearchValue = accumulatedSearch.slice(0, -1);
       setAccumulatedSearch(newSearchValue);
       setSearchValue(newSearchValue);
