@@ -50,7 +50,7 @@ interface DataTableProps {
   zIndex?: number;
 }
 
-const DataTableDashboard = ({
+const DataTable = ({
   columns,
   data,
   align = "left",
@@ -73,8 +73,8 @@ const DataTableDashboard = ({
 }: DataTableProps) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [sortConfig, setSortConfig] = useState<any>({
-    key: null,
-    direction: "",
+    key: columns[0].accessor || null,
+    direction: "asc",
   });
   const [expandedRows, setExpandedRows] = useState<any>(new Set());
   const [sortedRowIndices, setSortedRowIndices] = useState<any>({});
@@ -260,21 +260,17 @@ const DataTableDashboard = ({
 
 
   return (
-    <table
-      ref={tableRef}
-      className={`w-full border-separate border-spacing-0 ${
-        !!isTableLayoutFixed ? "table-fixed" : ""
-      }`}
-    >
+    <table ref={tableRef}
+      className={`w-full border-separate border-spacing-0 ${!!isTableLayoutFixed ? "table-fixed" : ""}`}>
       <thead
         style={
           sticky
             ? {
-                position: "sticky",
-                top: 0,
-                backgroundColor: "white",
-                zIndex: zIndex,
-              }
+              position: "sticky",
+              top: 0,
+              backgroundColor: "white",
+              zIndex: zIndex,
+            }
             : {}
         }
       >
@@ -285,15 +281,15 @@ const DataTableDashboard = ({
                 style={
                   sticky
                     ? {
-                        position: "sticky",
-                        top: 0,
-                        backgroundColor: "white",
-                        zIndex: zIndex,
-                      }
+                      position: "sticky",
+                      top: 0,
+                      backgroundColor: "white",
+                      zIndex: zIndex,
+                    }
                     : {}
                 }
                 rowSpan={2}
-                className={`h-12 w-8 border-y border-y-pureBlack ${expandableStyle?.columns}`}
+                className={`h-[40px] w-8 border-y border-y-pureBlack ${expandableStyle?.columns}`}
               ></th>
             )}
             {Array.from(new Set(columns.map((col) => col.group))).map(
@@ -307,20 +303,18 @@ const DataTableDashboard = ({
                         style={
                           sticky
                             ? {
-                                position: "sticky",
-                                top: 0,
-                                backgroundColor: "white",
-                                zIndex: zIndex,
-                              }
+                              position: "sticky",
+                              top: 0,
+                              backgroundColor: "white",
+                              zIndex: zIndex,
+                            }
                             : {}
                         }
                         rowSpan={colItem?.hideGroupLabel ? 2 : 1}
-                        className={`border-y border-y-pureBlack min-w-[100px] ${
-                          colItem?.colStyle
-                        } h-12 ${columns.length === index ? "" : "border-l"}
-            p-2 font-proxima text-sm font-bold  ${
-              !isHeaderTextBreak ? "whitespace-nowrap" : ""
-            } ${colItem?.sortable ? "cursor-pointer" : "cursor-default"}`}
+                        className={`border-y border-y-pureBlack min-w-[100px] ${colItem?.colStyle
+                          } h-[40px] ${columns.length === index ? "" : "border-l"}
+            p-2 font-proxima text-sm font-bold  ${!isHeaderTextBreak ? "whitespace-nowrap" : ""
+                          } ${colItem?.sortable ? "cursor-pointer" : "cursor-default"}`}
                         key={index}
                         onClick={() =>
                           colItem?.sortable && handleSort(colItem?.accessor)
@@ -356,24 +350,21 @@ const DataTableDashboard = ({
                     style={
                       sticky
                         ? {
-                            position: "sticky",
-                            top: 0,
-                            backgroundColor: "white",
-                            zIndex: zIndex,
-                          }
+                          position: "sticky",
+                          top: 0,
+                          backgroundColor: "white",
+                          zIndex: zIndex,
+                        }
                         : {}
                     }
                     rowSpan={temp?.hideGroupLabel ? 2 : 1}
-                    className={`border-t border-t-pureBlack ${temp?.colStyle} ${
-                      Array.from(new Set(columns.map((col) => col.group)))
-                        .length === index
-                        ? ""
-                        : `border-l`
-                    } ${
-                      temp?.hideGroupLabel ? "" : "border-b"
-                    } h-12 p-2 font-proxima font-bold ${
-                      !isHeaderTextBreak ? "whitespace-nowrap" : ""
-                    } ${temp?.sortable ? "cursor-pointer" : "cursor-default"}`}
+                    className={`border-t border-t-pureBlack ${temp?.colStyle} ${Array.from(new Set(columns.map((col) => col.group)))
+                      .length === index
+                      ? ""
+                      : `border-l`
+                      } ${temp?.hideGroupLabel ? "" : "border-b"
+                      } h-[40px] p-2 font-proxima font-bold ${!isHeaderTextBreak ? "whitespace-nowrap" : ""
+                      } ${temp?.sortable ? "cursor-pointer" : "cursor-default"}`}
                     colSpan={
                       columns.filter((col) => col.group === group).length
                     }
@@ -382,29 +373,25 @@ const DataTableDashboard = ({
                     {temp?.hideGroupLabel
                       ? ""
                       : !!temp?.groupLabel
-                      ? temp.groupLabel
-                      : group}
+                        ? temp.groupLabel
+                        : group}
                   </th>
                 );
               }
             )}
           </tr>
         )}
-        <tr
-          className={`w-full border-t border-b border-b-pureBlack border-t-pureBlack ${
-            noHeader ? "hidden" : ""
-          }`}
-        >
+        <tr className={`h-[40px] w-full border-t border-b border-b-pureBlack border-t-pureBlack ${noHeader ? "hidden" : ""}`}>
           {expandable && !columnGrouping && (
             <th
               style={
                 sticky
                   ? {
-                      position: "sticky",
-                      top: 0,
-                      backgroundColor: "white",
-                      zIndex: zIndex,
-                    }
+                    position: "sticky",
+                    top: 0,
+                    backgroundColor: "white",
+                    zIndex: zIndex,
+                  }
                   : {}
               }
               className={`w-8 border-t border-t-pureBlack border-y border-y-pureBlack ${expandableStyle?.columns}`}
@@ -418,26 +405,23 @@ const DataTableDashboard = ({
               style={
                 sticky
                   ? {
-                      position: "sticky",
-                      top: 0,
-                      backgroundColor: "white",
-                      zIndex: zIndex,
-                    }
+                    position: "sticky",
+                    top: 0,
+                    backgroundColor: "white",
+                    zIndex: zIndex,
+                  }
                   : {}
               }
-              className={`${
-                columnGrouping ? "" : "border-t border-t-pureBlack"
-              } border-b border-b-black min-w-[100px] !h-12 ${column?.colStyle} 
-              ${
-                columns.length === colIndex
+              className={`${columnGrouping ? "" : "border-t border-t-pureBlack"
+                } border-b border-b-black min-w-[100px] !h-[40px] ${column?.colStyle}
+              ${columns.length === colIndex
                   ? ""
                   : columnGrouping
-                  ? "border-l"
-                  : ""
-              }
-              p-2 font-proxima text-sm font-bold  ${
-                !isHeaderTextBreak ? "whitespace-nowrap" : ""
-              } ${column?.sortable ? "cursor-pointer" : "cursor-default"}`}
+                    ? "border-l"
+                    : ""
+                }
+              p-2 font-proxima text-sm font-bold  ${!isHeaderTextBreak ? "whitespace-nowrap" : ""
+                } ${column?.sortable ? "cursor-pointer" : "cursor-default"}`}
               key={colIndex}
               onClick={() => column?.sortable && handleSort(column?.accessor)}
             >
@@ -473,7 +457,7 @@ const DataTableDashboard = ({
           <React.Fragment key={rowIndex}>
             <tr
               key={row}
-              className={`${hoverEffect ? "hover:bg-whiteSmoke" : ""} `}
+              className={`h-[45px] ${hoverEffect ? "hover:bg-whiteSmoke" : ""} `}
               onMouseEnter={() => {
                 setSortedRowIndices({
                   ...sortedRowIndices,
@@ -498,32 +482,26 @@ const DataTableDashboard = ({
               {expandable &&
                 (row?.details ? (
                   <td
-                    className={`${
-                      expandableStyle?.rows
-                    } h-12 font-proxima text-[14px] ${
-                      expandedRows.has(rowIndex) ? "border-none" : "border-b"
-                    }  cursor-pointer border-[#ccc]`}
+                    className={`${expandableStyle?.rows
+                      } font-proxima text-sm ${expandedRows.has(rowIndex) ? "border-none" : "border-b"
+                      }  cursor-pointer border-[#ccc]`}
                     onClick={() => handleRowToggle(rowIndex)}
                   >
                     <div
-                      className={`flex items-center justify-center ${
-                        isTableLayoutFixed ? "" : "p-4"
-                      } transition-transform ${
-                        expandedRows.has(rowIndex)
+                      className={`flex items-center justify-center ${isTableLayoutFixed ? "" : "p-4"
+                        } transition-transform ${expandedRows.has(rowIndex)
                           ? "-rotate-90 duration-300"
                           : "rotate-90 duration-200"
-                      }`}
+                        }`}
                     >
                       <ChevronRight />
                     </div>
                   </td>
                 ) : (
                   <td
-                    className={`w-8 ${
-                      expandableStyle?.rows
-                    } h-12 pl-2 font-proxima text-[14px] ${
-                      expandedRows.has(rowIndex) ? "border-none" : "border-b"
-                    } ${noHeader && "border-t"} cursor-pointer border-[#ccc]`}
+                    className={`w-8 ${expandableStyle?.rows
+                      } h-[45px] pl-2 font-proxima text-sm ${expandedRows.has(rowIndex) ? "border-none" : "border-b"
+                      } ${noHeader ? "border-t" : ""} cursor-pointer border-[#ccc]`}
                   ></td>
                 ))}
               {/* Render data cells */}
@@ -531,17 +509,11 @@ const DataTableDashboard = ({
                 <React.Fragment key={colIndex}>
                   <td
                     key={colIndex}
-                    className={`${row?.style} ${noHeader && column?.colStyle} ${
-                      column?.rowStyle
-                    } h-12 px-1 py-1 font-proxima text-[14px] ${
-                      expandedRows.has(rowIndex) ? "border-none" : "border-b"
-                    } break-all border-[#ccc] ${noHeader && "border-t"}`}
+                    className={`${row?.style} ${noHeader ? column.colStyle : ""} ${column.rowStyle
+                      } h-[45px] font-proxima text-sm ${expandedRows.has(rowIndex) ? "border-none" : "border-b"
+                      } break-all border-[#ccc] ${noHeader ? "border-t" : ""}`}
                   >
-                    <span
-                      className={`flex items-center break-normal p-1 font-proxima text-[14px] justify-${getAlignment(
-                        column?.colalign
-                      )}`}
-                    >
+                    <span className={`flex items-center break-normal ${column?.colalign == "center" ? "" : column?.colalign == "right" ? "pr-2" : "pl-2"} tracking-[0.02em] font-proxima text-sm justify-${getAlignment(column?.colalign)}`}>
                       {row[column?.accessor]}
                     </span>
                   </td>
@@ -552,14 +524,14 @@ const DataTableDashboard = ({
             {(expandedRows.has(rowIndex)) && (
               <tr>
                 <td
-                  className="font-proxima text-[14px]"
+                  className="font-proxima text-sm"
                   colSpan={columns?.length + 1}
                 >
                   {row?.details ? (
                     row?.details
                   ) : (
                     <div
-                      className={`m-3 font-proxima text-[14px] ${expandableStyle?.rows}`}
+                      className={`m-3 font-proxima text-sm ${expandableStyle?.rows}`}
                     >
                       No data to display
                     </div>
@@ -576,4 +548,4 @@ const DataTableDashboard = ({
   );
 };
 
-export default DataTableDashboard;
+export default DataTable;

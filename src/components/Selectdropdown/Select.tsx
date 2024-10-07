@@ -110,6 +110,7 @@ const Select: React.FC<SelectProps> = ({
   const [textNameError, setTextNameError] = useState(false);
   const [textNameHasError, setTextNameHasError] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const [inputFocusedIndex, setInputFocusedIndex] = useState<number>(0);
   const [accumulatedSearch, setAccumulatedSearch] = useState("");
 
   const filteredOptions = updatedOptions.filter((option) =>
@@ -153,6 +154,13 @@ const Select: React.FC<SelectProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchValue("")
+      setAccumulatedSearch("")
+    }
+  }, [isOpen])
+
   //   useEffect(() => {
   //     const handleOutsideClick = (event: any) => {
   //       const isdropdownClick = event.target.closest(".bottomAnimation");
@@ -183,7 +191,7 @@ const Select: React.FC<SelectProps> = ({
     setSearchValue(inputValue); // Update search input value
     setAccumulatedSearch(inputValue);
 
-    if (validate && inputValue === "") {
+    if (validate && selectedOption == null) {
       setError(true);
       setErrMsg("Please select a valid option.");
     } else {
@@ -193,6 +201,7 @@ const Select: React.FC<SelectProps> = ({
   };
 
   const handleSelect = (value: any) => {
+    setError(false)
     if (value === null) {
       setSelectedOption(null);
       setInputValue("");
@@ -202,6 +211,7 @@ const Select: React.FC<SelectProps> = ({
       getValue(null);
       getError(true);
       setFocusedIndex(-1);
+      setInputFocusedIndex(-1)
     } else {
       const selected = updatedOptions.find((option) => option.value === value);
       setSelectedOption(selected || null);
@@ -212,12 +222,13 @@ const Select: React.FC<SelectProps> = ({
       getValue(value);
       getError(true);
       setFocusedIndex(-1);
+      setInputFocusedIndex(-1)
     }
   };
 
   const handleBlur = () => {
     if (validate) {
-      if (inputValue === "") {
+      if (selectedOption == null) {
         setError(true);
         setErrMsg("Please select a valid option.");
         getError(false);
@@ -262,16 +273,8 @@ const Select: React.FC<SelectProps> = ({
     setIsOpen(editing);
   }, [editing]);
 
-  const handleListItemKeyDown = (
-    e: React.KeyboardEvent<HTMLLIElement>,
-    value: string,
-    index: number
-  ) => {
-    if (
-      e.key === "Enter" &&
-      e.target instanceof HTMLElement &&
-      e.target.tagName == "LI"
-    ) {
+  const handleListItemKeyDown = (e: React.KeyboardEvent<HTMLLIElement>, value: string, index: number) => {
+    if (e.key === "Enter" && e.target instanceof HTMLElement && e.target.tagName == "LI") {
       handleSelect(value);
     } else if (e.key === "ArrowUp" && index > 0) {
       e.preventDefault();
@@ -281,21 +284,33 @@ const Select: React.FC<SelectProps> = ({
       setFocusedIndex(index + 1);
     }
     else if (e.key === "Tab") {
-      setIsOpen(false)
-      setFocusedIndex(-1);
+      if (e.shiftKey) {
+        // e.preventDefault();
+        setIsOpen(false)
+        setInputFocusedIndex(0)
+        setFocusedIndex(0);
+      } else {
+        setIsOpen(false)
+        setFocusedIndex(-1);
+      }
     }
     else if (e.key === "Escape") {
       setFocusedIndex(0);
       setIsOpen(false);
+    } else if (e.key === " ") {
+      e.preventDefault();
     }
   };
 
   useEffect(() => {
     if (focusedIndex !== -1 && options.length > 0) {
       const optionsElements = Array.from(
-        selectRef.current!.querySelectorAll("li")
+        selectRef.current!.querySelectorAll("li") ?? []
       );
-      optionsElements[focusedIndex].focus();
+      if (optionsElements[focusedIndex]) {
+        optionsElements[focusedIndex].focus();
+      }
+
     }
   }, [focusedIndex]);
 
@@ -309,6 +324,8 @@ const Select: React.FC<SelectProps> = ({
     } else if (e.key === "Escape") {
       setFocusedIndex(0);
       setIsOpen(false);
+    } else if (e.key === " ") {
+      e.preventDefault();
     }
   };
 
@@ -327,6 +344,7 @@ const Select: React.FC<SelectProps> = ({
     if (disabled) return;
 
     if ((e.key === "Enter" || (e.key === "ArrowDown" && focusedIndex == -1))) {
+      e.preventDefault();
       setIsOpen(true);
       setFocusedIndex(0);
     }
@@ -337,13 +355,12 @@ const Select: React.FC<SelectProps> = ({
       const newSearchValue = accumulatedSearch + e.key;
       setAccumulatedSearch(newSearchValue);
       setSearchValue(newSearchValue);
-    }
-    else if (e.key === "Backspace") {
+    } else if (e.key === "Backspace") {
       const newSearchValue = accumulatedSearch.slice(0, -1);
       setAccumulatedSearch(newSearchValue);
       setSearchValue(newSearchValue);
     }
-    else if (e.key === "Escape") {
+    else if (e.key === "Escape" || e.key === "Tab") {
       setFocusedIndex(0);
       setIsOpen(false);
       // setEditing(false);
@@ -370,7 +387,6 @@ const Select: React.FC<SelectProps> = ({
           }
           ${className}`}
         ref={selectRef}
-        onBlur={handleBlur}
       >
         {label && (
           <label
@@ -401,27 +417,27 @@ const Select: React.FC<SelectProps> = ({
         <div
           className={`focus:border-b focus:mb-[-1px] focus:border-primary outline-none flex flex-row items-center relative ${label ? "mt-[8px]" : ""
             } mb-0 w-full`}
-          tabIndex={0}
+          tabIndex={inputFocusedIndex}
           onKeyDown={handleKeyEnter}>
           <input
             id={id}
             onBlur={handleBlur}
             onClick={handleToggleOpen}
-            onChange={handleInputChange}
+            // onChange={handleInputChange}
             readOnly={!search || !isOpen}
             disabled={disabled}
             placeholder={placeholder || "Please select"}
-            tabIndex={search ? 0 : -1}
+            tabIndex={-1}
             value={
               search && isOpen
                 ? searchValue // If in search mode and input is open, use searchValue
                 : defaultValue !== null && defaultValue !== undefined
-                  ? newOptions.find((option) => option.value === defaultValue)
+                  ? newOptions.find((option: any) => option.value === defaultValue)
                     ?.label ?? placeholder
                   : selectedOption
                     ? selectedOption.label
                     : defaultValue
-                      ? newOptions.find((option) => option.value === defaultValue)
+                      ? newOptions.find((option: any) => option.value === defaultValue)
                         ?.label ?? ""
                       : inputValue && inputValue.length > 25
                         ? inputValue.substring(0, 20) + "..."
@@ -459,7 +475,7 @@ const Select: React.FC<SelectProps> = ({
           )}
         </div>
         <ul
-          className={`bottomAnimation absolute !z-10 w-full bg-pureWhite mt-[${noborder ? 13 : 1
+          className={`absolute !z-10 w-full bg-pureWhite mt-[${noborder ? 13 : 1
             }px] overflow-y-auto shadow-md transition-transform ${isOpen
               ? `${heightClass ? heightClass : "max-h-60"} translate-y-0 transition-opacity opacity-100 duration-500`
               : "max-h-0 translate-y-10 transition-opacity opacity-0 duration-500"
@@ -472,91 +488,88 @@ const Select: React.FC<SelectProps> = ({
             </span>
           ) : (
             <>
-              {!!filteredOptions &&
-                filteredOptions.map((option, index) => (
-                  <li
-                    key={index}
-                    className={`${option.value == selectedOption?.value
-                      ? "bg-whiteSmoke"
-                      : ""
-                      } px-[10px] ${option.active ? "active" : ""
-                      } py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
-                        addDynamicForm_Icons_Edit ||
-                        addDynamicForm_Icons_Delete
-                        ? "justify-between"
-                        : ""
-                      } ${option && option.liClass
-                        ? option.value === selectedOption?.value &&
-                        `${option.liClass}`
-                        : ""
-                      }
-                 ${option && option.isEnable !== false
-                        ? ""
-                        : "pointer-events-none opacity-60"
-                      }
-                 `}
-                    onClick={() => {
-                      if (option.value !== inputValue) {
-                        handleSelect(option.value);
-                      }
-                    }}
-                    onKeyDown={(e) =>
-                      handleListItemKeyDown(e, option.value, index)
-                    }
-                    tabIndex={isOpen ? index : -1}
-                    ref={(el) => {
-                      if (index === focusedIndex) {
-                        el?.focus();
-                      }
-                    }}
-                  >
-                    {avatar && (
-                      <div className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
-                        <Avatar
-                          variant="x-small"
-                          name={avatarName}
-                          imageUrl={avatarImgUrl}
-                        />
-                      </div>
-                    )}
-                    {option.label}&nbsp;{option.JsxElement}
-                    {(addDynamicForm ||
+              {!!filteredOptions && filteredOptions.map((option, index) => (
+                <li
+                  key={index}
+                  className={`${option.value == selectedOption?.value
+                    ? "bg-whiteSmoke"
+                    : ""
+                    } px-[10px] ${option.active ? "active" : ""
+                    } py-[10px] outline-none focus:bg-whiteSmoke relative group/item text-[14px] hover:bg-whiteSmoke font-normal cursor-pointer flex flex-row items-center ${addDynamicForm ||
                       addDynamicForm_Icons_Edit ||
-                      addDynamicForm_Icons_Delete) && (
-                        <a className="group/edit invisible hover:bg-slate-100 group-hover/item:visible">
-                          <div className="flex flex-row right-0 mr-2 justify-end items-end">
-                            {addDynamicForm_Icons_Edit && (
-                              <div
-                                className="p-[2px]"
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  setTextValue(option.value);
-                                  setInputLabel(option.label);
-                                  onChangeText(option.value, option.label);
-                                  setEditing(true);
-                                }}
-                              >
-                                <EditIconDropdown />
-                              </div>
-                            )}
-
-                            {addDynamicForm_Icons_Delete && (
-                              <div
-                                className="p-[2px]"
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  onChangeText(option.value, option.label);
-                                  handleDeleteValue(option.value);
-                                }}
-                              >
-                                <DeleteIconDropdown />
-                              </div>
-                            )}
+                      addDynamicForm_Icons_Delete
+                      ? "justify-between"
+                      : ""
+                    } ${option && option.liClass
+                      ? option.value === selectedOption?.value &&
+                      `${option.liClass}`
+                      : ""
+                    }
+                 ${option && option.isEnable !== false
+                      ? ""
+                      : "pointer-events-none opacity-60"
+                    }
+                 `}
+                  onClick={() => {
+                    if (option.value !== inputValue) {
+                      handleSelect(option.value);
+                    }
+                  }}
+                  onKeyDown={(e) =>
+                    handleListItemKeyDown(e, option.value, index)
+                  }
+                  tabIndex={isOpen ? index : -1}
+                  ref={(el) => {
+                    if (index === focusedIndex) {
+                      el?.focus();
+                    }
+                  }}
+                >
+                  {avatar && (
+                    <div className="mr-2 flex-shrink-0 items-center text-[1.5rem] text-darkCharcoal">
+                      <Avatar
+                        variant="x-small"
+                        name={avatarName}
+                        imageUrl={avatarImgUrl}
+                      />
+                    </div>
+                  )}
+                  {option.label}&nbsp;{option.JsxElement}
+                  {(addDynamicForm || addDynamicForm_Icons_Edit || addDynamicForm_Icons_Delete) && (
+                    <a className="group/edit invisible hover:bg-slate-100 group-hover/item:visible">
+                      <div className="flex flex-row right-0 mr-2 justify-end items-end">
+                        {addDynamicForm_Icons_Edit && (
+                          <div
+                            className="p-[2px]"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setTextValue(option.value);
+                              setInputLabel(option.label);
+                              onChangeText && onChangeText(option.value, option.label);
+                              setEditing(true);
+                            }}
+                          >
+                            <EditIconDropdown />
                           </div>
-                        </a>
-                      )}
-                  </li>
-                ))}
+                        )}
+
+                        {addDynamicForm_Icons_Delete && (
+                          <div
+                            className="p-[2px]"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              onChangeText && onChangeText(option.value, option.label);
+                              handleDeleteValue(option.value);
+                            }}
+                          >
+                            <DeleteIconDropdown />
+                          </div>
+                        )}
+                      </div>
+                    </a>
+                  )}
+                </li>
+              ))}
             </>
           )}
           {(addDynamicForm || editing) && (
