@@ -73,7 +73,7 @@ const DataTable = ({
 }: DataTableProps) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [sortConfig, setSortConfig] = useState<any>({
-    key: columns[0].accessor || null,
+    key: null,
     direction: "asc",
   });
   const [expandedRows, setExpandedRows] = useState<any>(new Set());
